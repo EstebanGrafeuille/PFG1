@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import StackNavigation from './src/navigation/StackNavigator';
+import TabNavigation from './src/navigation/TabNavigator';
 
 
 export default function App() {
@@ -10,6 +11,15 @@ export default function App() {
       <StackNavigation/>
     </NavigationContainer>
   );
+  
+ /*
+ return(
+    <NavigationContainer>
+      <TabNavigation />
+    </NavigationContainer>
+ );
+ */
+ 
 }
 
 const styles = StyleSheet.create({
