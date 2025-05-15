@@ -17,7 +17,7 @@ const Tab = createBottomTabNavigator({
   },
 });
 
-const TabNavigation = () => {
+const ProfileTabNavigation = () => {
 
     return (
         <Tab.Navigator
@@ -99,4 +99,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default TabNavigation
+export default ProfileTabNavigation
