@@ -23,6 +23,9 @@ const styles = StyleSheet.create({
     headerContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
+    position: "static",
+    marginTop: 20,
+    marginBottom: "auto",
     alignItems: "center",
     height: 50,
     width: "90%",

@@ -1,11 +1,28 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import ProfileHeader from '../../components/ProfileHeader';
+import BooksProfileComp from '../../components/BooksProfileComp';
 
 export default function WishlistScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={styles.wishlistScreen}>
       <ProfileHeader />
-      <Text>Wishlist Screen</Text>
+      <Text style={styles.listTitle}>Wishlist</Text>
+      <BooksProfileComp />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+
+  wishlistScreen: {
+    flexDirection: "column",
+    alignItems: 'center'
+  },
+
+  listTitle: {
+    paddingTop: 20,
+    fontFamily: 'Roboto_900Black',
+    fontSize: 18,
+    color: '#333',
+  },
+})
