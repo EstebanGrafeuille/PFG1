@@ -3,11 +3,11 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import RegisterLoginScreen from '../screens/RegisterLoginScren';
 
 import HomeScreen from '../screens/HomeScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import ProfileScreen from '../screens/profile/ProfileScreen';
 import AddBookScreen from '../screens/AddBookScreen';
 import SearchScreen from '../screens/SearchScreen';
 import SocialScreen from '../screens/SocialScreen';
-import ProfileTabNavigation from "./ProfileTabNavigator";
+import ProfileNavigation from "./ProfileNavigator";
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -59,7 +59,7 @@ const TabNavigation = () => {
                     </View>
                 )
             }}/>
-            <Tab.Screen name="SETTINGS" component={ProfileScreen} options={{
+            <Tab.Screen name="SETTINGS" component={ProfileNavigation} options={{
                 tabBarIcon: ({focused}) => (
                     <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
                         <Image source={require("../../assets/img/profile-icon.png")}
