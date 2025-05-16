@@ -7,15 +7,11 @@ import ProfileScreen from '../screens/ProfileScreen';
 import AddBookScreen from '../screens/AddBookScreen';
 import SearchScreen from '../screens/SearchScreen';
 import SocialScreen from '../screens/SocialScreen';
+import ProfileTabNavigation from "./ProfileTabNavigator";
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-const Tab = createBottomTabNavigator({
-  screens: {
-    Home: HomeScreen,
-    Profile: ProfileScreen,
-  },
-});
+const Tab = createBottomTabNavigator();
 
 const TabNavigation = () => {
 
@@ -63,7 +59,7 @@ const TabNavigation = () => {
                     </View>
                 )
             }}/>
-            <Tab.Screen name="ProfileScreen" component={ProfileScreen} options={{
+            <Tab.Screen name="SETTINGS" component={ProfileScreen} options={{
                 tabBarIcon: ({focused}) => (
                     <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
                         <Image source={require("../../assets/img/profile-icon.png")}
