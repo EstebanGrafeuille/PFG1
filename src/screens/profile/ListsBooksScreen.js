@@ -5,7 +5,7 @@ import BooksProfileComp from '../../components/BooksProfileComp';
 export default function ListsBooksScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ProfileHeader />
+      <ProfileHeader headerTitle="MY LIBRARY" />
       <Text style={styles.listTitle}>Listas</Text>
       <BooksProfileComp />
     </View>

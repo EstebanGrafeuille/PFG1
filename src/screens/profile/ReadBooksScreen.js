@@ -5,7 +5,7 @@ import BooksProfileComp from '../../components/BooksProfileComp';
 export default function ReadBooksScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ProfileHeader />
+      <ProfileHeader headerTitle="MY LIBRARY" />
       <Text style={styles.listTitle}>Books You Reed</Text>
       <BooksProfileComp />
     </View>

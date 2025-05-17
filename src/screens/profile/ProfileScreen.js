@@ -6,7 +6,7 @@ import ProfileGraphic from '../../components/ProfileGraphic';
 export default function ProfileScreen() {
   return (
     <View style={styles.profileScreen}>
-      <ProfileHeader />
+      <ProfileHeader headerTitle="SETTINGS" />
       <ProfileInfo />
       <ProfileGraphic />
       <ProfileStats />
