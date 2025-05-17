@@ -1,47 +1,95 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text } from 'react-native';
-import RegisterLoginScreen from '../screens/RegisterLoginScren'
+import { View, Image, StyleSheet } from 'react-native';
 
 import HomeScreen from '../screens/HomeScreen'
-import ProfileScreen from '../screens/ProfileScreen'
 import AddBookScreen from '../screens/AddBookScreen'
 import SocialScreen from '../screens/SocialScreen'
+import ProfileNavigation from "./ProfileNavigator";
 import SearchStackNavigator from "./SearchStackNavigator";
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-const Tab = createBottomTabNavigator({
-  screens: {
-    Home: HomeScreen,
-    Profile: ProfileScreen,
-  },
-});
+const Tab = createBottomTabNavigator();
 
 const TabNavigation = () => {
 
     return (
         <Tab.Navigator
-            tabBarOptions={{
-                showLabel: false,
-                style: {
+            screenOptions={{
+                tabBarShowLabel: false,
+                tabBarPosition: 'bottom',
+                tabBarStyle: {
+                    backgroundColor: "#FFCB20",
                     position: 'absolute',
-                    bottom: 25,
-                    left: 20,
-                    right: 20,
-                    elevation: 0,
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: 15,
-                    height: 15
+                    height: 60,
                 }
             }}
         >
-            <Tab.Screen name="HomeScreen" component={HomeScreen} />
-            <Tab.Screen name="Search"       component={ SearchStackNavigator } />
-            <Tab.Screen name="AddBookScreen" component={AddBookScreen} />
-            <Tab.Screen name="SocialScreen" component={SocialScreen} />
-            <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
+            <Tab.Screen name="HomeScreen" component={HomeScreen} options={{
+                tabBarIcon: ({focused}) => (
+                    <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
+                        <Image source={require("../../assets/img/home-icon-1.png")}
+                            resizeMode="contain" style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]} />
+                    </View>
+                )
+            }}/>
+            <Tab.Screen name="SearchScreen" component={SearchStackNavigator} options={{
+                tabBarIcon: ({focused}) => (
+                    <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
+                        <Image source={require("../../assets/img/search-icon.png")}
+                            resizeMode="contain" style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]} />
+                    </View>
+                )
+            }}/>
+            <Tab.Screen name="AddBookScreen" component={AddBookScreen} options={{
+                tabBarIcon: ({focused}) => (
+                    <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
+                        <Image source={require("../../assets/img/bookmark-icon.png")}
+                            resizeMode="contain" style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]} />
+                    </View>
+                )
+            }}/>
+            <Tab.Screen name="SocialScreen" component={SocialScreen} options={{
+                tabBarIcon: ({focused}) => (
+                    <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
+                        <Image source={require("../../assets/img/heart-icon.png")}
+                            resizeMode="contain" style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]} />
+                    </View>
+                )
+            }}/>
+            <Tab.Screen name="SETTINGS" component={ProfileNavigation} options={{
+                tabBarIcon: ({focused}) => (
+                    <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
+                        <Image source={require("../../assets/img/profile-icon.png")}
+                        resizeMode="contain" style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]} />
+                    </View>
+                )
+            }}/>
         </Tab.Navigator>
     )
 }
+
+const styles = StyleSheet.create({
+  tabIconStyle: {
+    width: 25,
+    height: 25,
+    tintColor: "#FFFFFF"
+  },
+  tabIconStyleFocused: {
+    tintColor: "#1D1B20"
+  },
+
+  tabIconContainer: {
+    alignItems: 'center',
+    paddingTop: 10,
+  },
+
+  tabIconContainerFocused: {
+    backgroundColor: "#FFFFFF",
+    height: 80,
+    width: 45,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+  }
+});
 
 export default TabNavigation
