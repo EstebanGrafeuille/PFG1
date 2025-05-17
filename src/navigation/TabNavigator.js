@@ -5,8 +5,8 @@ import RegisterLoginScreen from '../screens/RegisterLoginScren'
 import HomeScreen from '../screens/HomeScreen'
 import ProfileScreen from '../screens/ProfileScreen'
 import AddBookScreen from '../screens/AddBookScreen'
-import SearchScreen from '../screens/SearchScreen'
 import SocialScreen from '../screens/SocialScreen'
+import SearchStackNavigator from "./SearchStackNavigator";
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -36,7 +36,7 @@ const TabNavigation = () => {
             }}
         >
             <Tab.Screen name="HomeScreen" component={HomeScreen} />
-            <Tab.Screen name="SearchScreen" component={SearchScreen} />
+            <Tab.Screen name="Search"       component={ SearchStackNavigator } />
             <Tab.Screen name="AddBookScreen" component={AddBookScreen} />
             <Tab.Screen name="SocialScreen" component={SocialScreen} />
             <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
