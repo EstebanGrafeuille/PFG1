@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -113,10 +112,10 @@ export default SearchScreen
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', paddingHorizontal: 16, paddingTop: Platform.OS === 'ios' ? 50 : 16 },
+  container: { flex: 1, backgroundColor: '#f5f5f5', paddingHorizontal: 16, paddingTop: Platform.OS === 'ios' ? 50 : 16 },
   input: { height: 40, borderColor: '#ccc', borderWidth: 1, borderRadius: 5, paddingHorizontal: 8, marginBottom: 12 },
   loaderMore: { marginVertical: 12 },
-  thumbnail: { width: 50, height: 75, borderRadius: 4, backgroundColor: '#f0f0f0' }, placeholder: { alignItems: 'center', justifyContent: 'center' },
+  thumbnail: { width: 50, height: 75, borderRadius: 4, backgroundColor: '#f0f0f0' }, 
+  placeholder: { alignItems: 'center', justifyContent: 'center' },
   detailContainer: { flex: 1, padding: 16 },
-   
 });

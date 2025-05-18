@@ -1,10 +1,10 @@
 import { View, Image, StyleSheet } from 'react-native';
 
-import HomeScreen from '../screens/HomeScreen'
 import AddBookScreen from '../screens/AddBookScreen'
 import SocialScreen from '../screens/SocialScreen'
 import ProfileNavigation from "./ProfileNavigator";
 import SearchStackNavigator from "./SearchStackNavigator";
+import HomeStackNavigator from "./HomeStackNavigator";
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -24,7 +24,7 @@ const TabNavigation = () => {
                 }
             }}
         >
-            <Tab.Screen name="HomeScreen" component={HomeScreen} options={{
+            <Tab.Screen name="HomeScreen" component={HomeStackNavigator} options={{
                 tabBarIcon: ({focused}) => (
                     <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
                         <Image source={require("../../assets/img/home-icon-1.png")}

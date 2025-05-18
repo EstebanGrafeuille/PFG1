@@ -13,12 +13,12 @@ export default function WishlistScreen() {
 }
 
 const styles = StyleSheet.create({
-
   wishlistScreen: {
     flexDirection: "column",
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    flex: 1
   },
-
   listTitle: {
     paddingTop: 20,
     fontFamily: 'Roboto_900Black',

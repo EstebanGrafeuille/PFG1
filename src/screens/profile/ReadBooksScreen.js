@@ -4,7 +4,7 @@ import BooksProfileComp from '../../components/BooksProfileComp';
 
 export default function ReadBooksScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={styles.container}>
       <ProfileHeader />
       <Text style={styles.listTitle}>Books You Reed</Text>
       <BooksProfileComp />
@@ -13,7 +13,12 @@ export default function ReadBooksScreen() {
 }
 
 const styles = StyleSheet.create({
-
+  container: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5'
+  },
   listTitle: {
     paddingTop: 20,
     fontFamily: 'Roboto_900Black',

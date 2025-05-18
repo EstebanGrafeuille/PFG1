@@ -32,12 +32,12 @@ function ProfileInfo(){
 }
 
 const styles = StyleSheet.create({
-
   profileScreen: {
     flexDirection: "column",
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    flex: 1
   },
-
   text: {
     fontFamily: 'Roboto_200ExtraLight',
     fontSize: 18,
