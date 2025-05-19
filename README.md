@@ -1,67 +1,30 @@
-# Aplicación de Búsqueda y Gestión de Libros
+# BookTracker App
 
-Esta aplicación permite buscar libros utilizando la API de Google Books, ver detalles de los libros y organizarlos en diferentes listas (favoritos, por leer, leídos).
+Aplicación fullstack para buscar, guardar y gestionar libros utilizando React Native y Node.js.
 
-## Estructura del Proyecto
+## Estructura del proyecto
 
-El proyecto sigue una estructura organizada por funcionalidad para facilitar el mantenimiento y la escalabilidad:
+- **client/**: Frontend en React Native
+- **server/**: Backend en Node.js
 
+## Requisitos
+
+- Node.js 16+
+- npm o yarn
+- Expo CLI
+
+## Instalación
+
+```bash
+# Instalar todas las dependencias
+npm run install-all
+
+# Iniciar desarrollo (frontend y backend)
+npm run dev
+
+# Iniciar solo frontend
+npm run client
+
+# Iniciar solo backend
+npm run server
 ```
-src/
-  ├── api/                  # Servicios y llamadas a API
-  ├── components/           # Componentes reutilizables
-  │   ├── ui/               # Componentes de UI básicos
-  │   ├── books/            # Componentes específicos de libros
-  │   └── profile/          # Componentes de perfil
-  ├── hooks/                # Hooks personalizados
-  ├── navigation/           # Configuración de navegación
-  ├── screens/              # Pantallas organizadas por funcionalidad
-  ├── utils/                # Utilidades y helpers
-  ├── constants/            # Constantes, colores, dimensiones
-  └── context/              # Contextos de React
-```
-
-Para más detalles sobre la estructura, consulta [ESTRUCTURA.md](./ESTRUCTURA.md).
-
-## Documentación
-
-- [ESTRUCTURA.md](./ESTRUCTURA.md): Describe la estructura del proyecto y las convenciones utilizadas.
-- [MIGRACION.md](./MIGRACION.md): Guía para migrar el código a la nueva estructura.
-- [IMPLEMENTACION.md](./IMPLEMENTACION.md): Plan de implementación gradual de la nueva estructura.
-
-## Características Principales
-
-- Búsqueda de libros en la API de Google Books
-- Visualización de detalles de libros
-- Gestión de listas de libros (favoritos, por leer, leídos)
-- Perfil de usuario con estadísticas de lectura
-
-## Tecnologías Utilizadas
-
-- React Native
-- React Navigation
-- Context API para gestión de estado
-- Hooks personalizados para lógica reutilizable
-- Google Books API
-
-## Instalación y Ejecución
-
-1. Clona el repositorio
-2. Instala las dependencias:
-   ```
-   npm install
-   ```
-3. Inicia la aplicación:
-   ```
-   npm start
-   ```
-
-## Desarrollo
-
-Para contribuir al desarrollo:
-
-1. Sigue la estructura de directorios descrita en [ESTRUCTURA.md](./ESTRUCTURA.md)
-2. Utiliza los hooks personalizados para la lógica reutilizable
-3. Mantén los componentes pequeños y enfocados
-4. Documenta el código con JSDoc
-5. Sigue las convenciones de nomenclatura establecidas
