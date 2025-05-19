@@ -1,59 +1,75 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * Pantalla de detalles de libro
+ * Muestra información detallada sobre un libro específico
+ * 
+ * @module screens/searchScreens/DetailBookScreen
+ */
+import React from 'react';
 import {
   View,
   Text,
-  ActivityIndicator,
   StyleSheet,
   Image,
   ScrollView,
   TouchableOpacity,
   SafeAreaView
 } from 'react-native';
+// Importaciones actualizadas para la nueva estructura
+import useBookDetails from '../../hooks/useBookDetails';
+import { LoadingIndicator } from '../../components/ui/LoadingIndicator';
+import Colors from '../../constants/colors';
+import Layout from '../../constants/layout';
+import { useBooks } from '../../context/BooksContext';
+import { formatDate, getLanguageName } from '../../utils/helpers';
 
+/**
+ * Pantalla de detalles de libro
+ * @param {Object} props - Propiedades del componente
+ * @param {Object} props.route - Objeto de ruta con parámetros
+ * @param {Object} props.route.params - Parámetros de la ruta
+ * @param {string} props.route.params.volumeId - ID del volumen del libro
+ * @returns {JSX.Element} - Componente de pantalla de detalles
+ */
 const DetailBook = ({ route }) => {
   const { volumeId } = route.params;
-  const [details, setDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchBookDetails = async () => {
-      try {
-        const response = await fetch(`https://www.googleapis.com/books/v1/volumes/${volumeId}`);
-        const data = await response.json();
-        
-        // Asegurarse de que la URL de la imagen sea HTTPS
-        if (data.volumeInfo?.imageLinks?.thumbnail && data.volumeInfo.imageLinks.thumbnail.startsWith('http:')) {
-          data.volumeInfo.imageLinks.thumbnail = data.volumeInfo.imageLinks.thumbnail.replace('http:', 'https:');
-        }
-        
-        setDetails(data);
-      } catch (error) {
-        console.error('Error fetching book details:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBookDetails();
-  }, [volumeId]);
+  const { details, loading, error } = useBookDetails(volumeId);
+  const { 
+    addToFavorites, 
+    addToReadingList, 
+    isFavorite, 
+    isInReadingList 
+  } = useBooks();
 
   if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#FFCB20" />
-      </View>
-    );
+    return <LoadingIndicator fullScreen />;
   }
 
-  if (!details) {
+  if (error || !details) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>No se encontraron detalles del libro</Text>
+        <Text style={styles.errorText}>
+          {error || 'No se encontraron detalles del libro'}
+        </Text>
       </View>
     );
   }
 
   const info = details.volumeInfo;
+  
+  // Preparar objeto de libro para guardar en listas
+  const bookData = {
+    id: details.id,
+    title: info.title,
+    authors: info.authors || [],
+    thumbnail: info.imageLinks?.thumbnail,
+    publishedDate: info.publishedDate
+  };
+
+  // Manejar añadir a favoritos o lista de lectura
+  const handleAddBook = () => {
+    // Aquí se podría mostrar un modal con opciones
+    addToReadingList(bookData);
+  };
   
   return (
     <SafeAreaView style={styles.container}>
@@ -61,6 +77,7 @@ const DetailBook = ({ route }) => {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
       >
+        {/* Cabecera con imagen y datos básicos */}
         <View style={styles.headerContainer}>
           <View style={styles.imageContainer}>
             {info.imageLinks?.thumbnail ? (
@@ -82,7 +99,7 @@ const DetailBook = ({ route }) => {
               <Text style={styles.authors}>{info.authors.join(', ')}</Text>
             )}
             {info.publishedDate && (
-              <Text style={styles.publishedDate}>Publicado: {info.publishedDate}</Text>
+              <Text style={styles.publishedDate}>Publicado: {formatDate(info.publishedDate)}</Text>
             )}
             {info.categories && (
               <View style={styles.categoriesContainer}>
@@ -96,6 +113,7 @@ const DetailBook = ({ route }) => {
           </View>
         </View>
         
+        {/* Sección de descripción */}
         <View style={styles.infoSection}>
           <Text style={styles.sectionTitle}>Descripción</Text>
           {info.description ? (
@@ -105,6 +123,7 @@ const DetailBook = ({ route }) => {
           )}
         </View>
         
+        {/* Sección de detalles */}
         <View style={styles.infoSection}>
           <Text style={styles.sectionTitle}>Detalles</Text>
           <View style={styles.detailRow}>
@@ -117,7 +136,7 @@ const DetailBook = ({ route }) => {
           </View>
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Idioma:</Text>
-            <Text style={styles.detailValue}>{info.language || 'No disponible'}</Text>
+            <Text style={styles.detailValue}>{getLanguageName(info.language) || 'No disponible'}</Text>
           </View>
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>ISBN:</Text>
@@ -129,61 +148,62 @@ const DetailBook = ({ route }) => {
           </View>
         </View>
         
-        {/* Espacio adicional al final para evitar que el contenido sea tapado por el botón flotante y el footer */}
         <View style={styles.bottomSpace} />
       </ScrollView>
       
-      {/* Botón flotante para agregar a lista */}
-      <TouchableOpacity style={styles.floatingButton} activeOpacity={0.8}>
+      {/* Botón flotante para añadir a listas */}
+      <TouchableOpacity 
+        style={styles.floatingButton} 
+        activeOpacity={0.8}
+        onPress={handleAddBook}
+      >
         <Text style={styles.floatingButtonText}>+</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
+/**
+ * Estilos para la pantalla de detalles
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: Colors.BACKGROUND,
   },
   scrollView: {
     flex: 1,
   },
   scrollViewContent: {
-    paddingBottom: 140, // Espacio suficiente para el botón flotante y el footer
+    paddingBottom: 140,
   },
   bottomSpace: {
-    height: 80, // Altura adicional al final del contenido
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: 80,
   },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: Layout.SPACING.L,
   },
   errorText: {
-    fontSize: 16,
-    color: 'red',
+    fontSize: Layout.FONT_SIZE.L,
+    color: Colors.ERROR,
     textAlign: 'center',
   },
   headerContainer: {
     flexDirection: 'row',
-    padding: 16,
+    padding: Layout.SPACING.L,
     backgroundColor: '#f9f9f9',
     borderBottomWidth: 2,
-    borderBottomColor: '#FFCB20',
+    borderBottomColor: Colors.PRIMARY,
   },
   imageContainer: {
     width: 120,
     height: 180,
-    borderRadius: 8,
+    borderRadius: Layout.BORDER_RADIUS.M,
     overflow: 'hidden',
-    backgroundColor: '#eee',
+    backgroundColor: Colors.PLACEHOLDER,
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -197,103 +217,97 @@ const styles = StyleSheet.create({
   noImageContainer: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#FFCB20',
+    backgroundColor: Colors.PRIMARY,
     justifyContent: 'center',
     alignItems: 'center',
   },
   noImageText: {
     fontSize: 40,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: Layout.FONT_WEIGHT.BOLD,
+    color: Colors.WHITE,
   },
   headerInfo: {
     flex: 1,
-    marginLeft: 16,
+    marginLeft: Layout.SPACING.L,
     justifyContent: 'center',
   },
   title: {
-    fontFamily: 'Roboto_900Black',
-    fontSize: 18,
-    color: '#333',
-    marginBottom: 8,
+    fontSize: Layout.FONT_SIZE.XL,
+    fontWeight: Layout.FONT_WEIGHT.BLACK,
+    color: Colors.TEXT_PRIMARY,
+    marginBottom: Layout.SPACING.M,
   },
   authors: {
-    fontFamily: 'Roboto_400Regular',
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 8,
+    fontSize: Layout.FONT_SIZE.M,
+    color: Colors.TEXT_SECONDARY,
+    marginBottom: Layout.SPACING.M,
   },
   publishedDate: {
-    fontFamily: 'Roboto_400Regular',
-    fontSize: 12,
-    color: '#888',
-    marginBottom: 8,
+    fontSize: Layout.FONT_SIZE.S,
+    color: Colors.TEXT_TERTIARY,
+    marginBottom: Layout.SPACING.M,
   },
   categoriesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: 4,
+    marginTop: Layout.SPACING.XS,
   },
   categoryBadge: {
-    backgroundColor: '#FFCB20',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 12,
-    marginRight: 4,
-    marginBottom: 4,
+    backgroundColor: Colors.PRIMARY,
+    paddingHorizontal: Layout.SPACING.M,
+    paddingVertical: Layout.SPACING.XS,
+    borderRadius: Layout.BORDER_RADIUS.L,
+    marginRight: Layout.SPACING.XS,
+    marginBottom: Layout.SPACING.XS,
   },
   categoryText: {
-    fontFamily: 'Roboto_400Regular',
-    fontSize: 10,
-    color: '#333',
+    fontSize: Layout.FONT_SIZE.XS,
+    color: Colors.TEXT_PRIMARY,
   },
   infoSection: {
-    padding: 16,
+    padding: Layout.SPACING.L,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: Colors.BORDER,
   },
   sectionTitle: {
-    fontFamily: 'Roboto_700Bold',
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 8,
+    fontSize: Layout.FONT_SIZE.L,
+    fontWeight: Layout.FONT_WEIGHT.BOLD,
+    color: Colors.TEXT_PRIMARY,
+    marginBottom: Layout.SPACING.M,
   },
   description: {
-    fontFamily: 'Roboto_400Regular',
-    fontSize: 14,
+    fontSize: Layout.FONT_SIZE.M,
     lineHeight: 20,
-    color: '#444',
+    color: Colors.TEXT_PRIMARY,
   },
   noInfo: {
-    fontFamily: 'Roboto_400Regular',
-    fontSize: 14,
-    color: '#888',
+    fontSize: Layout.FONT_SIZE.M,
+    color: Colors.TEXT_TERTIARY,
     fontStyle: 'italic',
   },
   detailRow: {
     flexDirection: 'row',
-    marginBottom: 6,
+    marginBottom: Layout.SPACING.S,
   },
   detailLabel: {
-    fontFamily: 'Roboto_700Bold',
-    fontSize: 14,
-    color: '#333',
+    fontSize: Layout.FONT_SIZE.M,
+    fontWeight: Layout.FONT_WEIGHT.BOLD,
+    color: Colors.TEXT_PRIMARY,
     width: 80,
   },
   detailValue: {
-    fontFamily: 'Roboto_400Regular',
-    fontSize: 14,
-    color: '#444',
+    fontSize: Layout.FONT_SIZE.M,
+    color: Colors.TEXT_SECONDARY,
     flex: 1,
   },
   floatingButton: {
     position: 'absolute',
-    bottom: 80, // Aumentado para evitar el footer menu (60px de altura + 20px de margen)
-    right: 20,
+    bottom: 80,
+    right: Layout.SPACING.L,
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#FFCB20',
+    backgroundColor: Colors.PRIMARY,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 5,
@@ -303,9 +317,9 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   floatingButtonText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
+    fontSize: Layout.FONT_SIZE.XXL,
+    fontWeight: Layout.FONT_WEIGHT.BOLD,
+    color: Colors.WHITE,
   },
 });
 
