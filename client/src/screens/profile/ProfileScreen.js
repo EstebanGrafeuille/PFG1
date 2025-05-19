@@ -6,7 +6,7 @@ import ProfileGraphic from '../../components/ProfileGraphic';
 export default function ProfileScreen() {
   return (
     <View style={styles.profileScreen}>
-      <ProfileHeader />
+      <ProfileHeader headerTitle="SETTINGS" />
       <ProfileInfo />
       <ProfileGraphic />
       <ProfileStats />
@@ -16,7 +16,7 @@ export default function ProfileScreen() {
 
 function ProfileInfo(){
   return (
-    <View style={{flexDirection: "column", height: 180, width: 200, marginTop: 30, marginBottom: "auto", justifyContent: "space-between", alignItems: "center"}}>
+    <View style={{flexDirection: "column", height: 180, width: 200, marginTop: 30, marginBottom: 0, justifyContent: "space-between", alignItems: "center"}}>
       <Image source={require("../../../assets/img/profile-picture-sample.png")}
         resizeMode="contain" style={{height: 100, width: 100}} />
         <View style={{flexDirection: "row", height: 20, justifyContent:"center", alignItems: "space-between"}}>
