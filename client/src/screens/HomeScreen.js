@@ -95,23 +95,25 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView style={styles.homeScreen} contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.homeHeader}>
-          <View style={styles.bookBox}>
-            <Text style={styles.headerTitle1}>Book</Text>
-            <Text style={styles.headerTitle2}>Box</Text>
+          <View style={styles.homeHeaderBorder}>
+            <View style={styles.bookBox}>
+              <Text style={styles.headerTitle1}>Book</Text>
+              <Text style={styles.headerTitle2}>Box</Text>
           </View>
-          <Text style={styles.headersubTitle}>Check our latest recommendations!</Text>
+            <Text style={styles.headersubTitle}>Find your next favourite book</Text>
+          </View>
         </View>
         
         <View style={styles.rowContainer}>
           <Text style={styles.rowTitle}>New Releases</Text>
-          <BookRow books={newReleases} navigation={navigation} />
+          <BookRow books={newReleases} navigation={navigation} isYellow={true} />
         </View>
         
         <View style={styles.rowContainer}>
           <Text style={styles.rowTitle}>Best Ratings</Text>
-          <BookRow books={bestRatings} navigation={navigation} />
+          <BookRow books={bestRatings} navigation={navigation} isYellow={true} />
         </View>
         
         <View style={styles.rowContainer}>
@@ -144,43 +146,54 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#080D17',
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
-  },
-  homeScreen: {
-    flexDirection: "column",
+    alignItems: 'center',
+    backgroundColor: "#080D17"
   },
   scrollContent: {
-    paddingBottom: 100, // Espacio para el footer con margen adicional
+    paddingBottom: 100,
+    flexDirection: "column",
+    backgroundColor: "#080D17",
+    alignItems: "center",
   },
   homeHeader: {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    height: 60,
+    height: 80,
+    width: 220,
     marginTop: 10,
+    marginBottom: 20,
+    borderColor: "#FFCB20",
+    borderWidth: 1
+  },
+  homeHeaderBorder: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 80,
+    width: 220,
+    marginTop: 12,
+    marginLeft: 12,
+    borderColor: "#FFCB20",
+    borderWidth: 1
   },
   rowContainer: {
     flexDirection: "column",
     justifyContent: "center",
-    paddingTop: 10,
     paddingLeft: 15,
-    marginTop: 0,
-    height: 200,
-    borderBottomWidth: 2,
-    borderBottomColor: "#FFCB20",
-    borderTopWidth: 0,
-    borderTopColor: "grey"
+    marginTop: 10,
+    height: 190,
   },
   rowTitle: {
     fontFamily: 'Roboto_700Bold',
     fontSize: 16,
-    color: '#000000',
-    paddingBottom: 5,
+    color: '#FFCB20',
+    paddingBottom: 12,
   },
   bookBox: {
     flexDirection: "row",
@@ -188,18 +201,19 @@ const styles = StyleSheet.create({
   },
   headerTitle1: {
     fontFamily: 'Roboto_900Black',
-    fontSize: 24,
-    color: '#FFCB20',
+    fontSize: 26,
+    color: '#FFFFFF',
   },
   headerTitle2: {
     fontFamily: 'Roboto_900Black',
-    fontSize: 24,
-    color: 'grey',
+    fontSize: 26,
+    color: '#FFCB20',
   },
   headersubTitle: {
     fontFamily: 'Roboto_400Regular',
-    fontSize: 12,
-    color: 'grey',
+    paddingTop: 2,
+    fontSize: 13,
+    color: '#FFFFFF',
   },
   footerSpace: {
     height: 60, // Altura del footer
