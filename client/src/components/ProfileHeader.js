@@ -19,7 +19,7 @@ export default function ProfileHeader(props) {
         <View style={styles.headerDivider}/>
         <Text style={[styles.headerText, isFocused('ReadBooks') && styles.headerTextFocused]} onPress={() => navigation.navigate('ReadBooks')}>Read</Text>
         <View style={styles.headerDivider}/>
-        <Text style={[styles.headerText, isFocused('ListsBooks') && styles.headerTextFocused]} onPress={() => navigation.navigate('ListsBooks')}>Lists</Text>
+        <Text style={[styles.headerText, isFocused('ListsNavigation') && styles.headerTextFocused]} onPress={() => navigation.navigate('ListsNavigation')}>Lists</Text>
         <View style={styles.headerDivider}/>
         <Text style={[styles.headerText, isFocused('WishlistBooks') && styles.headerTextFocused]} onPress={() => navigation.navigate('WishlistBooks')}>Next</Text>
       </View>
