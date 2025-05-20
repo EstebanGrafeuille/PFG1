@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const userController = require('../controllers/userController');
 
 // Todas las rutas requieren autenticación
 router.use(auth);
 
-// Ruta de prueba
-router.get('/profile', (req, res) => {
-  res.json({ message: 'Perfil de usuario' });
-});
+// Rutas
+router.get('/:username', userController.getByUsername);
 
 module.exports = router;
