@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfileScreen from "../screens/profile/ProfileScreen";
-import ListsBooksScreen from "../screens/profile/ListsBooksScreen";
 import ReadBooksScreen from "../screens/profile/ReadBooksScreen";
 import WishlistScreen from "../screens/profile/WishlistScreen";
+import ListsNavigation from "./ListsNavigator";
 
 const ProfileNavigation = () => {
 
@@ -11,7 +11,7 @@ const ProfileNavigation = () => {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="ProfileSettings" component={ProfileScreen} />
             <Stack.Screen name="ReadBooks" component={ReadBooksScreen} />
-            <Stack.Screen name="ListsBooks" component={ListsBooksScreen} />
+            <Stack.Screen name="ListsNavigation" component={ListsNavigation} />
             <Stack.Screen name="WishlistBooks" component={WishlistScreen} />
         </Stack.Navigator>
     )

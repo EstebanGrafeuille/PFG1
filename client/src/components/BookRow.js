@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Image, ScrollView, Text, TouchableOpacity } from 'react-native';
 
-export default function BookRow({ books = [], navigation }) {
+export default function BookRow({ books = [], navigation, isYellow }) {
   // Si no hay libros, mostrar un mensaje
   if (!books || books.length === 0) {
     return (
@@ -16,7 +16,7 @@ export default function BookRow({ books = [], navigation }) {
       {books.map((book) => (
         <TouchableOpacity 
           key={book.id} 
-          style={styles.bookContainer}
+          style={isYellow ? styles.bookContainerYellow : styles.bookContainer}
           onPress={() => navigation && navigation.navigate('BookView', { volumeId: book.id })}
         >
           {book.thumbnail ? (
@@ -52,6 +52,17 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: '#eee',
     marginRight: 10,
+    borderWidth: 1,
+  },
+  bookContainerYellow: {
+    width: 90,              
+    height: 140,             
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#eee',
+    marginRight: 10,
+    borderColor: "#FFCB20",
+    borderWidth: 1,
   },
   bookPhoto: {
     width: '100%',

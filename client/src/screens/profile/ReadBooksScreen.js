@@ -5,8 +5,7 @@ import BooksProfileComp from '../../components/BooksProfileComp';
 export default function ReadBooksScreen() {
   return (
     <View style={styles.container}>
-      <ProfileHeader />
-      <Text style={styles.listTitle}>Books You Reed</Text>
+      <ProfileHeader headerTitle="YOUR LIBRARY"/>
       <BooksProfileComp />
     </View>
   );

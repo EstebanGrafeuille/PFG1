@@ -5,8 +5,7 @@ import BooksProfileComp from '../../components/BooksProfileComp';
 export default function WishlistScreen() {
   return (
     <View style={styles.wishlistScreen}>
-      <ProfileHeader />
-      <Text style={styles.listTitle}>Wishlist</Text>
+      <ProfileHeader headerTitle="YOUR NEXT READ"/>
       <BooksProfileComp />
     </View>
   );
