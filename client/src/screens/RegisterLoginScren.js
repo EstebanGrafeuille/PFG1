@@ -1,23 +1,3 @@
-// import { View, Text, Button, StyleSheet } from 'react-native';
-
-// export default function RegisterLoginScreen({ navigation }) {
-//   return (
-//     <View style={styles.container}>
-//       <Text>Login / Registro</Text>
-//       <Button title="Ir al Home" onPress={() => navigation.navigate('MainApp', { screen: 'HomeScreen' })} />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1, 
-//     justifyContent: 'center', 
-//     alignItems: 'center',
-//     backgroundColor: '#f5f5f5'
-//   }
-// });
-
 import {
   StyleSheet,
   Text,
@@ -28,123 +8,99 @@ import {
   Alert
 } from "react-native";
 import { useState, useContext } from "react";
-import authService from '../services/login'
-import {AuthContext} from '../context/AuthContext'
+import authService from '../services/login';
+import { AuthContext } from '../context/AuthContext';
 import asyncStorage from "../services/asyncStorage";
 
 export default function RegisterLoginScreen() {
-  const [nombre, setNombre] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [esLogin, setEsLogin] = useState(false);
 
-
-  const { setAuthData } = useContext(AuthContext)
-
- 
-
-  // const HandleLogin = () => {
-  //     //TODO: Llamar al backend (o al servicio de autenticacion elegido) para obtener el token
-  //     authService.login(email, password)
-  //     .then((authData) => {
-  //         setAuthData(authData)
-  //         console.log("Auth data desde registerLoggin handlelogin: ", typeof authData, authData)
-  //     })
-  //     .catch((error) => {
-  //         alert(error)
-  //     })
-
-  // }
+  const { setAuthData } = useContext(AuthContext);
 
 
+  const HandleLogin = () => {
+      //TODO: Llamar al backend (o al servicio de autenticacion elegido) para obtener el token
+      authService.login(email, password)
+      .then((authData) => {
+          asyncStorage.storeData("authData", authData)
+          setAuthData(authData)
+          console.log("Auth data desde registerLoggin handlelogin: ", typeof authData, authData)
+      })
+      .catch((error) => {
+          alert(error)
+      })
 
-const HandleLogin = async () => {
-  const fakeUser = {
-    name: "Tester",
-    email: email || "tester@mail.com",
-    token: "faketoken12345"
-  };
-
-  try {
-    await asyncStorage.storeData("authData", fakeUser); 
-    setAuthData(fakeUser); 
-    console.log("Login simulado:", fakeUser);
-  } catch (error) {
-    console.log("Error guardando en AsyncStorage:", error);
   }
-};
-
-
 
   const HandleRegister = () => {
-    if (email && password && nombre) {
-      authService.register(email, password, nombre)
+    if (email && password && username) {
+      authService.register(username, email, password)
         .then((authData) => {
           setAuthData(authData);
-          alert(`Bienvenido ${nombre}`);
+          alert(`Bienvenido ${username}`);
         })
         .catch(() => {
-          Alert.alert('','Error al registrar. Por favor, inténtelo de nuevo.');
-          console.log("En registerLoggin")
+          Alert.alert('', 'Error al registrar. Por favor, inténtelo de nuevo.');
+          console.log("En registerLoggin");
         });
     } else {
-      Alert.alert('','Por favor, complete todos los campos.');
+      Alert.alert('', 'Por favor, complete todos los campos.');
     }
   };
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-        <View style={styles.overlay} />
-        <View style={styles.content}>
-          <Text style={styles.title}>Bienvenido</Text>
-          {esLogin && (
-            <TextInput
-              style={styles.input}
-              placeholder="Ingrese su nombre"
-              value={nombre}
-              onChangeText={setNombre}
-              placeholderTextColor={"#ccc"}
-            />
+      <View style={styles.content}>
+        <Text style={styles.title}>BookBox</Text>
+        {esLogin && (
+          <TextInput
+            style={styles.input}
+            placeholder="Nombre"
+            value={username}
+            onChangeText={setUsername}
+            placeholderTextColor="#999"
+          />
+        )}
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          placeholderTextColor="#999"
+          keyboardType="email-address"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Contraseña"
+          value={password}
+          onChangeText={setPassword}
+          placeholderTextColor="#999"
+          secureTextEntry
+        />
+        <View style={styles.buttonContainer}>
+          {!esLogin ? (
+            <TouchableOpacity style={styles.button} onPress={HandleLogin}>
+              <Text style={styles.buttonText}>Iniciar sesión</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.button} onPress={HandleRegister}>
+              <Text style={styles.buttonText}>Crear cuenta</Text>
+            </TouchableOpacity>
           )}
-          <TextInput
-            style={styles.input}
-            placeholder="Ingrese su email"
-            value={email}
-            onChangeText={setEmail}
-            placeholderTextColor={"#ccc"}
-            keyboardType="email-address"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Ingrese su contraseña"
-            value={password}
-            onChangeText={setPassword}
-            placeholderTextColor={"#ccc"}
-            secureTextEntry
-          />
-          <View style={styles.buttonContainer}>
-            {!esLogin ? (
-              <TouchableOpacity style={styles.button} onPress={HandleLogin}>
-                <Text style={styles.buttonText}>Iniciar sesión</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity style={styles.registerButton} onPress={HandleRegister}>
-                <Text style={styles.buttonText}>Crear cuenta</Text>
-              </TouchableOpacity> 
-
-            )}
-            {!esLogin ? (
-              <TouchableOpacity style={styles.registerButton} onPress={() => setEsLogin(true)}>
-                <Text style={styles.buttonText}>Registrarse</Text>
-              </TouchableOpacity> 
-            ) : (
-              <TouchableOpacity style={styles.button} onPress={() => setEsLogin(false)}>
-                <Text style={styles.buttonText}>Ya tengo cuenta</Text>
-              </TouchableOpacity> 
-            )}
-          </View>
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => setEsLogin(!esLogin)}
+          >
+            <Text style={styles.secondaryButtonText}>
+              {esLogin ? "Ya tengo cuenta" : "Registrarse"}
+            </Text>
+          </TouchableOpacity>
         </View>
+      </View>
     </View>
   );
 }
@@ -152,58 +108,57 @@ const HandleLogin = async () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f5f5f5",
     justifyContent: "center",
-  },
-  image: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   content: {
-    flex: 1,
+    paddingHorizontal: 30,
+    paddingVertical: 40,
     justifyContent: "center",
-    paddingHorizontal: 20,
   },
   title: {
-    color: "#fff",
-    fontSize: 40,
+    fontSize: 36,
     fontWeight: "bold",
+    color: "#FFD700",
     textAlign: "center",
     marginBottom: 40,
   },
   input: {
     height: 50,
-    borderColor: "#fff",
+    borderRadius: 8,
+    borderColor: "#DDD",
     borderWidth: 1,
-    borderRadius: 25,
+    backgroundColor: "#fff",
+    paddingHorizontal: 15,
     marginBottom: 20,
-    paddingHorizontal: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    color: "#fff",
+    fontSize: 16,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
   buttonContainer: {
-    marginTop: 20,
+    marginTop: 10,
   },
   button: {
-    backgroundColor: "#1E90FF",
-    padding: 15,
-    borderRadius: 25,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  registerButton: {
-    backgroundColor: "#4CAF50",
-    padding: 15,
-    borderRadius: 25,
+    backgroundColor: "#FFD700",
+    paddingVertical: 15,
+    borderRadius: 8,
     alignItems: "center",
     marginBottom: 10,
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 18,
+    color: "#000",
+    fontSize: 16,
     fontWeight: "bold",
+  },
+  secondaryButton: {
+    alignItems: "center",
+    paddingVertical: 12,
+  },
+  secondaryButtonText: {
+    color: "#333",
+    fontSize: 14,
+    textDecorationLine: "underline",
   },
 });

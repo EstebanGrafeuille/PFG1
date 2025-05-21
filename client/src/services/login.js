@@ -1,9 +1,12 @@
 import asyncStorage from "./asyncStorage.js";
 
-const BASE_URL = "http://192.168.0.9";
+const BASE_URL = "http://192.168.0.9:5000";
 
 const login = (email, password) => {
   return new Promise((resolve, reject) => {
+      console.log("En login");
+      console.log(email, password);
+
     fetch(`${BASE_URL}/api/auth/login/`, {
       method: "POST",
       headers: {
@@ -29,9 +32,9 @@ const login = (email, password) => {
   });
 };
 
-const register = (email, password, name) => {
+const register = (username, email, password) => {
   console.log("En register1");
-  console.log(email, password, name);
+  console.log(email, password, username);
 
   return new Promise((resolve, reject) => {
     fetch(`${BASE_URL}/api/auth/register/`, {
@@ -39,7 +42,7 @@ const register = (email, password, name) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password, name }),
+      body: JSON.stringify({username, email, password}),
     })
       .then((res) => {
         if (res.ok) {
