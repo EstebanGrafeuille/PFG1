@@ -29,6 +29,7 @@ exports.register = async (req, res) => {
     );
 
     res.status(201).json({
+      message: 'Usuario registrado con éxito',
       token,
       user: {
         id: user._id,
@@ -66,6 +67,7 @@ exports.login = async (req, res) => {
     );
 
     res.json({
+      message: 'Inicio de sesión exitoso',
       token,
       user: {
         id: user._id,
