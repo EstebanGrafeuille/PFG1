@@ -2,6 +2,8 @@ const bookService = require("../services/bookService");
 
 class BookController {
 
+
+
   saveBook = async (req, res) => {
     try {
       const book = await bookService.saveBook(req.body);
@@ -14,33 +16,55 @@ class BookController {
     }
   };
 
-  getFavorites = async (req, res) => {
+  getLista = async (req, res) => {
     try {
-      const favorites = await bookService.getFavorites(req.user.id);
-      res.json(favorites);
+      const lista = await bookService.getLista(req.body.userId,req.body.lista);
+      res.json(lista);
     } catch (error) {
       res.status(500).json({
-        message: "Error al obtener favoritos",
+        message: "Error al obtener Lista",
         error: error.message,
       });
     }
   };
 
-  addToFavorites = async (req, res) => {
+  getAllLibros = async (req, res) => {
     try {
-      await bookService.addToFavorites(req.user.id, req.body.bookId);
-      res.status(201).json({ message: "Libro añadido a favoritos" });
+      const lista = await bookService.getAllLibros(req.body.userId);
+      res.status(200).json(lista);
     } catch (error) {
       res.status(500).json({
-        message: "Error al añadir a favoritos",
+        message: "Error al obtener Listas",
         error: error.message,
       });
     }
   };
 
-  removeFromFavorites = async (req, res) => {
+  addLista = async(req,res) =>{
+    try{
+      await bookService.addListaToUser(req.body.userId,req.body.lista);
+    res.status(201).json({message: "lista añadida",lista:req.body.lista})
+    }catch(error){
+      res.status(500).json({message: "error al agregar lista",error: error.message})
+    }
+    
+  }
+
+  addToLista = async (req, res) => {
     try {
-      await bookService.removeFromFavorites(req.user.id, req.params.bookId);
+      await bookService.addLibroToLista(req.body.userId,req.body.lista, req.body.bookId);
+      res.status(201).json({ message: "Libro añadido a lista" });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al añadir a lista",
+        error: error.message,
+      });
+    }
+  };
+
+  removeFromLista = async (req, res) => {
+    try {
+      await bookService.removeFromLista(req.body.userId,req.body.lista, req.body.bookId);
       res.json({ message: "Libro eliminado de favoritos" });
     } catch (error) {
       res.status(500).json({
