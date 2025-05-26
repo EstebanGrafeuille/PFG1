@@ -7,6 +7,8 @@ const userController = require('../controllers/userController');
 router.use(auth);
 
 // Rutas
-router.get('/:username', userController.getByUsername);
+router.get('/:id', userController.getById);
+router.get('/username/:username', userController.getByUsername);;
+router.put('/:id', userController.updateUser);
 
 module.exports = router;
