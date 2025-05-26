@@ -22,6 +22,10 @@ const bookSchema = new mongoose.Schema({
   }
 });
 
+bookSchema.methods.save = async function save(bookSchema) {
+  
+}
+
 const Book = mongoose.model('Book', bookSchema);
 
 module.exports = Book;
