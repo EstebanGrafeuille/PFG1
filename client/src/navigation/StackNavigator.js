@@ -16,11 +16,11 @@
 // export default StackNavigation
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import RegisterLoginScreen from "../screens/RegisterLoginScren";
+import RegisterLoginScreen from '../screens/user/RegisterLoginScren';
 import TabNavigation from "./TabNavigator";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-
+import ForgotPassScreen from "../screens/user/ForgotPassScreen";
 const Stack = createNativeStackNavigator();
 
 const StackNavigation = () => {
@@ -31,7 +31,10 @@ const StackNavigation = () => {
       {authData ? (
         <Stack.Screen name="MainApp" component={TabNavigation} />
       ) : (
+        <>
         <Stack.Screen name="RegisterLogin" component={RegisterLoginScreen} />
+        <Stack.Screen name= "ForgotPass" component = {ForgotPassScreen}/>
+        </>     
       )}
     </Stack.Navigator>
   );

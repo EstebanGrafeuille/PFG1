@@ -8,9 +8,10 @@ import {
   Alert
 } from "react-native";
 import { useState, useContext } from "react";
-import authService from '../services/login';
-import { AuthContext } from '../context/AuthContext';
-import asyncStorage from "../services/asyncStorage";
+import authService from '../../services/login';
+import { AuthContext } from '../../context/AuthContext';
+import asyncStorage from "../../services/asyncStorage";
+import {useNavigation} from '@react-navigation/native'
 
 export default function RegisterLoginScreen() {
   const [username, setUsername] = useState("");
@@ -19,6 +20,7 @@ export default function RegisterLoginScreen() {
   const [esLogin, setEsLogin] = useState(false);
 
   const { setAuthData } = useContext(AuthContext);
+  const navigation = useNavigation()
 
 
   const HandleLogin = () => {
@@ -100,6 +102,14 @@ export default function RegisterLoginScreen() {
             </Text>
           </TouchableOpacity>
         </View>
+          <TouchableOpacity 
+            style = {styles.secondaryButton}
+            onPress={()=> navigation.navigate("ForgotPass")}
+          >
+          <Text style = {styles.secondaryButtonText}>
+              {"Olvidaste tu contraseña?"}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
