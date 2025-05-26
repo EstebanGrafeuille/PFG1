@@ -6,32 +6,25 @@ const userBookSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  book: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Book',
-    required: true
-  },
-  status: {
-    type: String,
-    enum: ['favorite', 'reading', 'read'],
-    required: true
-  },
-  dateAdded: {
-    type: Date,
-    default: Date.now
-  },
-  dateRead: Date,
-  rating: {
-    type: Number,
-    min: 1,
-    max: 5
-  },
-  notes: String
+  listasUser:[String],
+  libros:{
+    googleId: String,
+    listasLibro: [String]
+  }
 });
 
-// Índice compuesto para evitar duplicados
-userBookSchema.index({ user: 1, book: 1, status: 1 }, { unique: true });
+userBookSchema.methods.checkLista = async function checkLista(lista){
+  const found = false;
+  const i = 0;
+  while (found){
+    if(listasUser[i] == lista){
+      found = true;
+      return found;
+    }
+    i++;
+  }
+};
 
-const UserBook = mongoose.model('UserBook', userBookSchema);
 
+const UserBook = mongoose.model('userbook',userBookSchema)
 module.exports = UserBook;
