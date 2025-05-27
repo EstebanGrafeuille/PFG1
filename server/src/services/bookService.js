@@ -142,8 +142,15 @@ class BookService {
       return error.message
     }
   }
-
-
+  async getListas(userId){
+    try{
+      const listas = await UserBook.find({"userId":userId},{"listasUser":1,"_id":0})
+      return listas;
+    }catch(error){
+      return error.message;
+    }
+    
+  }
   
 }
 
