@@ -1,23 +1,97 @@
-import { View, Text, StyleSheet, Button, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, Button, Pressable, Image, TextInput, onChangeText, ScrollView, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import ListBooksRemove from '../../../components/ListBooksRemove';
 
 export default function CreateListScreen(){
 
     const navigation = useNavigation();
+    let listTitle;
 
     return(
-        <View style={styles.createListScreen}>
-            <Text>Create List Screen</Text>
-            <Button title="Go Back" onPress={() => navigation.navigate('ListsBooksScreen')}/>
+        <View style={styles.listDetailScreen}>
+            <View style={styles.listContainer}>
+                <View style={styles.listHeader}>
+                    <Pressable onPress={() => navigation.navigate('ListsBooksScreen')}>
+                        <View style={styles.buttonContainer}>
+                            <Image source={require("../../../../assets/img/back-icon-white.png")} style={styles.icon}/>
+                        </View>
+                    </Pressable>
+                </View>
+                <View style={styles.titleContainer}>
+                        <TextInput
+                            style={styles.title}
+                            onChangeText={onChangeText}
+                            placeholder="Amazing List"
+                            value={listTitle}
+                            />
+                </View>
+                <Text style={styles.author}>by user_name</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('ListsBooksScreen')} style={styles.doneBtn}>
+                    <Text style={styles.btnText}>Done</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    createListScreen: {
+    listDetailScreen: {
         flexDirection: "column",
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
+        justifyContent: "flex-start",
+        alignItems: "center",
+        backgroundColor: "white",
+        flex: 1
+    },
+    listContainer:{
+        flexDirection: "column",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        backgroundColor: "#FFCB20",
+        width: 320,
+        marginTop: 80,
+        borderRadius: 20,
+        height: 420
+    },
+    listHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        width: "90%",
+        height: 65,
+        paddingTop: 20,
+        paddingBottom: 20
+    },
+    title: {
+        fontFamily: 'Roboto_900Black',
+        fontSize: 24,
+        color: '#FFFFFF',
+        paddingBottom: 20
+    },
+    author: {
+        fontFamily: 'Roboto_400Regular',
+        fontSize: 14,
+        color: '#FFFFFF',
+        paddingBottom: 50
+    },
+    buttonContainer: {
+        width: 26
+    },
+    icon: {
+        height: 20,
+        width: 20
+    },
+    doneBtn: {
+        height: 60,
+        width: 200,
+        backgroundColor: "#FFFFFF",
+        borderRadius: 40,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    btnText: {
+        fontFamily: 'Roboto_700Bold',
+        fontSize: 20,
+        color: '#FFCB20',
     }
 })
