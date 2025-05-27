@@ -1,12 +1,13 @@
 import { View, Image, Text, StyleSheet, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 export default function ListComponent(){
 
   const navigation = useNavigation();
+  const route = useRoute();
 
     return(
-        <Pressable onPress={() => navigation.navigate('ListDetailScreen')}>
+        <Pressable onPress={() => navigation.navigate('ListDetailNavigation')}>
             <View style={styles.listContainer}>
                 <View style={styles.listLeft}>
                     <Text style={styles.listTitle}>Literatura Rusa</Text>

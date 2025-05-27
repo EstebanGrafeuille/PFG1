@@ -12,11 +12,16 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
+  Pressable,
+  Alert,
+  Modal
 } from 'react-native';
 // Importaciones actualizadas para la nueva estructura
 import useBookDetails from '../../hooks/useBookDetails';
+import { useState } from 'react';
 import { LoadingIndicator } from '../../components/ui/LoadingIndicator';
+import { useNavigation } from '@react-navigation/native';
 import Colors from '../../constants/colors';
 import Layout from '../../constants/layout';
 import { useBooks } from '../../context/BooksContext';
@@ -39,6 +44,11 @@ const DetailBook = ({ route }) => {
     isFavorite, 
     isInReadingList 
   } = useBooks();
+
+  const navigation = useNavigation();
+
+  const [visible, setVisible] = useState(false);
+  const options = ['Opción 1', 'Opción 2', 'Opción 3'];
 
   if (loading) {
     return <LoadingIndicator fullScreen />;
@@ -79,86 +89,133 @@ const DetailBook = ({ route }) => {
       >
         {/* Cabecera con imagen y datos básicos */}
         <View style={styles.headerContainer}>
-          <View style={styles.imageContainer}>
-            {info.imageLinks?.thumbnail ? (
-              <Image 
-                source={{ uri: info.imageLinks.thumbnail }} 
-                style={styles.bookCover} 
-                resizeMode="cover"
-              />
-            ) : (
-              <View style={styles.noImageContainer}>
-                <Text style={styles.noImageText}>{info.title ? info.title.substring(0, 1) : "?"}</Text>
+          <Pressable onPress={() => navigation.navigate('Home')}>
+              <View style={styles.buttonContainer}>
+                  <Image source={require("../../../assets/img/back-icon-white.png")} style={styles.icon}/>
               </View>
-            )}
-          </View>
-          
+          </Pressable>       
           <View style={styles.headerInfo}>
-            <Text style={styles.title}>{info.title}</Text>
-            {info.authors && (
-              <Text style={styles.authors}>{info.authors.join(', ')}</Text>
-            )}
-            {info.publishedDate && (
-              <Text style={styles.publishedDate}>Publicado: {formatDate(info.publishedDate)}</Text>
-            )}
-            {info.categories && (
-              <View style={styles.categoriesContainer}>
-                {info.categories.map((category, index) => (
-                  <View key={index} style={styles.categoryBadge}>
-                    <Text style={styles.categoryText}>{category}</Text>
-                  </View>
-                ))}
+            <View style={styles.imageContainer}>
+              {info.imageLinks?.thumbnail ? (
+                <Image 
+                  source={{ uri: info.imageLinks.thumbnail }} 
+                  style={styles.bookCover} 
+                  resizeMode="cover"
+                />
+              ) : (
+                <View style={styles.noImageContainer}>
+                  <Text style={styles.noImageText}>{info.title ? info.title.substring(0, 1) : "?"}</Text>
+                </View>
+              )}
+            </View>
+            <View style={styles.headerRight}>
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>{info.title}</Text>
+                {info.authors && (
+                  <Text style={styles.authors}>{info.authors.join(', ')}</Text>
+                )}
               </View>
-            )}
+              {info.publishedDate && (
+                <Text style={styles.publishedDate}>{formatDate(info.publishedDate)}</Text>
+              )}
+              <Image source={require("../../../assets/img/stars-static.png")} style={styles.stars}/>
+              {info.categories && (
+                <View style={styles.categoriesContainer}>
+                  {info.categories.length > 0 && (
+                    <View style={styles.categoryBadge}>
+                      <Text style={styles.categoryText}>{info.categories[0]}</Text>
+                    </View>
+                  )}
+                </View>
+              )}
+            </View>
           </View>
         </View>
         
         {/* Sección de descripción */}
         <View style={styles.infoSection}>
-          <Text style={styles.sectionTitle}>Descripción</Text>
-          {info.description ? (
-            <Text style={styles.description}>{info.description}</Text>
-          ) : (
-            <Text style={styles.noInfo}>No hay descripción disponible</Text>
-          )}
-        </View>
-        
-        {/* Sección de detalles */}
-        <View style={styles.infoSection}>
-          <Text style={styles.sectionTitle}>Detalles</Text>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Editorial:</Text>
-            <Text style={styles.detailValue}>{info.publisher || 'No disponible'}</Text>
+          <View style={styles.buttonRow}>
+              <Pressable onPress={() =>  Alert.alert('Add to Read')} style={styles.rowItemContainer}>
+                  <View style={styles.listButtonContainer}>
+                      <Image source={require("../../../assets/img/wishlist-icon.png")} style={styles.listIcon}/>
+                  </View>
+                  <Text style={styles.iconText}>Read</Text>
+              </Pressable>
+              <Pressable onPress={() => setVisible(true)} style={styles.rowItemContainer}>
+                  <View style={styles.listButtonContainer}>
+                      <Image source={require("../../../assets/img/lists-icon.png")} style={styles.listIcon}/>
+                  </View>
+                  <Text style={styles.iconText}>Lists</Text>
+              </Pressable>
+                  <Modal
+                    transparent={true}
+                    visible={visible}
+                    animationType="fade"
+                    onRequestClose={() => setVisible(false)}
+                  >
+                    <View style={styles.overlay}>
+                      <View style={styles.popup}>
+                        {options.map((opt, index) => (
+                          <TouchableOpacity key={index} onPress={() => {
+                            console.log('Elegiste:', opt);
+                            setVisible(false);
+                          }}>
+                            <Text style={styles.option}>{opt}</Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+                  </Modal>
+              
+              <Pressable onPress={() =>  Alert.alert('Add to Wishlist')} style={styles.rowItemContainer}>
+                  <View style={styles.listButtonContainer}>
+                      <Image source={require("../../../assets/img/read-icon.png")} style={styles.listIcon}/>
+                  </View>
+                  <Text style={styles.iconText}>Next</Text>
+              </Pressable>
           </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Páginas:</Text>
-            <Text style={styles.detailValue}>{info.pageCount || 'No disponible'}</Text>
+          <View style={styles.reviewContainer}>
+              <Pressable onPress={() =>  Alert.alert('Write Review')}>
+                  <View style={styles.reviewButtonContainer}>
+                      <Image source={require("../../../assets/img/review-icon.png")} style={styles.reviewIcon}/>
+                  </View>
+              </Pressable>
+              <Text style={styles.iconText}>Write a Review</Text>
           </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Idioma:</Text>
-            <Text style={styles.detailValue}>{getLanguageName(info.language) || 'No disponible'}</Text>
-          </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>ISBN:</Text>
-            <Text style={styles.detailValue}>
-              {info.industryIdentifiers?.find(id => id.type === 'ISBN_13')?.identifier || 
-               info.industryIdentifiers?.find(id => id.type === 'ISBN_10')?.identifier || 
-               'No disponible'}
-            </Text>
+          <View style={styles.textSection}>
+               <Text style={styles.sectionTitle}>Descripción</Text>
+                {info.description ? (
+                  <Text style={styles.description}>{info.description}</Text>
+                ) : (
+                  <Text style={styles.noInfo}>No hay descripción disponible</Text>
+                )}
+                {/* SECCION de DETALLES */}
+                <Text style={styles.detailsTitle}>Detalles</Text>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Editorial:</Text>
+                    <Text style={styles.detailValue}>{info.publisher || 'No disponible'}</Text>
+                  </View>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Páginas:</Text>
+                    <Text style={styles.detailValue}>{info.pageCount || 'No disponible'}</Text>
+                  </View>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Idioma:</Text>
+                    <Text style={styles.detailValue}>{getLanguageName(info.language) || 'No disponible'}</Text>
+                  </View>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>ISBN:</Text>
+                    <Text style={styles.detailValue}>
+                      {info.industryIdentifiers?.find(id => id.type === 'ISBN_13')?.identifier || 
+                      info.industryIdentifiers?.find(id => id.type === 'ISBN_10')?.identifier || 
+                      'No disponible'}
+                    </Text>
+                  </View>
           </View>
         </View>
         
         <View style={styles.bottomSpace} />
       </ScrollView>
-      
-      {/* Botón flotante para añadir a listas */}
-      <TouchableOpacity 
-        style={styles.floatingButton} 
-        activeOpacity={0.8}
-        onPress={handleAddBook}
-      >
-        <Text style={styles.floatingButtonText}>+</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -169,7 +226,7 @@ const DetailBook = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.BACKGROUND,
+    backgroundColor: "#080D17",
   },
   scrollView: {
     flex: 1,
@@ -179,6 +236,9 @@ const styles = StyleSheet.create({
   },
   bottomSpace: {
     height: 80,
+    backgroundColor: "#FFFFFF",
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20
   },
   errorContainer: {
     flex: 1,
@@ -192,16 +252,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   headerContainer: {
-    flexDirection: 'row',
-    padding: Layout.SPACING.L,
-    backgroundColor: '#f9f9f9',
-    borderBottomWidth: 2,
-    borderBottomColor: Colors.PRIMARY,
+    flexDirection: 'column',
   },
   imageContainer: {
-    width: 120,
-    height: 180,
-    borderRadius: Layout.BORDER_RADIUS.M,
+    width: 115,
+    height: 160,
     overflow: 'hidden',
     backgroundColor: Colors.PLACEHOLDER,
     elevation: 3,
@@ -209,10 +264,18 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
+    borderRadius: 10,
+    borderColor: "#FFCB20",
+    borderRightWidth: 3,
+    borderBottomWidth: 3,
+    marginLeft: 30,
+    marginBottom: 20,
+    marginTop: "auto"
   },
   bookCover: {
     width: '100%',
     height: '100%',
+    borderRadius: 5
   },
   noImageContainer: {
     width: '100%',
@@ -226,31 +289,53 @@ const styles = StyleSheet.create({
     fontWeight: Layout.FONT_WEIGHT.BOLD,
     color: Colors.WHITE,
   },
+  buttonContainer: {
+    height: 16,
+    width: 16,
+    marginLeft: 20,
+    marginTop: 5,
+    marginBottom: 20
+  },
+  icon: {
+    height: "100%",
+    width: "100%"
+  },
   headerInfo: {
-    flex: 1,
-    marginLeft: Layout.SPACING.L,
-    justifyContent: 'center',
+    flexDirection: "row",
+    height: 200
+  },
+  headerRight: {
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    marginLeft: 20,
   },
   title: {
-    fontSize: Layout.FONT_SIZE.XL,
-    fontWeight: Layout.FONT_WEIGHT.BLACK,
-    color: Colors.TEXT_PRIMARY,
-    marginBottom: Layout.SPACING.M,
+    fontFamily: 'Roboto_900Black',
+    fontSize: 24,
+    color: '#FFFFFF',
+    marginBottom: 2
   },
   authors: {
-    fontSize: Layout.FONT_SIZE.M,
-    color: Colors.TEXT_SECONDARY,
-    marginBottom: Layout.SPACING.M,
+    fontFamily: 'Roboto_200ExtraLight',
+    fontSize: 15,
+    color: '#FFFFFF',
+    marginBottom: 2
   },
   publishedDate: {
-    fontSize: Layout.FONT_SIZE.S,
-    color: Colors.TEXT_TERTIARY,
-    marginBottom: Layout.SPACING.M,
+    fontFamily: 'Roboto_200ExtraLight',
+    fontSize: 12,
+    color: '#D2D2D2',
+    marginBottom: 20
+  },
+  stars: {
+    height: 20,
+    width: 144,
+    marginBottom: 10
   },
   categoriesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: Layout.SPACING.XS,
+    marginBottom: 20
   },
   categoryBadge: {
     backgroundColor: Colors.PRIMARY,
@@ -265,15 +350,54 @@ const styles = StyleSheet.create({
     color: Colors.TEXT_PRIMARY,
   },
   infoSection: {
-    padding: Layout.SPACING.L,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.BORDER,
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    height: 120,
+    alignItems: "center"
+  },
+  listButtonContainer: {
+    height: 32,
+    width: 32,
+  },
+  listIcon: {
+    height: "100%",
+    width: "100%"
+  },
+  reviewContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    height: 50,
+    alignItems: "center"
+  },
+  reviewButtonContainer: {
+    height: 46,
+    width: 270
+  },
+  reviewIcon: {
+    height: "100%",
+    width: "100%"
+  },
+  textSection: {
+    marginTop: 40,
+    paddingHorizontal: 20
   },
   sectionTitle: {
     fontSize: Layout.FONT_SIZE.L,
     fontWeight: Layout.FONT_WEIGHT.BOLD,
     color: Colors.TEXT_PRIMARY,
     marginBottom: Layout.SPACING.M,
+  },
+  detailsTitle: {
+    fontSize: Layout.FONT_SIZE.L,
+    fontWeight: Layout.FONT_WEIGHT.BOLD,
+    color: Colors.TEXT_PRIMARY,
+    marginBottom: Layout.SPACING.M,
+    marginTop: 30
   },
   description: {
     fontSize: Layout.FONT_SIZE.M,
@@ -321,6 +445,36 @@ const styles = StyleSheet.create({
     fontWeight: Layout.FONT_WEIGHT.BOLD,
     color: Colors.WHITE,
   },
+  titleContainer: {
+    width: 230,    
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)'
+  },
+  popup: {
+    backgroundColor: 'white',
+    marginHorizontal: 50,
+    padding: 20,
+    borderRadius: 10
+  },
+  option: {
+    fontFamily: 'Roboto_400Regular',
+    fontSize: 18,
+    marginVertical: 10,
+    textAlign: 'center'
+  },
+  rowItemContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  iconText: {
+    fontFamily: 'Roboto_200ExtraLight',
+    fontSize: 12,
+    marginTop: 5
+  }
 });
 
 export default DetailBook;

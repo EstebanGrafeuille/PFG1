@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, Button, Pressable, Image, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, Button, Pressable, Image, Alert,ScrollView, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import BooksProfileComp from "../../../components/BooksProfileComp"
+import ListBooksRemove from '../../../components/ListBooksRemove';
 
-export default function ListDetailScreen(){
+export default function EditListScreen(){
 
     const navigation = useNavigation();
 
@@ -10,7 +10,7 @@ export default function ListDetailScreen(){
         <View style={styles.listDetailScreen}>
             <View style={styles.listContainer}>
                 <View style={styles.listHeader}>
-                    <Pressable onPress={() => navigation.navigate('ListsBooksScreen')}>
+                    <Pressable onPress={() => navigation.navigate('ListDetailScreen')}>
                         <View style={styles.buttonContainer}>
                             <Image source={require("../../../../assets/img/back-icon-grey.png")} style={styles.icon}/>
                         </View>
@@ -18,14 +18,17 @@ export default function ListDetailScreen(){
                     <View style={styles.titleContainer}>
                         <Text style={styles.title}>Literatura Rusa</Text>
                     </View>
-                    <Pressable onPress={() => navigation.navigate('EditListScreen')}>
+                    <Pressable onPress={() =>  Alert.alert('You want to delete List?')}>
                         <View style={styles.buttonContainer}>
-                            <Image source={require("../../../../assets/img/edit-icon-yellow.png")} style={styles.icon}/>
+                            <Image source={require("../../../../assets/img/trash-icon-grey.png")} style={styles.icon}/>
                         </View>
                     </Pressable>
                 </View>
                 <Text style={styles.author}>by user_name</Text>
-                <BooksProfileComp />
+                <TouchableOpacity onPress={() => navigation.navigate('ListsBooksScreen')} style={styles.doneBtn}>
+                    <Text style={styles.btnText}>Done</Text>
+                </TouchableOpacity>
+                <ListBooksRemove />
             </View>
         </View>
     )
@@ -52,7 +55,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         width: 360,
-        height: 50,
+        height: 80,
         marginTop: 20,
     },
     title: {
@@ -64,9 +67,26 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto_200ExtraLight',
         fontSize: 13,
         color: '#919191',
+        marginBottom: 50,
+        marginTop: 15
     },
     icon: {
         height: 26,
         width: 26
     },
+    doneBtn: {
+        height: 42,
+        width: 130,
+        backgroundColor: "#FFCB20",
+        borderRadius: 40,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 100
+    },
+    btnText: {
+        fontFamily: 'Roboto_700Bold',
+        fontSize: 20,
+        color: '#FFFFFF',
+    }
 })

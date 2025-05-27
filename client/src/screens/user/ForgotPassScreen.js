@@ -85,7 +85,7 @@ export default function ForgotPassScreen() {
                 ) : (
                     <>
                     <Text style = {styles.infoText}>
-                        Por favor ingresa tu correo electronico registrado para que podamos enviarte un codigo de verificación
+                        Por favor ingresa tu correo registrado para que podamos enviarte un codigo de verificación
                     </Text>
                                         <TextInput
                         style={styles.input}
@@ -115,7 +115,7 @@ export default function ForgotPassScreen() {
                         onPress={() => setHaveCode(!haveCode)}
                     >
                         <Text style={styles.secondaryButtonText}>
-                            {haveCode ? "Volver a pedir codigo" : "Ya tengo un codigo"}
+                            {haveCode && ( "Volver a pedir codigo" )}
                         </Text>
                     </TouchableOpacity>
                 </View>
