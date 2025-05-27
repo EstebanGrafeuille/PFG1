@@ -14,10 +14,12 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Pressable,
-  Alert
+  Alert,
+  Modal
 } from 'react-native';
 // Importaciones actualizadas para la nueva estructura
 import useBookDetails from '../../hooks/useBookDetails';
+import { useState } from 'react';
 import { LoadingIndicator } from '../../components/ui/LoadingIndicator';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../constants/colors';
@@ -44,6 +46,9 @@ const DetailBook = ({ route }) => {
   } = useBooks();
 
   const navigation = useNavigation();
+
+  const [visible, setVisible] = useState(false);
+  const options = ['Opción 1', 'Opción 2', 'Opción 3'];
 
   if (loading) {
     return <LoadingIndicator fullScreen />;
@@ -130,20 +135,43 @@ const DetailBook = ({ route }) => {
         {/* Sección de descripción */}
         <View style={styles.infoSection}>
           <View style={styles.buttonRow}>
-              <Pressable onPress={() =>  Alert.alert('Add to Read')}>
+              <Pressable onPress={() =>  Alert.alert('Add to Read')} style={styles.rowItemContainer}>
                   <View style={styles.listButtonContainer}>
                       <Image source={require("../../../assets/img/wishlist-icon.png")} style={styles.listIcon}/>
                   </View>
+                  <Text style={styles.iconText}>Read</Text>
               </Pressable>
-              <Pressable onPress={handleAddBook}>
+              <Pressable onPress={() => setVisible(true)} style={styles.rowItemContainer}>
                   <View style={styles.listButtonContainer}>
                       <Image source={require("../../../assets/img/lists-icon.png")} style={styles.listIcon}/>
                   </View>
+                  <Text style={styles.iconText}>Lists</Text>
               </Pressable>
-              <Pressable onPress={() =>  Alert.alert('Add to Wishlist')}>
+                  <Modal
+                    transparent={true}
+                    visible={visible}
+                    animationType="fade"
+                    onRequestClose={() => setVisible(false)}
+                  >
+                    <View style={styles.overlay}>
+                      <View style={styles.popup}>
+                        {options.map((opt, index) => (
+                          <TouchableOpacity key={index} onPress={() => {
+                            console.log('Elegiste:', opt);
+                            setVisible(false);
+                          }}>
+                            <Text style={styles.option}>{opt}</Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+                  </Modal>
+              
+              <Pressable onPress={() =>  Alert.alert('Add to Wishlist')} style={styles.rowItemContainer}>
                   <View style={styles.listButtonContainer}>
                       <Image source={require("../../../assets/img/read-icon.png")} style={styles.listIcon}/>
                   </View>
+                  <Text style={styles.iconText}>Next</Text>
               </Pressable>
           </View>
           <View style={styles.reviewContainer}>
@@ -152,6 +180,7 @@ const DetailBook = ({ route }) => {
                       <Image source={require("../../../assets/img/review-icon.png")} style={styles.reviewIcon}/>
                   </View>
               </Pressable>
+              <Text style={styles.iconText}>Write a Review</Text>
           </View>
           <View style={styles.textSection}>
                <Text style={styles.sectionTitle}>Descripción</Text>
@@ -340,9 +369,9 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   reviewContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    height: 40,
+    flexDirection: "column",
+    justifyContent: "center",
+    height: 50,
     alignItems: "center"
   },
   reviewButtonContainer: {
@@ -418,6 +447,33 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     width: 230,    
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)'
+  },
+  popup: {
+    backgroundColor: 'white',
+    marginHorizontal: 50,
+    padding: 20,
+    borderRadius: 10
+  },
+  option: {
+    fontFamily: 'Roboto_400Regular',
+    fontSize: 18,
+    marginVertical: 10,
+    textAlign: 'center'
+  },
+  rowItemContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  iconText: {
+    fontFamily: 'Roboto_200ExtraLight',
+    fontSize: 12,
+    marginTop: 5
   }
 });
 
