@@ -73,6 +73,17 @@ class BookController {
       });
     }
   };
+  getListas = async (req,res) =>{
+    try{
+      const libros = await bookService.getListas(req.body.userId);
+      res.status(200).json(libros)
+    }catch(error){
+      res.status(500).json({
+        message: "Error traer libros de la lista",
+        error: error.message,
+      });
+    }
+  }
 }
 
 module.exports = new BookController();
