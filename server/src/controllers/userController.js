@@ -33,6 +33,22 @@ class UserController {
       res.status(400).send({ success: false, message: error.message });
     }
   };
+
+  updateImage = async (req, res) => {
+   try {
+     const userId = req.params.id;
+     if (!req.file || !req.file.path) {
+       return res.status(400).json({ message: 'No se subió ninguna imagen' });
+     }
+
+     const imageUrl = req.file.path;
+     const user = await userService.updateImage(userId, imageUrl);
+     res.json({ message: 'Imagen actualizada', user });
+   } catch (error) {
+     res.status(500).json({ message: 'Error al actualizar imagen', error: error.message });
+   }
+  }
 }
+
 
 module.exports = new UserController();

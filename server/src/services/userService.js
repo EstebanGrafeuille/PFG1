@@ -36,6 +36,16 @@ class UserService {
    if (!user) throw new Error("Usuario no encontrado");
    return user;
   }
+
+  async updateImage(userId, imageUrl) {
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { image: imageUrl },
+    { new: true }
+  );
+  if (!user) throw new Error("Usuario no encontrado");
+  return user;
+}
 }
 
 module.exports = new UserService(); 
