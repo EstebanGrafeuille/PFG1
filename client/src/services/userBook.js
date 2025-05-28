@@ -70,7 +70,29 @@ const addToLista = async (userId, lista, bookId, token) => {
   }
 };
 
+const getLista = async (userId, list, token) => {
+  try {
+    const response = await fetch(`http://localhost:5000/api/books/getLista?userId=${userId}&list=${list}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("No se pudo obtener la Lista");
+    }
+
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 export default {
-  addLista, getListas, addToLista
+  addLista, getListas, addToLista, getLista
 };
