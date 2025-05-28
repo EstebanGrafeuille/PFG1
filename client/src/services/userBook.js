@@ -23,7 +23,6 @@ const addLista = async (userId, lista, token) => {
 };
 
 const getListas = async (userId, token) => {
-  console.log("Este es el ID desde services / userBook.js: " + userId)
   try {
     const response = await fetch(`http://localhost:5000/api/books/getListas?userId=${userId}`, {
       method: 'GET',
@@ -38,10 +37,32 @@ const getListas = async (userId, token) => {
     }
 
     const data = await response.json();
+    return data;
 
+  } catch (error) {
+    throw error;
+  }
+};
+
+const addToLista = async (userId, lista, bookId, token) => {
+  console.log(userId, lista, bookId, token)
+  try {
+    const response = await fetch(`http://localhost:5000/api/books/addLibroToLista`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+      },
+      body: JSON.stringify({ userId, lista, bookId })
+    });
+
+    if (!response.ok) {
+      throw new Error("No se pudo agregar Libro a la lista");
+    }
+
+    const data = await response.json();
     console.log(data)
-
-    //return await response.json();
     return data;
 
   } catch (error) {
@@ -51,5 +72,5 @@ const getListas = async (userId, token) => {
 
 
 export default {
-  addLista, getListas
+  addLista, getListas, addToLista
 };

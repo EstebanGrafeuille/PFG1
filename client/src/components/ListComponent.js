@@ -4,7 +4,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 export default function ListComponent({title}){
 
   const navigation = useNavigation();
-  const route = useRoute();
 
     return(
         <Pressable onPress={() => navigation.navigate('ListDetailNavigation')}>

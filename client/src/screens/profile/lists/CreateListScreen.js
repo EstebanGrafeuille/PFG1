@@ -1,8 +1,5 @@
 import { View, Text, StyleSheet, Button, Pressable, Image, TextInput, onChangeText, ScrollView, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ProfileHeader from '../../../components/ProfileHeader';
-import ListComponent from '../../../components/ListComponent';
-import NewListComponent from '../../../components/NewListComponent';
 import React, { useEffect, useState, useContext } from "react";
 import userBookService from "../../../services/userBook";
 import { AuthContext } from "../../../context/AuthContext";
@@ -10,11 +7,9 @@ import { AuthContext } from "../../../context/AuthContext";
 export default function CreateListScreen(){
 
     const [newListName, setNewListName] = useState("");
-    const [listas, setListas] = useState([]);
     const { authData } = useContext(AuthContext);
 
     const navigation = useNavigation();
-    let listTitle;
 
     const handleCreateList = async () => {
         try {

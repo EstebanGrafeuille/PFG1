@@ -19,13 +19,15 @@ import {
 } from 'react-native';
 // Importaciones actualizadas para la nueva estructura
 import useBookDetails from '../../hooks/useBookDetails';
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { LoadingIndicator } from '../../components/ui/LoadingIndicator';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../constants/colors';
 import Layout from '../../constants/layout';
 import { useBooks } from '../../context/BooksContext';
 import { formatDate, getLanguageName } from '../../utils/helpers';
+import userBookService from "../../services/userBook"
+import { AuthContext } from "../../context/AuthContext";
 
 /**
  * Pantalla de detalles de libro
@@ -46,9 +48,25 @@ const DetailBook = ({ route }) => {
   } = useBooks();
 
   const navigation = useNavigation();
-
   const [visible, setVisible] = useState(false);
-  const options = ['Opción 1', 'Opción 2', 'Opción 3'];
+
+  const [listas, setListas] = useState([]);
+    const { authData } = useContext(AuthContext);
+  
+  const fetchListas = async () => {
+    try {
+      const userBook = await userBookService.getListas(authData.user.id, authData.token);
+      setListas((userBook[0] && userBook[0].listasUser) || []);
+    } catch (error) {
+      console.error("Error al obtener listas:", error.message);
+    }
+  };
+  
+    useEffect(() => {
+      fetchListas();
+    }, []);
+
+      const options = listas;
 
   if (loading) {
     return <LoadingIndicator fullScreen />;
@@ -76,10 +94,18 @@ const DetailBook = ({ route }) => {
   };
 
   // Manejar añadir a favoritos o lista de lectura
-  const handleAddBook = () => {
-    // Aquí se podría mostrar un modal con opciones
-    addToReadingList(bookData);
-  };
+  const handleAddBook = async (listName) => {
+  try {
+    await userBookService.addToLista(
+      authData.user.id,
+      listName,
+      bookData.id,
+      authData.token
+    );
+  } catch (error) {
+    console.error("Error al agregar a lista:", error.message);
+  }
+};
   
   return (
     <SafeAreaView style={styles.container}>
@@ -147,6 +173,7 @@ const DetailBook = ({ route }) => {
                   </View>
                   <Text style={styles.iconText}>Lists</Text>
               </Pressable>
+              {/*
                   <Modal
                     transparent={true}
                     visible={visible}
@@ -166,7 +193,29 @@ const DetailBook = ({ route }) => {
                       </View>
                     </View>
                   </Modal>
-              
+                */}
+                <Modal
+                    transparent={true}
+                    visible={visible}
+                    animationType="fade"
+                    onRequestClose={() => setVisible(false)}
+                  >
+                    <View style={styles.overlay}>
+                      <View style={styles.popup}>
+                        {options.map((opt, index) => (
+                          <TouchableOpacity
+                            key={index}
+                            onPress={() => {
+                              handleAddBook(opt); // ← Llama la función con el nombre de la lista
+                              setVisible(false);    // ← Cierra el modal
+                            }}
+                          >
+                            <Text style={styles.option}>{opt}</Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+                  </Modal>
               <Pressable onPress={() =>  Alert.alert('Add to Wishlist')} style={styles.rowItemContainer}>
                   <View style={styles.listButtonContainer}>
                       <Image source={require("../../../assets/img/read-icon.png")} style={styles.listIcon}/>

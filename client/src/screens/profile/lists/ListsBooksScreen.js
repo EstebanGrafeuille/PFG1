@@ -6,8 +6,7 @@ import { View, TextInput, Button, FlatList, Text, StyleSheet, ScrollView } from 
 import userBookService from "../../../services/userBook";
 import { AuthContext } from "../../../context/AuthContext";
 
-const ListsBooksScreen = ({ userId, token }) => {
-  const [newListName, setNewListName] = useState("");
+const ListsBooksScreen = () => {
   const [listas, setListas] = useState([]);
   const { authData } = useContext(AuthContext);
 
@@ -19,16 +18,6 @@ const ListsBooksScreen = ({ userId, token }) => {
       console.error("Error al obtener listas:", error.message);
     }
   };
-
-  // const handleCreateList = async () => {
-  //   try {
-  //     await userBookService.addLista(authData.user.id, newListName, authData.token);
-  //     setNewListName("");
-  //     fetchListas();
-  //   } catch (error) {
-  //     console.error("Error al crear lista:", error.message);
-  //   }
-  // };
 
   useEffect(() => {
     fetchListas();
