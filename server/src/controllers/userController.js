@@ -1,7 +1,6 @@
 const userService = require("../services/userService.js");
 
 class UserController {
-
   getByUsername = async (req, res) => {
     try {
       const { username } = req.params;
@@ -22,7 +21,6 @@ class UserController {
     }
   };
 
-  
   updateUser = async (req, res) => {
     try {
       const { id } = req.params;

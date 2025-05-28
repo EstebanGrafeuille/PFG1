@@ -1,12 +1,12 @@
 /**
  * Componente de barra de búsqueda reutilizable
- * 
+ *
  * @module components/ui/SearchBar
  */
-import React from 'react';
-import { TextInput, StyleSheet } from 'react-native';
-import Colors from '../../constants/colors';
-import Layout from '../../constants/layout';
+import React from "react";
+import { TextInput, StyleSheet } from "react-native";
+import Colors from "../../constants/colors";
+import Layout from "../../constants/layout";
 
 // Comentario para desarrolladores:
 // TODO: Cuando se complete la migración, actualizar las importaciones a:
@@ -22,12 +22,7 @@ import Layout from '../../constants/layout';
  * @param {string} [props.placeholder="Buscar libros..."] - Texto de placeholder
  * @returns {JSX.Element} - Componente de barra de búsqueda
  */
-const SearchBar = ({ 
-  value, 
-  onChangeText, 
-  onSubmit,
-  placeholder = "Buscar libros..." 
-}) => (
+const SearchBar = ({ value, onChangeText, onSubmit, placeholder = "Buscar libros..." }) => (
   <TextInput
     style={styles.input}
     placeholder={placeholder}

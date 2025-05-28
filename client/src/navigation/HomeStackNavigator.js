@@ -1,6 +1,6 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from '../screens/HomeScreen';
-import DetailBook from '../screens/searchScreens/DetailBookScreen';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import HomeScreen from "../screens/HomeScreen";
+import DetailBook from "../screens/searchScreens/DetailBookScreen";
 
 const HomeStack = createNativeStackNavigator();
 
@@ -8,10 +8,7 @@ const HomeStack = createNativeStackNavigator();
 const HomeStackNavigator = () => (
   <HomeStack.Navigator screenOptions={{ headerShown: false }}>
     <HomeStack.Screen name="Home" component={HomeScreen} />
-    <HomeStack.Screen
-      name="BookView"
-      component={DetailBook}
-    />
+    <HomeStack.Screen name="BookView" component={DetailBook} />
   </HomeStack.Navigator>
 );
 

@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
-import ProfileHeader from '../../components/ProfileHeader';
-import BooksProfileComp from '../../components/BooksProfileComp';
+import { View, Text, StyleSheet, Image } from "react-native";
+import ProfileHeader from "../../components/ProfileHeader";
+import BooksProfileComp from "../../components/BooksProfileComp";
 
 export default function WishlistScreen() {
   return (
     <View style={styles.wishlistScreen}>
-      <ProfileHeader headerTitle="YOUR NEXT READ"/>
+      <ProfileHeader headerTitle="YOUR NEXT READ" />
       <BooksProfileComp />
     </View>
   );
@@ -14,14 +14,14 @@ export default function WishlistScreen() {
 const styles = StyleSheet.create({
   wishlistScreen: {
     flexDirection: "column",
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
     flex: 1
   },
   listTitle: {
     paddingTop: 20,
-    fontFamily: 'Roboto_900Black',
+    fontFamily: "Roboto_900Black",
     fontSize: 18,
-    color: '#333',
-  },
-})
+    color: "#333"
+  }
+});

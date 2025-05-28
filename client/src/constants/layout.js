@@ -1,6 +1,6 @@
 /**
  * Constantes de layout para la aplicación
- * 
+ *
  * @module constants/layout
  */
 export default {
@@ -15,7 +15,7 @@ export default {
     XL: 20,
     XXL: 24
   },
-  
+
   /**
    * Radios de borde para elementos UI
    */
@@ -27,7 +27,7 @@ export default {
     XL: 16,
     ROUND: 50
   },
-  
+
   /**
    * Tamaños de fuente
    */
@@ -39,15 +39,15 @@ export default {
     XL: 18,
     XXL: 24
   },
-  
+
   /**
    * Pesos de fuente
    */
   FONT_WEIGHT: {
-    REGULAR: '400',
-    MEDIUM: '500',
-    SEMI_BOLD: '600',
-    BOLD: '700',
-    BLACK: '900'
+    REGULAR: "400",
+    MEDIUM: "500",
+    SEMI_BOLD: "600",
+    BOLD: "700",
+    BLACK: "900"
   }
 };

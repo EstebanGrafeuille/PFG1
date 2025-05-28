@@ -8,10 +8,10 @@ import {
   Alert
 } from "react-native";
 import { useState, useContext } from "react";
-import authService from '../../services/login';
-import { AuthContext } from '../../context/AuthContext';
+import authService from "../../services/login";
+import { AuthContext } from "../../context/AuthContext";
 import asyncStorage from "../../services/asyncStorage";
-import {useNavigation} from '@react-navigation/native'
+import { useNavigation } from "@react-navigation/native";
 
 export default function RegisterLoginScreen() {
   const [username, setUsername] = useState("");
@@ -20,36 +20,36 @@ export default function RegisterLoginScreen() {
   const [esLogin, setEsLogin] = useState(false);
 
   const { setAuthData } = useContext(AuthContext);
-  const navigation = useNavigation()
-
+  const navigation = useNavigation();
 
   const HandleLogin = () => {
-      //TODO: Llamar al backend (o al servicio de autenticacion elegido) para obtener el token
-      authService.login(email, password)
+    //TODO: Llamar al backend (o al servicio de autenticacion elegido) para obtener el token
+    authService
+      .login(email, password)
       .then((authData) => {
-          asyncStorage.storeData("authData", authData)
-          setAuthData(authData)
-          console.log("Auth data desde registerLoggin handlelogin: ", typeof authData, authData)
+        asyncStorage.storeData("authData", authData);
+        setAuthData(authData);
+        console.log("Auth data desde registerLoggin handlelogin: ", typeof authData, authData);
       })
       .catch((error) => {
-          alert(error)
-      })
-
-  }
+        alert(error);
+      });
+  };
 
   const HandleRegister = () => {
     if (email && password && username) {
-      authService.register(username, email, password)
+      authService
+        .register(username, email, password)
         .then((authData) => {
           setAuthData(authData);
           alert(`Bienvenido ${username}`);
         })
         .catch(() => {
-          Alert.alert('', 'Error al registrar. Por favor, inténtelo de nuevo.');
+          Alert.alert("", "Error al registrar. Por favor, inténtelo de nuevo.");
           console.log("En registerLoggin");
         });
     } else {
-      Alert.alert('', 'Por favor, complete todos los campos.');
+      Alert.alert("", "Por favor, complete todos los campos.");
     }
   };
 
@@ -93,22 +93,17 @@ export default function RegisterLoginScreen() {
               <Text style={styles.buttonText}>Crear cuenta</Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            style={styles.secondaryButton}
-            onPress={() => setEsLogin(!esLogin)}
-          >
+          <TouchableOpacity style={styles.secondaryButton} onPress={() => setEsLogin(!esLogin)}>
             <Text style={styles.secondaryButtonText}>
               {esLogin ? "Ya tengo cuenta" : "Registrarse"}
             </Text>
           </TouchableOpacity>
         </View>
-          <TouchableOpacity 
-            style = {styles.secondaryButton}
-            onPress={()=> navigation.navigate("ForgotPass")}
-          >
-          <Text style = {styles.secondaryButtonText}>
-              {"Olvidaste tu contraseña?"}
-          </Text>
+        <TouchableOpacity
+          style={styles.secondaryButton}
+          onPress={() => navigation.navigate("ForgotPass")}
+        >
+          <Text style={styles.secondaryButtonText}>{"Olvidaste tu contraseña?"}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -119,19 +114,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f5f5f5",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   content: {
     paddingHorizontal: 30,
     paddingVertical: 40,
-    justifyContent: "center",
+    justifyContent: "center"
   },
   title: {
     fontSize: 36,
     fontWeight: "bold",
     color: "#FFD700",
     textAlign: "center",
-    marginBottom: 40,
+    marginBottom: 40
   },
   input: {
     height: 50,
@@ -145,30 +140,30 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    shadowRadius: 4
   },
   buttonContainer: {
-    marginTop: 10,
+    marginTop: 10
   },
   button: {
     backgroundColor: "#FFD700",
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 10
   },
   buttonText: {
     color: "#000",
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "bold"
   },
   secondaryButton: {
     alignItems: "center",
-    paddingVertical: 12,
+    paddingVertical: 12
   },
   secondaryButtonText: {
     color: "#333",
     fontSize: 14,
-    textDecorationLine: "underline",
-  },
+    textDecorationLine: "underline"
+  }
 });

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const bookSchema = new mongoose.Schema({
   googleId: {
@@ -22,10 +22,8 @@ const bookSchema = new mongoose.Schema({
   }
 });
 
-bookSchema.methods.save = async function save(bookSchema) {
-  
-}
+bookSchema.methods.save = async function save(bookSchema) {};
 
-const Book = mongoose.model('Book', bookSchema);
+const Book = mongoose.model("Book", bookSchema);
 
 module.exports = Book;

@@ -5,7 +5,7 @@ class UserService {
     const user = await User.findOne({ username }).select("username email");
     if (!user) throw new Error("Usuario no encontrado");
     return user;
-  };
+  }
 
   async getById(id) {
     const user = await User.findById(id).select("username email");
@@ -16,26 +16,26 @@ class UserService {
   async updateUser(id, updateData) {
     const { username, email } = updateData;
 
-   // Verificar si el nuevo username o email ya existen en otro usuario
+    // Verificar si el nuevo username o email ya existen en otro usuario
     const existingUser = await User.findOne({
-     $or: [{ username }, { email }],
-     _id: { $ne: id } // Excluir al usuario actual
-   });
+      $or: [{ username }, { email }],
+      _id: { $ne: id } // Excluir al usuario actual
+    });
 
     if (existingUser) {
-     throw new Error("El nombre de usuario o email ya está en uso");
-   }
+      throw new Error("El nombre de usuario o email ya está en uso");
+    }
 
-   // Actualizar y devolver el usuario
-   const user = await User.findByIdAndUpdate(
-     id,
-     { username, email },
-     { new: true, runValidators: true }
-   ).select("username email");
+    // Actualizar y devolver el usuario
+    const user = await User.findByIdAndUpdate(
+      id,
+      { username, email },
+      { new: true, runValidators: true }
+    ).select("username email");
 
-   if (!user) throw new Error("Usuario no encontrado");
-   return user;
+    if (!user) throw new Error("Usuario no encontrado");
+    return user;
   }
 }
 
-module.exports = new UserService(); 
+module.exports = new UserService();

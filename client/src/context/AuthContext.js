@@ -34,7 +34,7 @@
 // };
 
 import { createContext, useState, useEffect } from "react";
-import AsyncStorage from '../services/asyncStorage'; // si usás almacenamiento local
+import AsyncStorage from "../services/asyncStorage"; // si usás almacenamiento local
 import { Text } from "react-native";
 
 export const AuthContext = createContext(null);
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Simulación de carga o recuperar sesión
     AsyncStorage.getData("authData").then((data) => {
-      console.log("Encontro algo?")
+      console.log("Encontro algo?");
       if (data) setAuthData(data);
       setLoading(false);
     });
@@ -54,10 +54,5 @@ export const AuthProvider = ({ children }) => {
 
   if (loading) return <Text>Cargando...</Text>; // Este return sí es válido
 
-  return (
-    <AuthContext.Provider value={{ authData, setAuthData }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ authData, setAuthData }}>{children}</AuthContext.Provider>;
 };
-

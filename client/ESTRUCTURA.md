@@ -67,6 +67,7 @@ Los componentes siguen un patrón de diseño funcional y se dividen en:
 ### Llamadas a API
 
 Las llamadas a API están centralizadas en servicios específicos para facilitar:
+
 - Reutilización de código
 - Manejo de errores consistente
 - Transformación de datos

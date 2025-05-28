@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import Notification from '../components/Notification';
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import Notification from "../components/Notification";
 
 export default function SocialScreen() {
   return (
@@ -9,18 +9,17 @@ export default function SocialScreen() {
         <Text style={styles.headerTitle2}>• Your Friends Activity</Text>
       </View>
       <View style={styles.notificationContainer}>
-        <Notification isNew={true}/>
-        <Notification isNew={true}/>
-        <Notification isNew={false}/>
-        <Notification isNew={false}/>
-        <Notification isNew={false}/>
+        <Notification isNew={true} />
+        <Notification isNew={true} />
+        <Notification isNew={false} />
+        <Notification isNew={false} />
+        <Notification isNew={false} />
       </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-
   socialScreen: {
     flexDirection: "column",
     marginTop: 0,
@@ -34,23 +33,23 @@ const styles = StyleSheet.create({
     marginTop: 30
   },
 
-   headerTitle1: {
-    fontFamily: 'Roboto_900Black',
+  headerTitle1: {
+    fontFamily: "Roboto_900Black",
     fontSize: 24,
-    color: '#FFFFFF',
-    paddingBottom: 5,
+    color: "#FFFFFF",
+    paddingBottom: 5
   },
 
   headerTitle2: {
-    fontFamily: 'Roboto_400Regular',
+    fontFamily: "Roboto_400Regular",
     fontSize: 15,
-    color: '#FFFFFF',
-    paddingBottom: 5,
+    color: "#FFFFFF",
+    paddingBottom: 5
   },
 
   notificationContainer: {
     flexDirection: "column",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 20
   }
-})
+});

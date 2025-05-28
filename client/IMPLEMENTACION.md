@@ -22,6 +22,7 @@ Para evitar problemas durante la migración, seguiremos un enfoque gradual:
 Para minimizar el riesgo, implementaremos la nueva estructura en paralelo con la existente:
 
 1. Crear los nuevos directorios:
+
    ```
    src/api
    src/hooks
@@ -34,6 +35,7 @@ Para minimizar el riesgo, implementaremos la nueva estructura en paralelo con la
    ```
 
 2. Copiar los archivos existentes a sus nuevas ubicaciones (sin eliminar los originales):
+
    ```
    src/api_booksApi.js → src/api/booksApi.js
    src/hooks_useBookSearch.js → src/hooks/useBookSearch.js
@@ -54,12 +56,14 @@ Para minimizar el riesgo, implementaremos la nueva estructura en paralelo con la
 Migrar los componentes uno por uno, comenzando por los menos dependientes:
 
 1. **Constantes y Utilidades**:
+
    - Migrar `colors.js` y `layout.js`
    - Actualizar importaciones en archivos que los usan
    - Verificar que todo funcione correctamente
    - Eliminar los archivos originales
 
 2. **API y Hooks**:
+
    - Migrar `booksApi.js`
    - Migrar `useBookSearch.js` y `useBookDetails.js`
    - Actualizar importaciones
@@ -67,12 +71,14 @@ Migrar los componentes uno por uno, comenzando por los menos dependientes:
    - Eliminar archivos originales
 
 3. **Componentes UI**:
+
    - Migrar `SearchBar.js` y `LoadingIndicator.js`
    - Actualizar importaciones
    - Verificar funcionalidad
    - Eliminar archivos originales
 
 4. **Componentes de Libros**:
+
    - Migrar `BookItem.js`
    - Actualizar importaciones
    - Verificar funcionalidad
@@ -87,10 +93,12 @@ Migrar los componentes uno por uno, comenzando por los menos dependientes:
 ## Fase 4: Actualización Final
 
 1. **Actualizar Pantallas**:
+
    - Actualizar importaciones en todas las pantallas
    - Verificar que todas las pantallas funcionen correctamente
 
 2. **Pruebas Completas**:
+
    - Probar todas las funcionalidades de la aplicación
    - Verificar que no haya errores de importación
    - Asegurar que la navegación funcione correctamente
@@ -102,23 +110,25 @@ Migrar los componentes uno por uno, comenzando por los menos dependientes:
 ## Ejemplo de Actualización de Importaciones
 
 ### Antes:
+
 ```javascript
-import BookItem from '../../components/BookItem';
-import useBookSearch from '../../hooks_useBookSearch';
-import { LoadingIndicator, LoadingFooter } from '../../components/ui_LoadingIndicator';
-import SearchBar from '../../components/ui_SearchBar';
-import Colors from '../../constants_colors';
-import Layout from '../../constants_layout';
+import BookItem from "../../components/BookItem";
+import useBookSearch from "../../hooks_useBookSearch";
+import { LoadingIndicator, LoadingFooter } from "../../components/ui_LoadingIndicator";
+import SearchBar from "../../components/ui_SearchBar";
+import Colors from "../../constants_colors";
+import Layout from "../../constants_layout";
 ```
 
 ### Después:
+
 ```javascript
-import BookItem from '../../components/books/BookItem';
-import useBookSearch from '../../hooks/useBookSearch';
-import { LoadingIndicator, LoadingFooter } from '../../components/ui/LoadingIndicator';
-import SearchBar from '../../components/ui/SearchBar';
-import Colors from '../../constants/colors';
-import Layout from '../../constants/layout';
+import BookItem from "../../components/books/BookItem";
+import useBookSearch from "../../hooks/useBookSearch";
+import { LoadingIndicator, LoadingFooter } from "../../components/ui/LoadingIndicator";
+import SearchBar from "../../components/ui/SearchBar";
+import Colors from "../../constants/colors";
+import Layout from "../../constants/layout";
 ```
 
 ## Consideraciones Adicionales
