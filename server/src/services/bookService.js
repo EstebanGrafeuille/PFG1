@@ -127,8 +127,33 @@ class BookService {
   }
   async getLista(userId,lista){
     try{
-      const librosLista = await UserBook.find({"userId":userId,"libros.listas":lista },{"userId":1,"libros.googleId":1,"_id":0});
-      return librosLista
+      const results = await UserBook.aggregate([
+      {
+        $match: {
+          userId: userId // Match the user's document
+        }
+      },
+      {
+        $unwind: "$libros" // Deconstruct the 'libros' array into multiple documents
+      },
+      {
+        $match: {
+          "libros.listasLibro": lista // Filter for libros where 'listasLibro' contains "favoritos"
+        }
+      },
+      {
+        $project: {
+          _id: 0, // Exclude the default _id
+          "libros.googleId": 1 // Include only the 'libros' object
+        }
+      }
+    ]);
+    console.log(results[1].libros.googleId)
+    const libros = []
+    results.forEach(function(result){
+      libros.push(result.libros.googleId)
+    });
+    return libros
     }catch(error){
       return error.message
     }
