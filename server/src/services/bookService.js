@@ -1,5 +1,4 @@
 // server\src\services\bookService.js
-const Book = require("../models/Book");
 const UserBook = require("../models/UserBook");
 
 class BookService {
@@ -15,10 +14,6 @@ class BookService {
 
 	// Añadir libro a favoritos
 	async addToFavorites(userId, bookId) {
-		// Verificar si el libro existe
-		const book = await Book.findById(bookId);
-		if (!book) throw new Error("Libro no encontrado");
-
 		// Verificar si ya está en favoritos
 		const existingFavorite = await UserBook.findOne({
 			user: userId,
