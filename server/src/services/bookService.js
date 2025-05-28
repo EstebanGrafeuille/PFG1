@@ -3,41 +3,6 @@ const Book = require("../models/Book");
 const UserBook = require("../models/UserBook");
 
 class BookService {
-	// Guardar un libro en la base de datos
-	async saveBook(data) {
-		const {
-			googleId,
-			title,
-			authors,
-			description,
-			thumbnail,
-			pageCount,
-			categories,
-			publishedDate,
-		} = data;
-
-		// Verificar si el libro ya existe
-		let book = await Book.findOne({ googleId });
-
-		if (!book) {
-			// Crear nuevo libro si no existe
-			book = new Book({
-				googleId,
-				title,
-				authors,
-				description,
-				thumbnail,
-				pageCount,
-				categories,
-				publishedDate,
-			});
-
-			await UserBook.save(book);
-		}
-
-		return book;
-	}
-
 	// Obtener libros favoritos del usuario
 	async getFavorites(userId) {
 		const userBooks = await UserBook.find({
