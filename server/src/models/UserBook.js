@@ -26,15 +26,7 @@ const userBookSchema = new mongoose.Schema({
 userBookSchema.index({ user: 1, googleId: 1, status: 1 }, { unique: true });
 
 userBookSchema.methods.checkLista = async function checkLista(lista) {
-	const found = false;
-	const i = 0;
-	while (found) {
-		if (listasUser[i] == lista) {
-			found = true;
-			return found;
-		}
-		i++;
-	}
+	return this.listasUser.includes(lista);
 };
 
 module.exports = mongoose.model("userbook", userBookSchema);

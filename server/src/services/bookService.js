@@ -32,7 +32,7 @@ class BookService {
 	async removeFromLista(userId, lista, bookId) {
 		try {
 			await UserBook.updateOne(
-				{ userId: userId, "libros.googleId": bookId },
+				{ user: userId, "libros.googleId": bookId },
 				{ $pull: { "libros.listasLibro": lista } }
 			);
 		} catch (error) {
@@ -41,7 +41,7 @@ class BookService {
 	}
 
 	async createUserBook(userId) {
-		const registrado = UserBook.findOne({ userId: userId });
+		const registrado = UserBook.findOne({ user: userId });
 		if (registrado) {
 			throw new Error("el usuario ya tiene un UserBook");
 		}
@@ -50,17 +50,17 @@ class BookService {
 	}
 
 	async addListaToUser(userId, nombreListaNueva) {
-		const userbook = await UserBook.findOne({ userId: userId });
+		const userbook = await UserBook.findOne({ user: userId });
 		if (userbook) {
 			const lista = await UserBook.findOne({
-				userId: userId,
+				user: userId,
 				"libros.listas": nombreListaNueva,
 			});
 			if (lista) {
 				throw new Error("la lista ya existe");
 			}
 			await UserBook.updateOne(
-				{ userId: userId },
+				{ user: userId },
 				{ $push: { listasUser: nombreListaNueva } }
 			);
 			return nombreListaNueva;
@@ -69,19 +69,19 @@ class BookService {
 	}
 
 	async addLibroToLista(userId, lista, libroId) {
-		const userbook = await UserBook.findOne({ userId: userId });
+		const userbook = await UserBook.findOne({ user: userId });
 		if (userbook) {
-			if (await UserBook.findOne({ userId: userId, listasUser: lista })) {
+			if (await UserBook.findOne({ user: userId, listasUser: lista })) {
 				if (
-					await UserBook.findOne({ userId: userId, "libros.googleId": libroId })
+					await UserBook.findOne({ user: userId, "libros.googleId": libroId })
 				) {
 					await UserBook.updateOne(
-						{ userId: userId, "libros.googleId": libroId },
+						{ user: userId, "libros.googleId": libroId },
 						{ $push: { "libros.listasLibro": lista } }
 					);
 				} else {
 					await UserBook.updateOne(
-						{ userId: userId },
+						{ user: userId },
 						{
 							$set: {
 								libros: {
@@ -103,7 +103,7 @@ class BookService {
 	async getLista(userId, lista) {
 		try {
 			const librosLista = await UserBook.find(
-				{ userId: userId, "libros.listas": lista },
+				{ user: userId, "libros.listas": lista },
 				{ userId: 1, "libros.googleId": 1, _id: 0 }
 			);
 			return librosLista;
@@ -115,7 +115,7 @@ class BookService {
 	async getAllLibros(userId) {
 		try {
 			const librosLista = await UserBook.find(
-				{ userId: userId },
+				{ user: userId },
 				{ userId: 1, "libros.googleId": 1, _id: 0 }
 			);
 			return librosLista;
@@ -127,7 +127,7 @@ class BookService {
 	async getListas(userId) {
 		try {
 			const listas = await UserBook.find(
-				{ userId: userId },
+				{ user: userId },
 				{ listasUser: 1, _id: 0 }
 			);
 			return listas;
