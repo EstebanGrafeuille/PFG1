@@ -1,14 +1,14 @@
 const BASE_URL = "http://localhost:5000";
 
-const createUserList = async (userId, listName, token) => {
+const addLista = async (userId, lista, token) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/users/${userId}/userbook/`, {
-      method: "POST",
+    const response = await fetch(`http://localhost:5000/api/books/addLista`, {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ listName })
+      body: JSON.stringify({ userId, lista })
     });
 
     if (!response.ok) {
@@ -43,7 +43,7 @@ const getListas = async (userId, token) => {
 
     //return await response.json();
     return data;
-    
+
   } catch (error) {
     throw error;
   }
@@ -51,5 +51,5 @@ const getListas = async (userId, token) => {
 
 
 export default {
-  createUserList, getListas
+  addLista, getListas
 };

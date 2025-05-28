@@ -81,19 +81,6 @@ class BookController {
 
       // const libros = await bookService.getListas(req.body.userId);
 
-      /*
-      http://localhost:5000/api/books/getListas?
-
-            {
-          "userId": "6834a749616656319f70feb4"
-      }
-
-      /
-      -----------
-
-      */
-      // Opcion
-
       const userId = req.query.userId;
       const libros = await bookService.getListas(userId);
 
