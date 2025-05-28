@@ -93,6 +93,8 @@ const DetailBook = ({ route }) => {
     publishedDate: info.publishedDate
   };
 
+  console.log("libro ID: " + bookData.id);
+
   // Manejar añadir a favoritos o lista de lectura
   const handleAddBook = async (listName) => {
   try {

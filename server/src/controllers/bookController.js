@@ -18,7 +18,10 @@ class BookController {
 
   getLista = async (req, res) => {
     try {
-      const lista = await bookService.getLista(req.body.userId,req.body.lista);
+      //const lista = await bookService.getLista(req.body.userId,req.body.lista);
+
+      const lista = await bookService.getLista(req.query.userId, req.query.lista);
+
       res.json(lista);
     } catch (error) {
       res.status(500).json({
@@ -74,16 +77,10 @@ class BookController {
     }
   };
   getListas = async (req,res) =>{
-
-    console.log("userId recibido:", req.query.userId);
-
     try{
-
       // const libros = await bookService.getListas(req.body.userId);
-
       const userId = req.query.userId;
       const libros = await bookService.getListas(userId);
-
 
       res.status(200).json(libros)
     }catch(error){

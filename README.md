@@ -27,4 +27,24 @@ npm run client
 
 # Iniciar solo backend
 npm run server
+
+
+// "userId": "6834a749616656319f70feb4"
+
+// Codigo de libros para testear
+// In8mDwAAQBAJ
+// L88qEAAAQBAJ
+// KVGd-NabpW0C
+// UGUahZnpa0MC
+
+// LIistas de USERBOOK:
+
+# 0
+# "favoritos"
+# 1
+# "leidos"
+# 2
+# "leyendo"
+# 3
+# "Lista del Front"
 ```
