@@ -7,12 +7,23 @@ const userBookSchema = new mongoose.Schema({
 		ref: "User",
 		required: true,
 	},
+	googleId: {
+		type: String,
+		default: null,
+	},
+	status: {
+		type: String,
+		enum: ["favorite"],
+		default: "favorite",
+	},
 	listasUser: [String],
 	libros: {
 		googleId: String,
 		listasLibro: [String],
 	},
 });
+
+userBookSchema.index({ user: 1, googleId: 1, status: 1 }, { unique: true });
 
 userBookSchema.methods.checkLista = async function checkLista(lista) {
 	const found = false;
@@ -26,5 +37,4 @@ userBookSchema.methods.checkLista = async function checkLista(lista) {
 	}
 };
 
-const UserBook = mongoose.model("userbook", userBookSchema);
-module.exports = UserBook;
+module.exports = mongoose.model("userbook", userBookSchema);

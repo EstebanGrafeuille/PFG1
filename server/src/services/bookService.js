@@ -7,33 +7,28 @@ class BookService {
 		const userBooks = await UserBook.find({
 			user: userId,
 			status: "favorite",
-		}).populate("book");
-
-		return userBooks.map((ub) => ub.book);
+		});
+		return userBooks.map((ub) => ub.googleId);
 	}
 
 	// Añadir libro a favoritos
 	async addToFavorites(userId, bookId) {
-		// Verificar si ya está en favoritos
 		const existingFavorite = await UserBook.findOne({
 			user: userId,
-			book: bookId,
+			googleId: bookId,
 			status: "favorite",
 		});
 
 		if (existingFavorite) throw new Error("El libro ya está en favoritos");
 
-		// Añadir a favoritos
-		const userBook = new UserBook({
+		await UserBook.create({
 			user: userId,
-			book: bookId,
+			googleId: bookId,
 			status: "favorite",
 		});
-
-		await userBook.save();
 	}
 
-	// Eliminar libro de favoritos
+	// Eliminar libro de favoritos / listas personalizadas
 	async removeFromLista(userId, lista, bookId) {
 		try {
 			await UserBook.updateOne(
@@ -53,6 +48,7 @@ class BookService {
 		const userbook = new UserBook(userId);
 		await userbook.save();
 	}
+
 	async addListaToUser(userId, nombreListaNueva) {
 		const userbook = await UserBook.findOne({ userId: userId });
 		if (userbook) {
@@ -74,19 +70,16 @@ class BookService {
 
 	async addLibroToLista(userId, lista, libroId) {
 		const userbook = await UserBook.findOne({ userId: userId });
-		console.log([userId, lista, libroId]);
 		if (userbook) {
 			if (await UserBook.findOne({ userId: userId, listasUser: lista })) {
 				if (
 					await UserBook.findOne({ userId: userId, "libros.googleId": libroId })
 				) {
-					console.log("libro encontrado");
 					await UserBook.updateOne(
 						{ userId: userId, "libros.googleId": libroId },
 						{ $push: { "libros.listasLibro": lista } }
 					);
 				} else {
-					console.log("libro no encontrado");
 					await UserBook.updateOne(
 						{ userId: userId },
 						{
@@ -106,6 +99,7 @@ class BookService {
 			throw new Error("usuario inexistente");
 		}
 	}
+
 	async getLista(userId, lista) {
 		try {
 			const librosLista = await UserBook.find(
@@ -129,6 +123,7 @@ class BookService {
 			return error.message;
 		}
 	}
+
 	async getListas(userId) {
 		try {
 			const listas = await UserBook.find(
