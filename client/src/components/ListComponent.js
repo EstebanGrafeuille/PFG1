@@ -1,7 +1,7 @@
 import { View, Image, Text, StyleSheet, Pressable } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-export default function ListComponent(){
+export default function ListComponent({title}){
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -10,7 +10,7 @@ export default function ListComponent(){
         <Pressable onPress={() => navigation.navigate('ListDetailNavigation')}>
             <View style={styles.listContainer}>
                 <View style={styles.listLeft}>
-                    <Text style={styles.listTitle}>Literatura Rusa</Text>
+                    <Text style={styles.listTitle}>{title}</Text>
                     <Text style={styles.listOwner}>Your List</Text>
                 </View>
                 <View style={styles.listRight}>

@@ -1,11 +1,30 @@
 import { View, Text, StyleSheet, Button, Pressable, Image, TextInput, onChangeText, ScrollView, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ListBooksRemove from '../../../components/ListBooksRemove';
+import ProfileHeader from '../../../components/ProfileHeader';
+import ListComponent from '../../../components/ListComponent';
+import NewListComponent from '../../../components/NewListComponent';
+import React, { useEffect, useState, useContext } from "react";
+import userBookService from "../../../services/userBook";
+import { AuthContext } from "../../../context/AuthContext";
 
 export default function CreateListScreen(){
 
+    const [newListName, setNewListName] = useState("");
+    const [listas, setListas] = useState([]);
+    const { authData } = useContext(AuthContext);
+
     const navigation = useNavigation();
     let listTitle;
+
+    const handleCreateList = async () => {
+        try {
+          await userBookService.addLista(authData.user.id, newListName, authData.token);
+          setNewListName("");
+          navigation.navigate('ListsBooksScreen');
+        } catch (error) {
+          console.error("Error al crear lista:", error.message);
+        }
+      };
 
     return(
         <View style={styles.listDetailScreen}>
@@ -19,14 +38,14 @@ export default function CreateListScreen(){
                 </View>
                 <View style={styles.titleContainer}>
                         <TextInput
-                            style={styles.title}
-                            onChangeText={onChangeText}
-                            placeholder="Amazing List"
-                            value={listTitle}
-                            />
+                                style={styles.title}
+                                placeholder="New List Name"
+                                value={newListName}
+                                onChangeText={setNewListName}
+                              />
                 </View>
                 <Text style={styles.author}>by user_name</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('ListsBooksScreen')} style={styles.doneBtn}>
+                <TouchableOpacity onPress={handleCreateList} style={styles.doneBtn}>
                     <Text style={styles.btnText}>Done</Text>
                 </TouchableOpacity>
             </View>
@@ -65,7 +84,10 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto_900Black',
         fontSize: 24,
         color: '#FFFFFF',
-        paddingBottom: 20
+        paddingBottom: 20,
+        width: 200,
+        justifyContent: "center",
+        alignItems: "center"
     },
     author: {
         fontFamily: 'Roboto_400Regular',
@@ -93,5 +115,11 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto_700Bold',
         fontSize: 20,
         color: '#FFCB20',
+    },
+    titleContainer: {
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        width: 270,
     }
 })

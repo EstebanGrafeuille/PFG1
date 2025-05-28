@@ -2,8 +2,8 @@ import ProfileHeader from '../../../components/ProfileHeader';
 import ListComponent from '../../../components/ListComponent';
 import NewListComponent from '../../../components/NewListComponent';
 import React, { useEffect, useState, useContext } from "react";
-import { View, TextInput, Button, FlatList, Text, StyleSheet } from "react-native";
-import userBookService from "../../../services/userBook"; // Ajustá el path
+import { View, TextInput, Button, FlatList, Text, StyleSheet, ScrollView } from "react-native";
+import userBookService from "../../../services/userBook";
 import { AuthContext } from "../../../context/AuthContext";
 
 const ListsBooksScreen = ({ userId, token }) => {
@@ -14,22 +14,21 @@ const ListsBooksScreen = ({ userId, token }) => {
   const fetchListas = async () => {
     try {
       const userBook = await userBookService.getListas(authData.user.id, authData.token);
-      //setListas(userBook.listasUser || []);
       setListas((userBook[0] && userBook[0].listasUser) || []);
     } catch (error) {
       console.error("Error al obtener listas:", error.message);
     }
   };
 
-  const handleCreateList = async () => {
-    try {
-      await userBookService.addLista(authData.user.id, newListName, authData.token);
-      setNewListName("");
-      fetchListas();
-    } catch (error) {
-      console.error("Error al crear lista:", error.message);
-    }
-  };
+  // const handleCreateList = async () => {
+  //   try {
+  //     await userBookService.addLista(authData.user.id, newListName, authData.token);
+  //     setNewListName("");
+  //     fetchListas();
+  //   } catch (error) {
+  //     console.error("Error al crear lista:", error.message);
+  //   }
+  // };
 
   useEffect(() => {
     fetchListas();
@@ -38,23 +37,15 @@ const ListsBooksScreen = ({ userId, token }) => {
     return (
     <View style={styles.listsBooksScreen}>
       <ProfileHeader headerTitle="YOUR LISTS"/>
-      <View style={styles.listColumn}>
-        <TextInput
-        placeholder="Nombre de la nueva lista"
-        value={newListName}
-        onChangeText={setNewListName}
-      />
-      <Button title="Crear lista" onPress={handleCreateList} />
-      <FlatList
-        data={listas}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => <Text>{item}</Text>}
-      />
-        <ListComponent />
-        <ListComponent />
-        <ListComponent />
-        <NewListComponent />
-      </View>
+      <ScrollView>
+        <View style={styles.listColumn}>
+            {listas.map((nombreLista, index) => (
+              <ListComponent key={index} title={nombreLista} />
+            ))}
+          <NewListComponent />
+          <View style={styles.extraSpace}/>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -80,4 +71,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#333',
   },
+  extraSpace: {
+    height: 100
+  }
 })
