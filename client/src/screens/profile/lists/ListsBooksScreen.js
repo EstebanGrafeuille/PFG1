@@ -48,17 +48,11 @@ const ListsBooksScreen = ({ userId, token }) => {
   const [listas, setListas] = useState([]);
   const { authData } = useContext(AuthContext);
 
-//   useEffect(() => {
-//   console.log("AuthData en ListsBooksScreen:", authData);
-//   if (authData && authData.user && authData.token) {
-//     fetchListas();
-//   }
-// }, [authData]);
-
   const fetchListas = async () => {
     try {
-      const userBook = await userBookService.getUserBook(authData.user.id, authData.token);
-      setListas(userBook.listasUser || []);
+      const userBook = await userBookService.getListas(authData.user.id, authData.token);
+      //setListas(userBook.listasUser || []);
+      setListas((userBook[0] && userBook[0].listasUser) || []);
     } catch (error) {
       console.error("Error al obtener listas:", error.message);
     }

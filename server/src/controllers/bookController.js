@@ -74,8 +74,30 @@ class BookController {
     }
   };
   getListas = async (req,res) =>{
+
+    console.log("userId recibido:", req.query.userId);
+
     try{
-      const libros = await bookService.getListas(req.body.userId);
+
+      // const libros = await bookService.getListas(req.body.userId);
+
+      /*
+      http://localhost:5000/api/books/getListas?
+
+            {
+          "userId": "6834a749616656319f70feb4"
+      }
+
+      /
+      -----------
+
+      */
+      // Opcion
+
+      const userId = req.query.userId;
+      const libros = await bookService.getListas(userId);
+
+
       res.status(200).json(libros)
     }catch(error){
       res.status(500).json({
@@ -84,6 +106,7 @@ class BookController {
       });
     }
   }
+
 }
 
 module.exports = new BookController();

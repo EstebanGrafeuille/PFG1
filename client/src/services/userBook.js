@@ -22,21 +22,34 @@ const createUserList = async (userId, listName, token) => {
   }
 };
 
-const getUserBook = async (userId, token) => {
-  const response = await fetch(`${BASE_URL}/api/users/${userId}/userbook`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const getListas = async (userId, token) => {
+  console.log("Este es el ID desde services / userBook.js: " + userId)
+  try {
+    const response = await fetch(`http://localhost:5000/api/books/getListas?userId=${userId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+      }
+    });
 
-  if (!response.ok) {
-    throw new Error("No se pudo obtener el UserBook");
+    if (!response.ok) {
+      throw new Error("No se pudo obtener el UserBook");
+    }
+
+    const data = await response.json();
+
+    console.log(data)
+
+    //return await response.json();
+    return data;
+    
+  } catch (error) {
+    throw error;
   }
-
-  return await response.json();
 };
 
+
 export default {
-  createUserList, getUserBook
+  createUserList, getListas
 };
