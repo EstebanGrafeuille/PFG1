@@ -7,10 +7,10 @@ const userBookSchema = new mongoose.Schema({
     required: true
   },
   listasUser:[String],
-  libros:{
+  libros:[{
     googleId: String,
     listasLibro: [String]
-  }
+  }]
 });
 
 userBookSchema.methods.checkLista = async function checkLista(lista){

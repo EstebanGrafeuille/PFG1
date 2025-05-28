@@ -110,10 +110,10 @@ class BookService {
       if(await UserBook.findOne({"userId":userId,"listasUser":lista})){
         if(await UserBook.findOne({"userId":userId,"libros.googleId":libroId})){
           console.log("libro encontrado")
-          await UserBook.updateOne({"userId":userId,"libros.googleId":libroId},{$push:{"libros.listasLibro":lista}})
+          await UserBook.updateOne({"userId":userId,"libros.googleId":libroId},{$push:{"libros.$.listasLibro":lista}})
         }else{
           console.log("libro no encontrado")
-          await UserBook.updateOne({"userId":userId},{$set:{"libros":{
+          await UserBook.updateOne({"userId":userId},{$push:{"libros":{
             "googleId":libroId,
             "listasLibro":[lista]
           }}});
