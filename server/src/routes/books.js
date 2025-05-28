@@ -7,7 +7,6 @@ const auth = require("../middleware/auth");
 router.use(auth);
 
 // Rutas para libros
-router.post("/", bookController.saveBook);
 router.get("/getLista", bookController.getLista);
 router.get("/getAllLibros", bookController.getAllLibros);
 router.post("/addLista", bookController.addLista);
