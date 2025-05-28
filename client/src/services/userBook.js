@@ -70,9 +70,9 @@ const addToLista = async (userId, lista, bookId, token) => {
   }
 };
 
-const getLista = async (userId, list, token) => {
+const getLista = async (userId, lista, token) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/books/getLista?userId=${userId}&list=${list}`, {
+    const response = await fetch(`http://localhost:5000/api/books/getLista?userId=${userId}&lista=${lista}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,

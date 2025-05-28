@@ -11,17 +11,13 @@ export default function ReadBooksScreen () {
   const { authData } = useContext(AuthContext);
   const [bookIds, setBookIds] = useState([]);
 
-  //userBookService.getLista(authData.user.id, "Lista", authData.token);
-
   useEffect(() => {
     const fetchLibros = async () => {
       try {
-        const libros = await userBookService.getLista(authData.user.id, "Lista", authData.token);
-        setBookIds(libros); // ya es un array
-        console.log("Book IDS: ");
-        console.log(bookIds)
-        console.log("Lirbos: ");
-        console.log(libros)
+        const libros = await userBookService.getLista(authData.user.id, "favoritos", authData.token);
+        console.log("Contenido:", libros);
+        setBookIds(libros);
+        
       } catch (error) {
         console.error("Error obteniendo libros de lista:", error.message);
       }
