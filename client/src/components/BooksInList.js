@@ -9,8 +9,13 @@ export default function BooksInList({ids}) {
 
   const navigation = useNavigation();
 
+          
+
   useEffect(() => {
   const fetchBooksByIds = async () => {
+
+    console.log("Desde Books in List: ")
+    console.log(ids);
     try {
       const responses = await Promise.all(
         ids.map(async (id) => {

@@ -3,7 +3,7 @@ const bookService = require("../services/bookService");
 class BookController {
 	getLista = async (req, res) => {
 		try {
-			const lista = await bookService.getLista(req.body.userId, req.body.lista);
+			const lista = await bookService.getLista(req.query.userId, req.query.lista);
 			res.json(lista);
 		} catch (error) {
 			res.status(500).json({
