@@ -14,8 +14,7 @@ export default function ReadBooksScreen () {
   useEffect(() => {
     const fetchLibros = async () => {
       try {
-        const libros = await userBookService.getLista(authData.user.id, "favoritos", authData.token);
-        console.log("Contenido:", libros);
+        const libros = await userBookService.getLista(authData.user.id, "Lista del Front", authData.token);
         setBookIds(libros);
         
       } catch (error) {
@@ -28,7 +27,7 @@ export default function ReadBooksScreen () {
   return (
     <View style={styles.container}>
       <ProfileHeader headerTitle="YOUR LIBRARY"/>
-      <BooksInList />
+      <BooksInList ids={bookIds} />
     </View>
   );
 }
