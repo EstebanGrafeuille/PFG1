@@ -1,10 +1,39 @@
-import { View, Text, StyleSheet, Button, Pressable, Image, Alert,ScrollView, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+// import { View, Text, StyleSheet, Button, Pressable, Image, Alert,ScrollView, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
+// import { useNavigation } from '@react-navigation/native';
 import ListBooksRemove from '../../../components/ListBooksRemove';
+
+import { useEffect, useState, useContext } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { View, Text, StyleSheet, Button, Pressable, Image, TouchableOpacity, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import BooksInList from "../../../components/BooksInList";
+import userBookService from "../../../services/userBook";
+import { AuthContext } from "../../../context/AuthContext";
 
 export default function EditListScreen(){
 
     const navigation = useNavigation();
+
+    const { authData } = useContext(AuthContext);
+    const [bookIds, setBookIds] = useState([]);
+
+    const route = useRoute();
+    const { listTitle } = route.params;
+    
+    useEffect(() => {
+    const fetchLibros = async () => {
+        try {
+        const libros = await userBookService.getLista(authData.user.id, listTitle, authData.token);
+        setBookIds(libros);
+        
+        } catch (error) {
+        console.error("Error obteniendo libros de lista:", error.message);
+        }
+    };
+    fetchLibros();
+    }, []);
+
+    console.log("Edit List Screen" + bookIds);
 
     return(
         <View style={styles.listDetailScreen}>
@@ -28,9 +57,9 @@ export default function EditListScreen(){
                 <TouchableOpacity onPress={() => navigation.navigate('ListsBooksScreen')} style={styles.doneBtn}>
                     <Text style={styles.btnText}>Done</Text>
                 </TouchableOpacity>
-                <ListBooksRemove />
+                <ListBooksRemove ids={bookIds} />
             </View>
-        </View>
+        </View> 
     )
 }
 

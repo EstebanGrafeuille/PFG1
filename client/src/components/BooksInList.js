@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, Image, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 
-export default function BooksInList({ids}) {
-
-  console.log("Books from Component")
-  console.log(ids);
+export default function BooksInList({ids, navigation}) {
 
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,9 +47,6 @@ export default function BooksInList({ids}) {
       };
     });
   };
-
-  console.log("Adentro del state de Books")
-  console.log(books)
 
 const column1 = [];
 const column2 = [];

@@ -6,7 +6,7 @@ export default function ListComponent({title}){
   const navigation = useNavigation();
 
     return(
-        <Pressable onPress={() => navigation.navigate('ListDetailNavigation')}>
+        <Pressable onPress={() => navigation.navigate('ListDetailNavigation', {listTitle: title})}>
             <View style={styles.listContainer}>
                 <View style={styles.listLeft}>
                     <Text style={styles.listTitle}>{title}</Text>
