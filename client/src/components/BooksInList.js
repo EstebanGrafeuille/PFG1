@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { View, StyleSheet, Text, Image, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 
-export default function BooksInList({ids, navigation}) {
+export default function BooksInList({ids}) {
 
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
   const fetchBooksByIds = async () => {
@@ -17,7 +20,7 @@ export default function BooksInList({ids, navigation}) {
         }));
       setBooks(processBookData(responses));
     } catch (error) {
-      console.error('❌ Error al buscar libros por ID:', error);
+      console.error('Error al buscar libros por ID:', error);
     } finally {
       setLoading(false);
     }
@@ -67,7 +70,7 @@ books.forEach((book, index) => {
     }
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContent}>
+    <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
       <View style={styles.columnsContainer}>
         {/* Columna 1 */}
         <View style={styles.column}>
@@ -90,7 +93,7 @@ books.forEach((book, index) => {
         {/* Columna 2 */}
         <View style={styles.column}>
           <TouchableOpacity style={styles.addButtonContainer}>
-                <Image source={require("../../assets/img/ad-logo.png")} style={styles.addButton}/>
+                <Image source={require("../../assets/img/ad-logo-2.png")} style={styles.addButton}/>
           </TouchableOpacity>
           {column2.map((book) => (
             <TouchableOpacity
@@ -126,6 +129,7 @@ books.forEach((book, index) => {
           ))}
         </View>
       </View>
+      <View style={{ height: 100 }} />
     </ScrollView>
 
   );
@@ -133,6 +137,7 @@ books.forEach((book, index) => {
 
 const styles = StyleSheet.create({
   scrollContent: {
+    flex: 1
 },
 
 columnsContainer: {
@@ -181,4 +186,8 @@ bookPhoto: {
     fontWeight: 'bold',
     color: 'white',
   },
+  extraSpace: {
+    height: 500,
+    backgroundColor: "black"
+  }
 })

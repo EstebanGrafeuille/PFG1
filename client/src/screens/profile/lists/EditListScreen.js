@@ -33,8 +33,6 @@ export default function EditListScreen(){
     fetchLibros();
     }, []);
 
-    console.log("Edit List Screen" + bookIds);
-
     return(
         <View style={styles.listDetailScreen}>
             <View style={styles.listContainer}>
@@ -45,7 +43,7 @@ export default function EditListScreen(){
                         </View>
                     </Pressable>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.title}>Literatura Rusa</Text>
+                        <Text style={styles.title}>{listTitle}</Text>
                     </View>
                     <Pressable onPress={() =>  Alert.alert('You want to delete List?')}>
                         <View style={styles.buttonContainer}>

@@ -69,10 +69,11 @@ class BookController {
   removeFromLista = async (req, res) => {
     try {
       await bookService.removeFromLista(req.body.userId,req.body.lista, req.body.bookId);
-      res.json({ message: "Libro eliminado de favoritos" });
+    //await bookService.removeFromLista(req.body.userId,req.body.list, req.body.bookId);
+      res.json({ message: "Libro: " + req.body.bookId + " eliminado de lista: " + req.body.list });
     } catch (error) {
       res.status(500).json({
-        message: "Error al eliminar de favoritos",
+        message: "Error al eliminar de lista: "+ req.body.list,
         error: error.message,
       });
     }

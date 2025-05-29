@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ListDetailScreen from '../screens/profile/lists/ListDetailScreen';
 import EditListScreen from '../screens/profile/lists/EditListScreen';
+import DetailBook from '../screens/searchScreens/DetailBookScreen';
 import { useRoute } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
@@ -26,6 +27,10 @@ export default function ListDetailNavigation() {
         component={EditListScreen}
         initialParams={{ listTitle }}
         options={{ title: 'Edit List' }}
+      />
+      <Stack.Screen
+        name="BookView"
+        component={DetailBook}
       />
     </Stack.Navigator>
   );

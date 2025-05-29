@@ -117,7 +117,7 @@ const DetailBook = ({ route }) => {
       >
         {/* Cabecera con imagen y datos básicos */}
         <View style={styles.headerContainer}>
-          <Pressable onPress={() => navigation.navigate('Home')}>
+          <Pressable onPress={() => navigation.goBack()}>
               <View style={styles.buttonContainer}>
                   <Image source={require("../../../assets/img/back-icon-white.png")} style={styles.icon}/>
               </View>

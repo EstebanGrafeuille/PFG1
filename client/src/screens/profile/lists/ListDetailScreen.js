@@ -49,7 +49,7 @@ export default function ListDetailScreen(){
                     </Pressable>
                 </View>
                 <Text style={styles.author}>by user_name</Text>
-                <BooksInList ids={bookIds} />
+                <BooksInList ids={bookIds} nav={navigation}/>
             </View>
         </View>
     )
@@ -57,12 +57,14 @@ export default function ListDetailScreen(){
 
 const styles = StyleSheet.create({
     listDetailScreen: {
+        flex: 1,
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",
         backgroundColor: "white",
     },
     listContainer:{
+        flex: 1,
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",
