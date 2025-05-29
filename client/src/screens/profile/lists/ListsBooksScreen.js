@@ -1,6 +1,6 @@
-import ProfileHeader from '../../../components/ProfileHeader';
-import ListComponent from '../../../components/ListComponent';
-import NewListComponent from '../../../components/NewListComponent';
+import ProfileHeader from "../../../components/ProfileHeader";
+import ListComponent from "../../../components/ListComponent";
+import NewListComponent from "../../../components/NewListComponent";
 import React, { useEffect, useState, useContext } from "react";
 import { View, TextInput, Button, FlatList, Text, StyleSheet, ScrollView } from "react-native";
 import userBookService from "../../../services/userBook";
@@ -23,16 +23,16 @@ const ListsBooksScreen = () => {
     fetchListas();
   }, []);
 
-    return (
+  return (
     <View style={styles.listsBooksScreen}>
-      <ProfileHeader headerTitle="YOUR LISTS"/>
+      <ProfileHeader headerTitle="YOUR LISTS" />
       <ScrollView>
         <View style={styles.listColumn}>
-            {listas.map((nombreLista, index) => (
-              <ListComponent key={index} title={nombreLista} />
-            ))}
+          {listas.map((nombreLista, index) => (
+            <ListComponent key={index} title={nombreLista} />
+          ))}
           <NewListComponent />
-          <View style={styles.extraSpace}/>
+          <View style={styles.extraSpace} />
         </View>
       </ScrollView>
     </View>
@@ -42,25 +42,24 @@ const ListsBooksScreen = () => {
 export default ListsBooksScreen;
 
 const styles = StyleSheet.create({
-  
   listsBooksScreen: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5'
+    alignItems: "center",
+    backgroundColor: "#f5f5f5"
   },
 
   listColumn: {
     flexDirection: "column",
-    marginTop: 40,
+    marginTop: 40
   },
 
   listTitle: {
     paddingTop: 20,
-    fontFamily: 'Roboto_900Black',
+    fontFamily: "Roboto_900Black",
     fontSize: 18,
-    color: '#333',
+    color: "#333"
   },
   extraSpace: {
     height: 100
   }
-})
+});

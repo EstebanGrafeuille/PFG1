@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
   },
   listTitle: {
     paddingTop: 20,
-    fontFamily: 'Roboto_900Black',
+    fontFamily: "Roboto_900Black",
     fontSize: 18,
-    color: '#333',
-  },
-})
+    color: "#333"
+  }
+});

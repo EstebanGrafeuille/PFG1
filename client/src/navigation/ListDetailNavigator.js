@@ -13,9 +13,7 @@ export default function ListDetailNavigation() {
   const { listTitle } = route.params;
 
   return (
-    <Stack.Navigator 
-      initialRouteName="ListDetailScreen"
-      screenOptions={{headerShown: false}}>
+    <Stack.Navigator initialRouteName="ListDetailScreen" screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name="ListDetailScreen"
         component={ListDetailScreen}

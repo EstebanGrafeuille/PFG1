@@ -3,9 +3,9 @@ const BASE_URL = "http://localhost:5000";
 const addLista = async (userId, lista, token) => {
   try {
     const response = await fetch(`http://localhost:5000/api/books/addLista`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({ userId, lista })
@@ -25,10 +25,10 @@ const addLista = async (userId, lista, token) => {
 const getListas = async (userId, token) => {
   try {
     const response = await fetch(`http://localhost:5000/api/books/getListas?userId=${userId}`, {
-      method: 'GET',
+      method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
-        'Cache-Control': 'no-cache',
+        "Cache-Control": "no-cache"
       }
     });
 
@@ -38,21 +38,20 @@ const getListas = async (userId, token) => {
 
     const data = await response.json();
     return data;
-
   } catch (error) {
     throw error;
   }
 };
 
 const addToLista = async (userId, lista, bookId, token) => {
-  console.log(userId, lista, bookId, token)
+  console.log(userId, lista, bookId, token);
   try {
     const response = await fetch(`http://localhost:5000/api/books/addLibroToLista`, {
-      method: 'POST',
+      method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache',
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache"
       },
       body: JSON.stringify({ userId, lista, bookId })
     });
@@ -62,9 +61,8 @@ const addToLista = async (userId, lista, bookId, token) => {
     }
 
     const data = await response.json();
-    console.log(data)
+    console.log(data);
     return data;
-
   } catch (error) {
     throw error;
   }

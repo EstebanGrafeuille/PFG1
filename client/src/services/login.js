@@ -10,9 +10,9 @@ const login = (email, password) => {
     fetch(`${BASE_URL}/api/auth/login/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password })
     })
       .then((res) => {
         if (res.ok) {
@@ -23,7 +23,7 @@ const login = (email, password) => {
       })
       .then((authData) => {
         asyncStorage.storeData("authData", authData);
-        console.log("Guardando data", authData)
+        console.log("Guardando data", authData);
         resolve(authData);
       })
       .catch((error) => {
@@ -40,9 +40,9 @@ const register = (username, email, password) => {
     fetch(`${BASE_URL}/api/auth/register/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ username, email, password })
     })
       .then((res) => {
         if (res.ok) {
@@ -72,9 +72,9 @@ const forgotPassword = (email) => {
     fetch(`${BASE_URL}/api/auth/forgotPassword/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email })
     })
       .then((res) => {
         console.log("Respuesta del backend:", res.status); // 🔍
@@ -85,12 +85,13 @@ const forgotPassword = (email) => {
           return res.json().then((errorBody) => {
             console.log("Error real desde backend:", errorBody);
             throw new Error(errorBody.message || "Error desconocido");
-          })
+          });
         }
-      }).then((data) => {
+      })
+      .then((data) => {
         console.log("Éxito:", data); // 🔍
 
-        resolve(data)
+        resolve(data);
       })
       .catch((error) => {
         console.log("Catch del forgotPassword:", error); // 🔍
@@ -100,14 +101,13 @@ const forgotPassword = (email) => {
   });
 };
 
-
 const resetPassword = (email, code, newPassword) => {
   return fetch(`${BASE_URL}/api/auth/resetPassword`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify({ email, code, newPassword }),
+    body: JSON.stringify({ email, code, newPassword })
   }).then((res) => {
     if (!res.ok) {
       return res.json().then((err) => {

@@ -62,58 +62,58 @@ export default function EditListScreen(){
 }
 
 const styles = StyleSheet.create({
-    listDetailScreen: {
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        backgroundColor: "white",
-    },
-    listContainer:{
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        backgroundColor: "#F0F0F0",
-        width: "100%",
-        marginTop: 30,
-        borderRadius: 20
-    },
-    listHeader: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: 360,
-        height: 80,
-        marginTop: 20,
-    },
-    title: {
-        fontFamily: 'Roboto_900Black',
-        fontSize: 24,
-        color: '#FFCB20',
-    },
-    author: {
-        fontFamily: 'Roboto_200ExtraLight',
-        fontSize: 13,
-        color: '#919191',
-        marginBottom: 50,
-        marginTop: 15
-    },
-    icon: {
-        height: 26,
-        width: 26
-    },
-    doneBtn: {
-        height: 42,
-        width: 130,
-        backgroundColor: "#FFCB20",
-        borderRadius: 40,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: 100
-    },
-    btnText: {
-        fontFamily: 'Roboto_700Bold',
-        fontSize: 20,
-        color: '#FFFFFF',
-    }
-})
+  listDetailScreen: {
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "white"
+  },
+  listContainer: {
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "#F0F0F0",
+    width: "100%",
+    marginTop: 30,
+    borderRadius: 20
+  },
+  listHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: 360,
+    height: 80,
+    marginTop: 20
+  },
+  title: {
+    fontFamily: "Roboto_900Black",
+    fontSize: 24,
+    color: "#FFCB20"
+  },
+  author: {
+    fontFamily: "Roboto_200ExtraLight",
+    fontSize: 13,
+    color: "#919191",
+    marginBottom: 50,
+    marginTop: 15
+  },
+  icon: {
+    height: 26,
+    width: 26
+  },
+  doneBtn: {
+    height: 42,
+    width: 130,
+    backgroundColor: "#FFCB20",
+    borderRadius: 40,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 100
+  },
+  btnText: {
+    fontFamily: "Roboto_700Bold",
+    fontSize: 20,
+    color: "#FFFFFF"
+  }
+});

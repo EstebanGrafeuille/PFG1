@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, Image, ScrollView, Text, TouchableOpacity } from 'react-native';
+import React from "react";
+import { View, StyleSheet, Image, ScrollView, Text, TouchableOpacity } from "react-native";
 
 export default function BookRow({ books = [], navigation, isYellow }) {
   // Si no hay libros, mostrar un mensaje
@@ -14,17 +14,13 @@ export default function BookRow({ books = [], navigation, isYellow }) {
   return (
     <ScrollView horizontal={true} style={styles.scroll} showsHorizontalScrollIndicator={false}>
       {books.map((book) => (
-        <TouchableOpacity 
-          key={book.id} 
+        <TouchableOpacity
+          key={book.id}
           style={isYellow ? styles.bookContainerYellow : styles.bookContainer}
-          onPress={() => navigation && navigation.navigate('BookView', { volumeId: book.id })}
+          onPress={() => navigation && navigation.navigate("BookView", { volumeId: book.id })}
         >
           {book.thumbnail ? (
-            <Image 
-              source={{ uri: book.thumbnail }} 
-              style={styles.bookPhoto}
-              resizeMode="cover"
-            />
+            <Image source={{ uri: book.thumbnail }} style={styles.bookPhoto} resizeMode="cover" />
           ) : (
             <View style={[styles.bookPhoto, styles.noImageContainer]}>
               <Text style={styles.noImageText}>{book.title.substring(0, 1)}</Text>
@@ -39,53 +35,53 @@ export default function BookRow({ books = [], navigation, isYellow }) {
 const styles = StyleSheet.create({
   booksRow: {
     flexDirection: "row",
-    padding: 5,
+    padding: 5
   },
   scroll: {
     paddingHorizontal: 0,
-    padding: 0,
+    padding: 0
   },
   bookContainer: {
-    width: 90,              
-    height: 140,             
+    width: 90,
+    height: 140,
     borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: '#eee',
+    overflow: "hidden",
+    backgroundColor: "#eee",
     marginRight: 10,
-    borderWidth: 1,
+    borderWidth: 1
   },
   bookContainerYellow: {
-    width: 90,              
-    height: 140,             
+    width: 90,
+    height: 140,
     borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: '#eee',
+    overflow: "hidden",
+    backgroundColor: "#eee",
     marginRight: 10,
     borderColor: "#FFCB20",
-    borderWidth: 1,
+    borderWidth: 1
   },
   bookPhoto: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover"
   },
   noImageContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFCB20',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFCB20"
   },
   noImageText: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white"
   },
   emptyContainer: {
     height: 140,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center"
   },
   emptyText: {
-    color: 'grey',
-    fontStyle: 'italic',
+    color: "grey",
+    fontStyle: "italic"
   }
 });

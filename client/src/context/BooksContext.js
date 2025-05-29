@@ -1,9 +1,9 @@
 /**
  * Contexto para la gestión de libros en la aplicación
- * 
+ *
  * @module context/BooksContext
  */
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext } from "react";
 
 // Crear el contexto
 const BooksContext = createContext();
@@ -25,8 +25,8 @@ export const BooksProvider = ({ children }) => {
    * @param {Object} book - Libro a añadir
    */
   const addToFavorites = (book) => {
-    setFavorites(prev => {
-      if (prev.some(item => item.id === book.id)) return prev;
+    setFavorites((prev) => {
+      if (prev.some((item) => item.id === book.id)) return prev;
       return [...prev, book];
     });
   };
@@ -36,7 +36,7 @@ export const BooksProvider = ({ children }) => {
    * @param {string} bookId - ID del libro a eliminar
    */
   const removeFromFavorites = (bookId) => {
-    setFavorites(prev => prev.filter(item => item.id !== bookId));
+    setFavorites((prev) => prev.filter((item) => item.id !== bookId));
   };
 
   /**
@@ -44,8 +44,8 @@ export const BooksProvider = ({ children }) => {
    * @param {Object} book - Libro a añadir
    */
   const addToReadingList = (book) => {
-    setReadingList(prev => {
-      if (prev.some(item => item.id === book.id)) return prev;
+    setReadingList((prev) => {
+      if (prev.some((item) => item.id === book.id)) return prev;
       return [...prev, book];
     });
   };
@@ -55,7 +55,7 @@ export const BooksProvider = ({ children }) => {
    * @param {string} bookId - ID del libro a eliminar
    */
   const removeFromReadingList = (bookId) => {
-    setReadingList(prev => prev.filter(item => item.id !== bookId));
+    setReadingList((prev) => prev.filter((item) => item.id !== bookId));
   };
 
   /**
@@ -63,8 +63,8 @@ export const BooksProvider = ({ children }) => {
    * @param {Object} book - Libro a marcar como leído
    */
   const markAsRead = (book) => {
-    setReadBooks(prev => {
-      if (prev.some(item => item.id === book.id)) return prev;
+    setReadBooks((prev) => {
+      if (prev.some((item) => item.id === book.id)) return prev;
       return [...prev, { ...book, dateRead: new Date() }];
     });
     // Eliminar de la lista de lectura si estaba allí
@@ -77,9 +77,9 @@ export const BooksProvider = ({ children }) => {
    */
   const addToSearchHistory = (query) => {
     if (!query.trim()) return;
-    
-    setSearchHistory(prev => {
-      const filtered = prev.filter(item => item.toLowerCase() !== query.toLowerCase());
+
+    setSearchHistory((prev) => {
+      const filtered = prev.filter((item) => item.toLowerCase() !== query.toLowerCase());
       return [query, ...filtered].slice(0, 10); // Mantener solo los 10 más recientes
     });
   };
@@ -97,7 +97,7 @@ export const BooksProvider = ({ children }) => {
    * @returns {boolean} - Si el libro está en favoritos
    */
   const isFavorite = (bookId) => {
-    return favorites.some(item => item.id === bookId);
+    return favorites.some((item) => item.id === bookId);
   };
 
   /**
@@ -106,7 +106,7 @@ export const BooksProvider = ({ children }) => {
    * @returns {boolean} - Si el libro está en la lista de lectura
    */
   const isInReadingList = (bookId) => {
-    return readingList.some(item => item.id === bookId);
+    return readingList.some((item) => item.id === bookId);
   };
 
   /**
@@ -115,7 +115,7 @@ export const BooksProvider = ({ children }) => {
    * @returns {boolean} - Si el libro está marcado como leído
    */
   const isRead = (bookId) => {
-    return readBooks.some(item => item.id === bookId);
+    return readBooks.some((item) => item.id === bookId);
   };
 
   const value = {
@@ -135,11 +135,7 @@ export const BooksProvider = ({ children }) => {
     isRead
   };
 
-  return (
-    <BooksContext.Provider value={value}>
-      {children}
-    </BooksContext.Provider>
-  );
+  return <BooksContext.Provider value={value}>{children}</BooksContext.Provider>;
 };
 
 /**
@@ -149,7 +145,7 @@ export const BooksProvider = ({ children }) => {
 export const useBooks = () => {
   const context = useContext(BooksContext);
   if (!context) {
-    throw new Error('useBooks debe usarse dentro de un BooksProvider');
+    throw new Error("useBooks debe usarse dentro de un BooksProvider");
   }
   return context;
 };

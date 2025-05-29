@@ -1,107 +1,72 @@
-const Book = require("../models/Book");
+// server\src\services\bookService.js
 const UserBook = require("../models/UserBook");
 
 class BookService {
+	// Obtener libros favoritos del usuario
+	async getFavorites(userId) {
+		const userBooks = await UserBook.find({
+			user: userId,
+			status: "favorite",
+		});
+		return userBooks.map((ub) => ub.googleId);
+	}
 
-  // Guardar un libro en la base de datos
-  async saveBook(data) {
-    const {
-      googleId,
-      title,
-      authors,
-      description,
-      thumbnail,
-      pageCount,
-      categories,
-      publishedDate,
-    } = data;
+	// Añadir libro a favoritos
+	async addToFavorites(userId, bookId) {
+		const existingFavorite = await UserBook.findOne({
+			user: userId,
+			googleId: bookId,
+			status: "favorite",
+		});
 
-    // Verificar si el libro ya existe
-    let book = await Book.findOne({ googleId });
+		if (existingFavorite) throw new Error("El libro ya está en favoritos");
 
-    if (!book) {
-      // Crear nuevo libro si no existe
-      book = new Book({
-        googleId,
-        title,
-        authors,
-        description,
-        thumbnail,
-        pageCount,
-        categories,
-        publishedDate,
-      });
+		await UserBook.create({
+			user: userId,
+			googleId: bookId,
+			status: "favorite",
+		});
+	}
 
-      await UserBook.save(book);
-    }
+	// Eliminar libro de favoritos / listas personalizadas
+	async removeFromLista(userId, lista, bookId) {
+		try {
+			await UserBook.updateOne(
+				{ user: userId, "libros.googleId": bookId },
+				{ $pull: { "libros.listasLibro": lista } }
+			);
+		} catch (error) {
+			throw new Error("error al remover libro de la lista");
+		}
+	}
 
-    return book;
-  }
+	async createUserBook(userId) {
+		const registrado = UserBook.findOne({ user: userId });
+		if (registrado) {
+			throw new Error("el usuario ya tiene un UserBook");
+		}
+		const userbook = new UserBook(userId);
+		await userbook.save();
+	}
 
-  // Obtener libros favoritos del usuario
-  async getFavorites(userId) {
-    const userBooks = await UserBook.find({
-      user: userId,
-      status: "favorite",
-    }).populate("book");
-
-    return userBooks.map((ub) => ub.book);
-  }
-
-  // Añadir libro a favoritos
-  async addToFavorites(userId, bookId) {
-    // Verificar si el libro existe
-    const book = await Book.findById(bookId);
-    if (!book) throw new Error("Libro no encontrado");
-
-    // Verificar si ya está en favoritos
-    const existingFavorite = await UserBook.findOne({
-      user: userId,
-      book: bookId,
-      status: "favorite",
-    });
-
-    if (existingFavorite) throw new Error("El libro ya está en favoritos");
-
-    // Añadir a favoritos
-    const userBook = new UserBook({
-      user: userId,
-      book: bookId,
-      status: "favorite",
-    });
-
-    await userBook.save();
-  }
-
-  // Eliminar libro de favoritos
-  async removeFromLista(userId,lista, bookId) {
-    try{
-      await UserBook.updateOne({"userId":userId,"libros.googleId":bookId},{$pull:{"libros.listasLibro":lista}});
-    }catch(error){
-      throw new Error("error al remover libro de la lista")
-    }
-  }
-  
-  async createUserBook(userId){
-    const registrado = UserBook.findOne({"userId":userId});
-    if(registrado){
-      throw new Error("el usuario ya tiene un UserBook");
-    }
-    const userbook = new UserBook(userId);
-    await userbook.save();
-  }
-  async addListaToUser(userId,nombreListaNueva){
-    const userbook = await UserBook.findOne({"userId":userId});
-    if(userbook){
-      const lista = await UserBook.findOne({"userId":userId,"libros.listas":nombreListaNueva});
-      if(lista){
-        throw new Error("la lista ya existe");
-      }
-      await UserBook.updateOne({"userId":userId},{$push:{"listasUser":nombreListaNueva}})
-      return nombreListaNueva
-    }
-    throw new Error("usuario no encontrado");
-  }
+	async addListaToUser(userId, nombreListaNueva) {
+		const userbook = await UserBook.findOne({ user: userId });
+		if (userbook) {
+			const lista = await UserBook.findOne({
+				user: userId,
+				"libros.listas": nombreListaNueva,
+			});
+			if (lista) {
+				throw new Error("la lista ya existe");
+			}
+			await UserBook.updateOne(
+				{ user: userId },
+				{ $push: { listasUser: nombreListaNueva } }
+			);
+			return nombreListaNueva;
+		}
+		throw new Error("usuario no encontrado");
+	}
 
   async addLibroToLista(userId,lista,libroId){
     const userbook = await UserBook.findOne({"userId":userId});

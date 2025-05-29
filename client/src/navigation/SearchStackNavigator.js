@@ -1,6 +1,6 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SearchScreen from '../screens/searchScreens/SearchScreen';
-import DetailBook from '../screens/searchScreens/DetailBookScreen';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import SearchScreen from "../screens/searchScreens/SearchScreen";
+import DetailBook from "../screens/searchScreens/DetailBookScreen";
 
 const SearchStack = createNativeStackNavigator();
 
@@ -8,11 +8,8 @@ const SearchStack = createNativeStackNavigator();
 const SearchStackNavigator = () => (
   <SearchStack.Navigator screenOptions={{ headerShown: false }}>
     <SearchStack.Screen name="Search" component={SearchScreen} />
-    <SearchStack.Screen
-      name="BookView"
-      component={DetailBook}
-    />
+    <SearchStack.Screen name="BookView" component={DetailBook} />
   </SearchStack.Navigator>
 );
 
-export default SearchStackNavigator
+export default SearchStackNavigator;

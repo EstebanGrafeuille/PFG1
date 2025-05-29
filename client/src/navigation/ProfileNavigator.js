@@ -5,20 +5,18 @@ import WishlistScreen from "../screens/profile/WishlistScreen";
 import ListsNavigation from "./ListsNavigator";
 
 const ProfileNavigation = () => {
+  const Stack = createNativeStackNavigator();
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ProfileSettings" component={ProfileScreen} />
+      <Stack.Screen name="ReadBooks" component={ReadBooksScreen} />
+      <Stack.Screen name="ListsNavigation" component={ListsNavigation} />
+      <Stack.Screen name="WishlistBooks" component={WishlistScreen} />
+    </Stack.Navigator>
+  );
+};
 
-    const Stack = createNativeStackNavigator()
-    return (
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="ProfileSettings" component={ProfileScreen} />
-            <Stack.Screen name="ReadBooks" component={ReadBooksScreen} />
-            <Stack.Screen name="ListsNavigation" component={ListsNavigation} />
-            <Stack.Screen name="WishlistBooks" component={WishlistScreen} />
-        </Stack.Navigator>
-    )
-}
-
-export default ProfileNavigation
-
+export default ProfileNavigation;
 
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // import { View, Text, Image, StyleSheet } from 'react-native';

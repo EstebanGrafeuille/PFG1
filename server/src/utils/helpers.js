@@ -4,11 +4,11 @@
  * @returns {String} - Fecha formateada
  */
 exports.formatDate = (date) => {
-  if (!date) return '';
-  return new Date(date).toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  if (!date) return "";
+  return new Date(date).toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
   });
 };
 
