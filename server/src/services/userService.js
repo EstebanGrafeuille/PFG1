@@ -43,6 +43,12 @@ class UserService {
     if (!user) throw new Error("Usuario no encontrado");
     return user;
   }
+
+  async deleteUser(id) {
+    const user = await User.findByIdAndDelete(id);
+    if (!user) throw new Error("Usuario no encontrado");
+    return { message: "Usuario eliminado correctamente" };
+  }
 }
 
 module.exports = new UserService();

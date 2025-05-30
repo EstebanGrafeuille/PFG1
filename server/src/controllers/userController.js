@@ -28,6 +28,11 @@ class UserController {
       const updatedUser = await userService.updateUser(id, { username, email });
       res.status(200).send({ success: true, message: updatedUser });
     } catch (error) {
+      // Validación específica de Mongoose
+      if (error.name === "ValidationError") {
+        const messages = Object.values(error.errors).map((err) => err.message);
+        return res.status(400).json({ message: messages.join(", ") });
+      }
       res.status(400).send({ success: false, message: error.message });
     }
   };
@@ -43,9 +48,17 @@ class UserController {
       const user = await userService.updateImage(userId, imageUrl);
       res.json({ message: "Imagen actualizada", user });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Error al actualizar imagen", error: error.message });
+      res.status(500).json({ message: "Error al actualizar imagen", error: error.message });
+    }
+  };
+
+  deleteUser = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await userService.deleteUser(id);
+      res.status(200).send({ success: true, message: result.message });
+    } catch (error) {
+      res.status(400).send({ success: false, message: error.message });
     }
   };
 }

@@ -12,5 +12,6 @@ router.get("/:id", userController.getById);
 router.get("/username/:username", userController.getByUsername);
 router.put("/:id", userController.updateUser);
 router.put("/:id/image", upload.single("image"), userController.updateImage);
+router.delete("/:id", userController.deleteUser);
 
 module.exports = router;
