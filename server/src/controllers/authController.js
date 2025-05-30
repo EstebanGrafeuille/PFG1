@@ -35,6 +35,11 @@ exports.register = async (req, res) => {
       }
     });
   } catch (error) {
+    // Validación específica de Mongoose
+    if (error.name === "ValidationError") {
+      const messages = Object.values(error.errors).map((err) => err.message);
+      return res.status(400).json({ message: messages.join(", ") });
+    }
     res.status(500).json({ message: "Error al registrar usuario", error: error.message });
   }
 };
