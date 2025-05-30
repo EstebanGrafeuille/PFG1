@@ -29,16 +29,49 @@ class BookService {
 	}
 
 	// Eliminar libro de favoritos / listas personalizadas
-	async removeFromLista(userId, lista, bookId) {
-		try {
-			await UserBook.updateOne(
-				{ user: userId, "libros.googleId": bookId },
-				{ $pull: { "libros.listasLibro": lista } }
-			);
-		} catch (error) {
-			throw new Error("error al remover libro de la lista");
-		}
-	}
+	// async removeFromLista(userId, lista, bookId) {
+	// 	try {
+	// 		await UserBook.updateOne(
+	// 			{ user: userId, "libros.googleId": bookId },
+	// 			{ $pull: { "libros.listasLibro": lista } }
+	// 		);
+	// 	} catch (error) {
+	// 		throw new Error("error al remover libro de la lista");
+	// 	}
+	// }
+
+  async removeFromLista(userId, lista, libroId) {
+  const userbook = await UserBook.findOne({ userId });
+  console.log([userId, lista, libroId]);
+
+  if (!userbook) {
+    throw new Error("usuario inexistente");
+  }
+  // Verifica que la lista exista para el usuario
+  const listaExiste = userbook.listasUser.includes(lista);
+  if (!listaExiste) {
+    throw new Error("lista inexistente");
+  }
+  // Verifica si el libro existe
+  const libroExistente = userbook.libros.find(libro => libro.googleId === libroId);
+  if (!libroExistente) {
+    throw new Error("libro no encontrado en el usuario");
+  }
+  // Elimina la lista de listasLibro del libro correspondiente
+  await UserBook.updateOne(
+    { userId, "libros.googleId": libroId },
+    { $pull: { "libros.$.listasLibro": lista } }
+  );
+  // Opcional: Eliminar el libro si ya no pertenece a ninguna lista
+  const updatedUserbook = await UserBook.findOne({ userId });
+  const libroActualizado = updatedUserbook.libros.find(libro => libro.googleId === libroId);
+  if (libroActualizado && libroActualizado.listasLibro.length === 0) {
+    await UserBook.updateOne(
+      { userId },
+      { $pull: { libros: { googleId: libroId } } }
+    );
+  }
+}
 
 	async createUserBook(userId) {
 		const registrado = UserBook.findOne({ user: userId });

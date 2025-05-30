@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, StyleSheet, Text, Image, Alert, Pressable, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import userBookService from "../services/userBook";
+import { AuthContext } from "../context/AuthContext";
 
 export default function ListBooksRemove({ids}){
 
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const { authData } = useContext(AuthContext);
 
   useEffect(() => {
   const fetchBooksByIds = async () => {
@@ -48,6 +52,17 @@ export default function ListBooksRemove({ids}){
     });
   };
 
+  // Manejar eliminar libro de lista
+    const handleRemoveBook = async (bookId) => {
+      try {
+        await userBookService.removeFromLista(authData.user.id, "Favoritos", bookId, authData.token);
+        setBooks(prev => prev.filter(b => b.id !== bookId));
+      } catch (error) {
+        console.error("Error al eliminar de lista: ", error.message);
+      }
+
+    };
+
     return(
         <View style={styles.container}>
             <Text style={styles.title}>Remove Books</Text>
@@ -55,7 +70,7 @@ export default function ListBooksRemove({ids}){
                 {books.map((book) => (
                     <View key={book.id} style={styles.listItem}>
                         <Text style={styles.bookName}>{book.title}</Text>
-                        <Pressable onPress={() =>  Alert.alert('You want to delete' + book.title)}>
+                        <Pressable onPress={() => {handleRemoveBook(book.id); }}>
                             <Image source={require("../../assets/img/delete-icon-yellow.png")} style={styles.icon}/>
                         </Pressable>
                     </View>

@@ -59,7 +59,7 @@ class BookController {
 				req.body.lista,
 				req.body.bookId
 			);
-			res.json({ message: "Libro eliminado de favoritos" });
+			res.json({ message: "Libro eliminado de " + req.body.lista });
 		} catch (error) {
 			res.status(500).json({
 				message: "Error al eliminar de favoritos",

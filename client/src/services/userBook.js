@@ -68,6 +68,31 @@ const addToLista = async (userId, lista, bookId, token) => {
   }
 };
 
+const removeFromLista = async (userId, lista, bookId, token) => {
+  console.log(userId, lista, bookId, token);
+  try {
+    const response = await fetch(`http://localhost:5000/api/books/removeFromLista`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache"
+      },
+      body: JSON.stringify({ userId, lista, bookId })
+    });
+
+    if (!response.ok) {
+      throw new Error("No se pudo libro de la Lista");
+    }
+
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getLista = async (userId, lista, token) => {
   try {
     const response = await fetch(`http://localhost:5000/api/books/getLista?userId=${userId}&lista=${lista}`, {
@@ -92,5 +117,5 @@ const getLista = async (userId, lista, token) => {
 
 
 export default {
-  addLista, getListas, addToLista, getLista
+  addLista, getListas, addToLista, getLista, removeFromLista
 };
