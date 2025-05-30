@@ -1,7 +1,6 @@
 const userService = require("../services/userService.js");
 
 class UserController {
-
   getByUsername = async (req, res) => {
     try {
       const { username } = req.params;
@@ -22,7 +21,6 @@ class UserController {
     }
   };
 
-  
   updateUser = async (req, res) => {
     try {
       const { id } = req.params;
@@ -35,20 +33,21 @@ class UserController {
   };
 
   updateImage = async (req, res) => {
-   try {
-     const userId = req.params.id;
-     if (!req.file || !req.file.path) {
-       return res.status(400).json({ message: 'No se subió ninguna imagen' });
-     }
+    try {
+      const userId = req.params.id;
+      if (!req.file || !req.file.path) {
+        return res.status(400).json({ message: "No se subió ninguna imagen" });
+      }
 
-     const imageUrl = req.file.path;
-     const user = await userService.updateImage(userId, imageUrl);
-     res.json({ message: 'Imagen actualizada', user });
-   } catch (error) {
-     res.status(500).json({ message: 'Error al actualizar imagen', error: error.message });
-   }
-  }
+      const imageUrl = req.file.path;
+      const user = await userService.updateImage(userId, imageUrl);
+      res.json({ message: "Imagen actualizada", user });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Error al actualizar imagen", error: error.message });
+    }
+  };
 }
-
 
 module.exports = new UserController();
