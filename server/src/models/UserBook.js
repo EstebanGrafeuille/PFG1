@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+// server\src\models\UserBook.js
+const mongoose = require("mongoose");
 
 const userBookSchema = new mongoose.Schema({
   user: {
@@ -7,24 +8,14 @@ const userBookSchema = new mongoose.Schema({
     required: true
   },
   listasUser:[String],
-  libros:{
+  libros:[{
     googleId: String,
     listasLibro: [String]
-  }
+  }]
 });
 
-userBookSchema.methods.checkLista = async function checkLista(lista){
-  const found = false;
-  const i = 0;
-  while (found){
-    if(listasUser[i] == lista){
-      found = true;
-      return found;
-    }
-    i++;
-  }
+userBookSchema.methods.checkLista = async function checkLista(lista) {
+	return this.listasUser.includes(lista);
 };
 
-
-const UserBook = mongoose.model('userbook',userBookSchema)
-module.exports = UserBook;
+module.exports = mongoose.model("userbook", userBookSchema);

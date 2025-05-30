@@ -14,10 +14,11 @@ export const searchBooks = async (query, startIndex = 0, maxResults = 40) => {
   if (!trimmed) return { items: [], totalItems: 0 };
 
   try {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(trimmed)}` +
-                `&maxResults=${maxResults}&startIndex=${startIndex}`;
+    const url =
+      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(trimmed)}` +
+      `&maxResults=${maxResults}&startIndex=${startIndex}`;
     const response = await fetch(url);
-    
+
     if (response.ok) {
       const data = await response.json();
       return {
@@ -25,9 +26,9 @@ export const searchBooks = async (query, startIndex = 0, maxResults = 40) => {
         totalItems: data.totalItems || 0
       };
     }
-    return { items: [], totalItems: 0, error: 'Error en la respuesta' };
+    return { items: [], totalItems: 0, error: "Error en la respuesta" };
   } catch (error) {
-    console.error('Error fetching books:', error);
+    console.error("Error fetching books:", error);
     return { items: [], totalItems: 0, error: error.message };
   }
 };
@@ -41,15 +42,21 @@ export const getBookDetails = async (volumeId) => {
   try {
     const response = await fetch(`https://www.googleapis.com/books/v1/volumes/${volumeId}`);
     const data = await response.json();
-    
+
     // Asegurar que la URL de la imagen sea HTTPS
-    if (data.volumeInfo?.imageLinks?.thumbnail && data.volumeInfo.imageLinks.thumbnail.startsWith('http:')) {
-      data.volumeInfo.imageLinks.thumbnail = data.volumeInfo.imageLinks.thumbnail.replace('http:', 'https:');
+    if (
+      data.volumeInfo?.imageLinks?.thumbnail &&
+      data.volumeInfo.imageLinks.thumbnail.startsWith("http:")
+    ) {
+      data.volumeInfo.imageLinks.thumbnail = data.volumeInfo.imageLinks.thumbnail.replace(
+        "http:",
+        "https:"
+      );
     }
-    
+
     return data;
   } catch (error) {
-    console.error('Error fetching book details:', error);
+    console.error("Error fetching book details:", error);
     throw error;
   }
 };
@@ -61,7 +68,7 @@ export const getBookDetails = async (volumeId) => {
  */
 const processBookItem = (item) => ({
   id: item.id,
-  title: item.volumeInfo?.title ?? 'Sin título',
+  title: item.volumeInfo?.title ?? "Sin título",
   authors: item.volumeInfo?.authors ?? [],
   thumbnail: item.volumeInfo?.imageLinks?.thumbnail
 });

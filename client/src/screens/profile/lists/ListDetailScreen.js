@@ -1,10 +1,34 @@
+import { useEffect, useState, useContext } from 'react';
+import { useRoute } from '@react-navigation/native';
 import { View, Text, StyleSheet, Button, Pressable, Image, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import BooksProfileComp from "../../../components/BooksProfileComp"
+import BooksInList from "../../../components/BooksInList";
+import userBookService from "../../../services/userBook";
+import { AuthContext } from "../../../context/AuthContext";
+
 
 export default function ListDetailScreen(){
 
     const navigation = useNavigation();
+
+    const { authData } = useContext(AuthContext);
+    const [bookIds, setBookIds] = useState([]);
+
+    const route = useRoute();
+    const { listTitle } = route.params;
+    
+    useEffect(() => {
+    const fetchLibros = async () => {
+        try {
+        const libros = await userBookService.getLista(authData.user.id, listTitle, authData.token);
+        setBookIds(libros);
+        
+        } catch (error) {
+        console.error("Error obteniendo libros de lista:", error.message);
+        }
+    };
+    fetchLibros();
+    }, []);
 
     return(
         <View style={styles.listDetailScreen}>
@@ -16,7 +40,7 @@ export default function ListDetailScreen(){
                         </View>
                     </Pressable>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.title}>Literatura Rusa</Text>
+                        <Text style={styles.title}>{listTitle}</Text>
                     </View>
                     <Pressable onPress={() => navigation.navigate('EditListScreen')}>
                         <View style={styles.buttonContainer}>
@@ -25,7 +49,7 @@ export default function ListDetailScreen(){
                     </Pressable>
                 </View>
                 <Text style={styles.author}>by user_name</Text>
-                <BooksProfileComp />
+                <BooksInList ids={bookIds} nav={navigation}/>
             </View>
         </View>
     )
@@ -33,12 +57,14 @@ export default function ListDetailScreen(){
 
 const styles = StyleSheet.create({
     listDetailScreen: {
+        flex: 1,
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",
         backgroundColor: "white",
     },
     listContainer:{
+        flex: 1,
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",

@@ -1,10 +1,10 @@
 /**
  * Hook personalizado para manejar la búsqueda de libros
- * 
+ *
  * @module hooks/useBookSearch
  */
-import { useState, useRef, useEffect } from 'react';
-import { searchBooks } from '../api/booksApi';
+import { useState, useRef, useEffect } from "react";
+import { searchBooks } from "../api/booksApi";
 
 // Comentario para desarrolladores:
 // TODO: Cuando se complete la migración, actualizar las importaciones a:
@@ -24,7 +24,7 @@ import { searchBooks } from '../api/booksApi';
  */
 export default function useBookSearch() {
   const [books, setBooks] = useState([]);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [startIndex, setStartIndex] = useState(0);
@@ -33,10 +33,13 @@ export default function useBookSearch() {
   const abortControllerRef = useRef(null);
 
   // Limpiar timers y controladores al desmontar
-  useEffect(() => () => {
-    if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    if (abortControllerRef.current) abortControllerRef.current.abort();
-  }, []);
+  useEffect(
+    () => () => {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+      if (abortControllerRef.current) abortControllerRef.current.abort();
+    },
+    []
+  );
 
   /**
    * Busca libros con el término de búsqueda proporcionado
@@ -49,17 +52,17 @@ export default function useBookSearch() {
     abortControllerRef.current = controller;
 
     index === 0 ? setLoading(true) : setLoadingMore(true);
-    
+
     try {
       const result = await searchBooks(searchTerm, index);
-      
+
       if (!controller.signal.aborted) {
-        setBooks(prev => index === 0 ? result.items : [...prev, ...result.items]);
+        setBooks((prev) => (index === 0 ? result.items : [...prev, ...result.items]));
         setTotalItems(result.totalItems);
         setStartIndex(index + result.items.length);
       }
     } catch (e) {
-      if (e.name !== 'AbortError') console.error('Error en useBookSearch:', e);
+      if (e.name !== "AbortError") console.error("Error en useBookSearch:", e);
     } finally {
       if (!controller.signal.aborted) {
         setLoading(false);
@@ -72,7 +75,7 @@ export default function useBookSearch() {
    * Maneja el cambio de texto en la búsqueda con debounce
    * @param {string} text - Texto de búsqueda
    */
-  const handleChangeText = text => {
+  const handleChangeText = (text) => {
     setQuery(text);
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {

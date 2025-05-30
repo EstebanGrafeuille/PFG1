@@ -1,10 +1,10 @@
 /**
  * Hook personalizado para obtener detalles de un libro
- * 
+ *
  * @module hooks/useBookDetails
  */
-import { useState, useEffect } from 'react';
-import { getBookDetails } from '../api/booksApi';
+import { useState, useEffect } from "react";
+import { getBookDetails } from "../api/booksApi";
 
 // Comentario para desarrolladores:
 // TODO: Cuando se complete la migración, actualizar las importaciones a:
@@ -34,8 +34,8 @@ export default function useBookDetails(volumeId) {
         setDetails(data);
         setError(null);
       } catch (error) {
-        console.error('Error fetching book details:', error);
-        setError('No se pudieron cargar los detalles del libro');
+        console.error("Error fetching book details:", error);
+        setError("No se pudieron cargar los detalles del libro");
       } finally {
         setLoading(false);
       }

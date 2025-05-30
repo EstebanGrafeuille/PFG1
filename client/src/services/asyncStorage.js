@@ -35,5 +35,5 @@ const clearAll = async () => {
 export default {
   storeData,
   getData,
-  clearAll,
+  clearAll
 };

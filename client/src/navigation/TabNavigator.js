@@ -1,73 +1,107 @@
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet } from "react-native";
 
-import AddBookScreen from '../screens/AddBookScreen'
-import SocialScreen from '../screens/SocialScreen'
-import ProfileNavigation from "./ProfileNavigator";
-import SearchStackNavigator from "./SearchStackNavigator";
-import HomeStackNavigator from "./HomeStackNavigator";
+import AddBookScreen from "../screens/AddBookScreen";
+import SocialScreen from "../screens/SocialScreen";
+import ProfileNavigation from "./tabs/profile/ProfileNavigator";
+import SearchStackNavigator from "./tabs/SearchStackNavigator";
+import HomeStackNavigator from "./tabs/HomeStackNavigator";
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigation = () => {
-
-    return (
-        <Tab.Navigator
-            screenOptions={{
-                tabBarShowLabel: false,
-                headerShown: false,
-                tabBarPosition: 'bottom',
-                tabBarStyle: {
-                    backgroundColor: "#FFCB20",
-                    position: 'absolute',
-                    height: 60,
-                }
-            }}
-        >
-            <Tab.Screen name="HomeScreen" component={HomeStackNavigator} options={{
-                tabBarIcon: ({focused}) => (
-                    <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
-                        <Image source={require("../../assets/img/home-icon-1.png")}
-                            resizeMode="contain" style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]} />
-                    </View>
-                )
-            }}/>
-            <Tab.Screen name="SearchScreen" component={SearchStackNavigator} options={{
-                tabBarIcon: ({focused}) => (
-                    <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
-                        <Image source={require("../../assets/img/search-icon.png")}
-                            resizeMode="contain" style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]} />
-                    </View>
-                )
-            }}/>
-            <Tab.Screen name="AddBookScreen" component={AddBookScreen} options={{
-                tabBarIcon: ({focused}) => (
-                    <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
-                        <Image source={require("../../assets/img/bookmark-icon.png")}
-                            resizeMode="contain" style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]} />
-                    </View>
-                )
-            }}/>
-            <Tab.Screen name="SocialScreen" component={SocialScreen} options={{
-                tabBarIcon: ({focused}) => (
-                    <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
-                        <Image source={require("../../assets/img/heart-icon.png")}
-                            resizeMode="contain" style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]} />
-                    </View>
-                )
-            }}/>
-            <Tab.Screen name="SETTINGS" component={ProfileNavigation} options={{
-                tabBarIcon: ({focused}) => (
-                    <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
-                        <Image source={require("../../assets/img/profile-icon.png")}
-                        resizeMode="contain" style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]} />
-                    </View>
-                )
-            }}/>
-        </Tab.Navigator>
-    )
-}
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        headerShown: false,
+        tabBarPosition: "bottom",
+        tabBarStyle: {
+          backgroundColor: "#FFCB20",
+          position: "absolute",
+          height: 60
+        }
+      }}
+    >
+      <Tab.Screen
+        name="HomeScreen"
+        component={HomeStackNavigator}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
+              <Image
+                source={require("../../assets/img/home-icon-1.png")}
+                resizeMode="contain"
+                style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]}
+              />
+            </View>
+          )
+        }}
+      />
+      <Tab.Screen
+        name="SearchScreen"
+        component={SearchStackNavigator}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
+              <Image
+                source={require("../../assets/img/search-icon.png")}
+                resizeMode="contain"
+                style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]}
+              />
+            </View>
+          )
+        }}
+      />
+      <Tab.Screen
+        name="AddBookScreen"
+        component={AddBookScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
+              <Image
+                source={require("../../assets/img/bookmark-icon.png")}
+                resizeMode="contain"
+                style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]}
+              />
+            </View>
+          )
+        }}
+      />
+      <Tab.Screen
+        name="SocialScreen"
+        component={SocialScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
+              <Image
+                source={require("../../assets/img/heart-icon.png")}
+                resizeMode="contain"
+                style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]}
+              />
+            </View>
+          )
+        }}
+      />
+      <Tab.Screen
+        name="SETTINGS"
+        component={ProfileNavigation}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
+              <Image
+                source={require("../../assets/img/profile-icon.png")}
+                resizeMode="contain"
+                style={[styles.tabIconStyle, focused && styles.tabIconStyleFocused]}
+              />
+            </View>
+          )
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
 const styles = StyleSheet.create({
   tabIconStyle: {
@@ -80,8 +114,8 @@ const styles = StyleSheet.create({
   },
 
   tabIconContainer: {
-    alignItems: 'center',
-    paddingTop: 10,
+    alignItems: "center",
+    paddingTop: 10
   },
 
   tabIconContainerFocused: {
@@ -89,8 +123,8 @@ const styles = StyleSheet.create({
     height: 80,
     width: 45,
     borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
+    borderTopLeftRadius: 10
   }
 });
 
-export default TabNavigation
+export default TabNavigation;

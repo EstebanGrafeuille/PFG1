@@ -1,3 +1,4 @@
+// server\src\services\userService.js
 const User = require("../models/User.js");
 
 class UserService {
@@ -19,7 +20,7 @@ class UserService {
     // Verificar si el nuevo username o email ya existen en otro usuario
     const existingUser = await User.findOne({
       $or: [{ username }, { email }],
-      _id: { $ne: id }, // Excluir al usuario actual
+      _id: { $ne: id } // Excluir al usuario actual
     });
 
     if (existingUser) {
@@ -38,11 +39,7 @@ class UserService {
   }
 
   async updateImage(userId, imageUrl) {
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { image: imageUrl },
-      { new: true }
-    );
+    const user = await User.findByIdAndUpdate(userId, { image: imageUrl }, { new: true });
     if (!user) throw new Error("Usuario no encontrado");
     return user;
   }

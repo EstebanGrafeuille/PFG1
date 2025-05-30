@@ -1,12 +1,12 @@
 /**
  * Componentes de indicadores de carga reutilizables
- * 
+ *
  * @module components/ui/LoadingIndicator
  */
-import React from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import Colors from '../../constants/colors';
-import Layout from '../../constants/layout';
+import React from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import Colors from "../../constants/colors";
+import Layout from "../../constants/layout";
 
 // Comentario para desarrolladores:
 // TODO: Cuando se complete la migración, actualizar las importaciones a:
@@ -20,15 +20,9 @@ import Layout from '../../constants/layout';
  * @param {boolean} [props.fullScreen=false] - Si debe ocupar toda la pantalla
  * @returns {JSX.Element} - Componente de indicador de carga
  */
-export const LoadingIndicator = ({ 
-  size = 'large', 
-  fullScreen = false 
-}) => (
+export const LoadingIndicator = ({ size = "large", fullScreen = false }) => (
   <View style={[styles.container, fullScreen && styles.fullScreen]}>
-    <ActivityIndicator 
-      size={size} 
-      color={Colors.PRIMARY} 
-    />
+    <ActivityIndicator size={size} color={Colors.PRIMARY} />
   </View>
 );
 
@@ -38,15 +32,8 @@ export const LoadingIndicator = ({
  * @param {boolean} props.loading - Si está cargando
  * @returns {JSX.Element|null} - Componente de indicador de carga o null
  */
-export const LoadingFooter = ({ loading }) => (
-  loading ? (
-    <ActivityIndicator 
-      style={styles.footer} 
-      size="small" 
-      color={Colors.PRIMARY} 
-    />
-  ) : null
-);
+export const LoadingFooter = ({ loading }) =>
+  loading ? <ActivityIndicator style={styles.footer} size="small" color={Colors.PRIMARY} /> : null;
 
 /**
  * Estilos para los componentes de indicadores de carga
@@ -57,8 +44,8 @@ const styles = StyleSheet.create({
   },
   fullScreen: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center"
   },
   footer: {
     marginVertical: Layout.SPACING.M

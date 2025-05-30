@@ -1,3 +1,4 @@
+// server\src\models\User.js
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
@@ -6,35 +7,35 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    trim: true,
+    trim: true
   },
   email: {
     type: String,
     required: true,
     unique: true,
     trim: true,
-    lowercase: true,
+    lowercase: true
   },
   password: {
     type: String,
-    required: true,
+    required: true
   },
   image: {
     type: String,
-    default: "",
+    default: ""
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
   resetCode: {
     type: String,
-    default: null,
+    default: null
   },
   resetCodeExpires: {
     type: Date,
-    default: null,
-  },
+    default: null
+  }
 });
 
 // Hash de contraseña antes de guardar
