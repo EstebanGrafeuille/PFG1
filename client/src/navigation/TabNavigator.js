@@ -2,9 +2,9 @@ import { View, Image, StyleSheet } from "react-native";
 
 import AddBookScreen from "../screens/AddBookScreen";
 import SocialScreen from "../screens/SocialScreen";
-import ProfileNavigation from "./ProfileNavigator";
-import SearchStackNavigator from "./SearchStackNavigator";
-import HomeStackNavigator from "./HomeStackNavigator";
+import ProfileNavigation from "./tabs/profile/ProfileNavigator";
+import SearchStackNavigator from "./tabs/SearchStackNavigator";
+import HomeStackNavigator from "./tabs/HomeStackNavigator";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 

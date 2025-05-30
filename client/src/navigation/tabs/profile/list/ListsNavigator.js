@@ -1,9 +1,9 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import ListsBooksScreen from "../screens/profile/lists/ListsBooksScreen";
-import CreateListScreen from "../screens/profile/lists/CreateListScreen";
-import ListDetailScreen from "../screens/profile/lists/ListDetailScreen";
+import ListsBooksScreen from "../../../../screens/profile/lists/ListsBooksScreen";
+import CreateListScreen from "../../../../screens/profile/lists/CreateListScreen";
+import ListDetailScreen from "../../../../screens/profile/lists/ListDetailScreen";
 import ListDetailNavigation from "./ListDetailNavigator";
 
 const Stack = createNativeStackNavigator();

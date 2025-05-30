@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import SearchScreen from "../screens/searchScreens/SearchScreen";
-import DetailBook from "../screens/searchScreens/DetailBookScreen";
+import SearchScreen from "../../screens/searchScreens/SearchScreen";
+import DetailBook from "../../screens/searchScreens/DetailBookScreen";
 
 const SearchStack = createNativeStackNavigator();
 

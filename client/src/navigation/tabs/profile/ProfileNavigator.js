@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ProfileScreen from "../screens/profile/ProfileScreen";
-import ReadBooksScreen from "../screens/profile/ReadBooksScreen";
-import WishlistScreen from "../screens/profile/WishlistScreen";
-import ListsNavigation from "./ListsNavigator";
+import ProfileScreen from "../../../screens/profile/ProfileScreen";
+import ReadBooksScreen from "../../../screens/profile/ReadBooksScreen";
+import WishlistScreen from "../../../screens/profile/WishlistScreen";
+import ListsNavigation from "./list/ListsNavigator";
 
 const ProfileNavigation = () => {
   const Stack = createNativeStackNavigator();
