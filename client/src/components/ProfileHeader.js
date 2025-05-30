@@ -15,8 +15,8 @@ export default function ProfileHeader(props) {
       </View>
       <View style={styles.headerContainer}>
         <Text
-          style={[styles.headerText, isFocused("ProfileSettings") && styles.headerTextFocused]}
-          onPress={() => navigation.navigate("ProfileSettings")}
+          style={[styles.headerText, isFocused("SettingsNavigation") && styles.headerTextFocused]}
+          onPress={() => navigation.navigate("SettingsNavigation")}
         >
           Profile
         </Text>
