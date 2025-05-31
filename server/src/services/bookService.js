@@ -3,6 +3,28 @@ const UserBook = require("../models/UserBook");
 
 class BookService {
 	// Obtener libros favoritos del usuario
+
+  async createUB(id){
+    console.log("creando userbook con id " + id)
+    try{
+      const existente = await UserBook.findOne({userId:id});
+      console.log("ya existe el userbook" + existente)
+      if(existente){
+        throw new Error("usuario ya registrado")
+      }else{
+        const userbook = new UserBook({
+          userId:id,
+          listasUser:["favoritos","leidos","leyendo"],
+          libros:[]
+        });
+        console.log(userbook)
+        await userbook.save();
+        return userbook
+      }
+    }catch(error){
+      return error.message
+    }
+  }
 	async getFavorites(userId) {
 		const userBooks = await UserBook.find({
 			user: userId,
@@ -72,16 +94,6 @@ class BookService {
     );
   }
 }
-
-	async createUserBook(userId) {
-		const registrado = UserBook.findOne({ user: userId });
-		if (registrado) {
-			throw new Error("el usuario ya tiene un UserBook");
-		}
-		const userbook = new UserBook(userId);
-		await userbook.save();
-	}
-
 	async addListaToUser(userId, nombreListaNueva) {
 		const userbook = await UserBook.findOne({ user: userId });
 		if (userbook) {
@@ -107,10 +119,10 @@ class BookService {
     if(userbook){
       if(await UserBook.findOne({"userId":userId,"listasUser":lista})){
         if(await UserBook.findOne({"userId":userId,"libros.googleId":libroId})){
-          console.log("libro encontrado")
+          
           await UserBook.updateOne({"userId":userId,"libros.googleId":libroId},{$push:{"libros.$.listasLibro":lista}})
         }else{
-          console.log("libro no encontrado")
+          
           await UserBook.updateOne({"userId":userId},{$push:{"libros":{
             "googleId":libroId,
             "listasLibro":[lista]

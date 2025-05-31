@@ -84,6 +84,24 @@ class BookController {
 			});
 		}
 	};
+
+   createUserBook = async (req,res)=> {
+    try{
+      	const result = await bookService.createUB(req.body.userId);
+		console.log(result);
+		if(result == "usuario ya registrado"){
+			res.status(500).json({
+				message: "Error al crear userbook " + result
+			});
+		}
+	  	res.status(201).json({message:"userbook creado para el usuario: " + result})
+    }catch(error){
+		res.status(500).json({
+				message: "Error al crear userbook",
+				error: error.message,
+			});
+    }
+  }
 }
 
 module.exports = new BookController();
