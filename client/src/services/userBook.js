@@ -1,8 +1,8 @@
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://192.168.0.11:5000";
 
 const addLista = async (userId, lista, token) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/books/addLista`, {
+    const response = await fetch(`http://192.168.0.11:5000/api/books/addLista`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,7 +24,7 @@ const addLista = async (userId, lista, token) => {
 
 const getListas = async (userId, token) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/books/getListas?userId=${userId}`, {
+    const response = await fetch(`http://192.168.0.11:5000/api/books/getListas?userId=${userId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -46,7 +46,7 @@ const getListas = async (userId, token) => {
 const addToLista = async (userId, lista, bookId, token) => {
   console.log(userId, lista, bookId, token);
   try {
-    const response = await fetch(`http://localhost:5000/api/books/addLibroToLista`, {
+    const response = await fetch(`http://192.168.0.11:5000/api/books/addLibroToLista`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -71,7 +71,7 @@ const addToLista = async (userId, lista, bookId, token) => {
 const removeFromLista = async (userId, lista, bookId, token) => {
   console.log(userId, lista, bookId, token);
   try {
-    const response = await fetch(`http://localhost:5000/api/books/removeFromLista`, {
+    const response = await fetch(`http://192.168.0.11:5000/api/books/removeFromLista`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -95,7 +95,7 @@ const removeFromLista = async (userId, lista, bookId, token) => {
 
 const getLista = async (userId, lista, token) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/books/getLista?userId=${userId}&lista=${lista}`, {
+    const response = await fetch(`http://192.168.0.11:5000/api/books/getLista?userId=${userId}&lista=${lista}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,

@@ -103,10 +103,10 @@ const DetailBook = ({ route }) => {
         {/* Cabecera con imagen y datos básicos */}
         <View style={styles.headerContainer}>
           <Pressable onPress={() => navigation.goBack()}>
-              <View style={styles.buttonContainer}>
-                  <Image source={require("../../../assets/img/back-icon-white.png")} style={styles.icon}/>
-              </View>
-          </Pressable>       
+            <View style={styles.buttonContainer}>
+              <Image source={require("../../../assets/img/back-icon-white.png")} style={styles.icon} />
+            </View>
+          </Pressable>
           <View style={styles.headerInfo}>
             <View style={styles.imageContainer}>
               {info.imageLinks?.thumbnail ? (
@@ -224,9 +224,21 @@ const DetailBook = ({ route }) => {
               </View>
               <Text style={styles.iconText}>Next</Text>
             </Pressable>
+            <Pressable
+              onPress={() =>navigation.navigate("Reviews", {volumeId: details.id})} 
+              style={styles.rowItemContainer}
+            >
+              <View style={styles.reviewstButtonContainer}>
+                <Image
+                  source={require("../../../assets/img/reviews-icon.png")}
+                  style={styles.reviewsIcon}
+                />
+              </View>
+              <Text style={styles.iconText}>Reviews</Text>
+            </Pressable>
           </View>
           <View style={styles.reviewContainer}>
-            <Pressable onPress={() => Alert.alert("Write Review")}>
+            <Pressable onPress={() => navigation.navigate("AddReview", { volumeId: details.id })}>
               <View style={styles.reviewButtonContainer}>
                 <Image
                   source={require("../../../assets/img/review-icon.png")}
@@ -421,6 +433,14 @@ const styles = StyleSheet.create({
     width: 32
   },
   listIcon: {
+    height: "100%",
+    width: "100%"
+  },
+  reviewstButtonContainer: {
+    height: 32,
+    width: 32
+  },
+  reviewsIcon: {
     height: "100%",
     width: "100%"
   },
