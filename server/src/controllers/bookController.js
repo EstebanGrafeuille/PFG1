@@ -87,13 +87,15 @@ class BookController {
 
    createUserBook = async (req,res)=> {
     try{
-      	const result = await bookService.createUB(req.body.userId);
-		console.log(result);
+      	const result = await bookService.createUB(req);
 		if(result == "usuario ya registrado"){
+			console.log("usuario ya registrado");
 			res.status(500).json({
 				message: "Error al crear userbook " + result
 			});
+			console.log("");
 		}
+		console.log("usuario no registrado")
 	  	res.status(201).json({message:"userbook creado para el usuario: " + result})
     }catch(error){
 		res.status(500).json({

@@ -8,16 +8,17 @@ class BookService {
     console.log("creando userbook con id " + id)
     try{
       const existente = await UserBook.findOne({userId:id});
-      console.log("ya existe el userbook" + existente)
-      if(existente){
-        throw new Error("usuario ya registrado")
+      
+      if(existente != null){
+        console.log("ya existe el userbook " + existente)
+        throw new Error("usuario ya tiene lista")
       }else{
         const userbook = new UserBook({
           userId:id,
           listasUser:["favoritos","leidos","leyendo"],
           libros:[]
         });
-        console.log(userbook)
+        //console.log(userbook)
         await userbook.save();
         return userbook
       }
