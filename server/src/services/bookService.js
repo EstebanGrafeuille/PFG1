@@ -96,6 +96,7 @@ class BookService {
   }
 }
 	async addListaToUser(userId, nombreListaNueva) {
+    if(nombreListaNueva ==""){throw new Error("nombre de lista vacia")}
 		const userbook = await UserBook.findOne({ user: userId });
 		if (userbook) {
 			const lista = await UserBook.findOne({
