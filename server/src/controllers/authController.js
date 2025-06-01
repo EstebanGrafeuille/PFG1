@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
+const bookService = require("../services/bookService")
 
 // Registrar un nuevo usuario
 exports.register = async (req, res) => {
@@ -21,7 +22,9 @@ exports.register = async (req, res) => {
     });
 
     await user.save();
-
+    console.log("creado user")
+    await bookService.createUB(user._id);
+    console.log("creado ub")
     // Generar token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 
