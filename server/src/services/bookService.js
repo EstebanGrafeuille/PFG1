@@ -65,13 +65,14 @@ class BookService {
 
   async removeFromLista(userId, lista, libroId) {
   const userbook = await UserBook.findOne({ userId });
-  console.log([userId, lista, libroId]);
+  console.log(userbook.listasUser);
 
   if (!userbook) {
     throw new Error("usuario inexistente");
   }
   // Verifica que la lista exista para el usuario
   const listaExiste = userbook.listasUser.includes(lista);
+  console.log(listaExiste)
   if (!listaExiste) {
     throw new Error("lista inexistente");
   }
