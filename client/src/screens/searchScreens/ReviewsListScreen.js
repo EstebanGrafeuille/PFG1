@@ -10,6 +10,10 @@ import {
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import reviewService from "../../services/reviewService";
+import ReviewCard from "../../components/ReviewCard";
+import { AuthContext } from "../../context/AuthContext";
+import { useContext } from "react";
+
 
 export default function ReviewListScreen() {
   const { params } = useRoute();
@@ -19,11 +23,14 @@ export default function ReviewListScreen() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { authData } = useContext(AuthContext);
+
+
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         const res = await reviewService.getReviewsByBook(volumeId);
-        setReviews(res.data || []); // asume que el backend devuelve { data: [...] }
+        setReviews(res.data || []);
       } catch (err) {
         console.error("Error al obtener reseñas:", err.message);
       } finally {
@@ -34,12 +41,17 @@ export default function ReviewListScreen() {
     fetchReviews();
   }, [volumeId]);
 
-  const renderItem = ({ item }) => (
-    <View style={styles.reviewCard}>
-      <Text style={styles.reviewer}>{item.user?.name || "Anónimo"}</Text>
-      <Text style={styles.comment}>{item.comment}</Text>
-    </View>
-  );
+const handleEdit = (review) => {
+  console.log("Editar reseña:", review);
+  // Lógica futura para editar
+};
+
+const handleDelete = (review) => {
+  console.log("Eliminar reseña:", review);
+  // Lógica futura para eliminar
+};
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,12 +61,18 @@ export default function ReviewListScreen() {
       ) : reviews.length === 0 ? (
         <Text style={styles.emptyText}>Todavía no hay reseñas para este libro.</Text>
       ) : (
-        <FlatList
-          data={reviews}
-          keyExtractor={(item) => item._id}
-          renderItem={renderItem}
-          contentContainerStyle={styles.list}
-        />
+<FlatList
+  data={reviews}
+  keyExtractor={(item) => item._id}
+  renderItem={({ item }) => (
+    <ReviewCard
+      review={item}
+      isOwnReview={item.user?._id === authData?.user?._id}
+      onEdit={handleEdit}
+      onDelete={handleDelete}
+    />
+  )}
+/>
       )}
     </SafeAreaView>
   );
