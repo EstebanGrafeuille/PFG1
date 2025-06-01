@@ -6,21 +6,9 @@
 import { useState, useRef, useEffect } from "react";
 import { searchBooks } from "../api/booksApi";
 
-// Comentario para desarrolladores:
-// TODO: Cuando se complete la migración, actualizar las importaciones a:
-// import { searchBooks } from './api/booksApi';
-
 /**
  * Hook personalizado para manejar la búsqueda de libros
  * @returns {Object} Estado y funciones para la búsqueda de libros
- * @returns {Array} books - Lista de libros encontrados
- * @returns {string} query - Término de búsqueda actual
- * @returns {boolean} loading - Si está cargando la búsqueda inicial
- * @returns {boolean} loadingMore - Si está cargando más resultados
- * @returns {Function} handleChangeText - Función para manejar cambios en el texto de búsqueda
- * @returns {Function} handleEndReached - Función para manejar cuando se llega al final de la lista
- * @returns {Function} handleSubmit - Función para manejar el envío del formulario de búsqueda
- * @returns {Function} setQuery - Función para establecer el término de búsqueda directamente
  */
 export default function useBookSearch() {
   const [books, setBooks] = useState([]);
@@ -29,6 +17,14 @@ export default function useBookSearch() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [startIndex, setStartIndex] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
+  const [searchType, setSearchType] = useState("title"); // "title" o "author"
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [filters, setFilters] = useState({
+    previewAvailable: false,
+    freeEbooks: false,
+    fullBooks: false
+  });
+  
   const debounceTimer = useRef(null);
   const abortControllerRef = useRef(null);
 
@@ -42,11 +38,38 @@ export default function useBookSearch() {
   );
 
   /**
+   * Construye la consulta de búsqueda basada en el tipo y categoría
+   * @param {string} searchTerm - Término de búsqueda
+   * @returns {string} - Consulta formateada
+   */
+  const buildSearchQuery = (searchTerm) => {
+    if (!searchTerm.trim()) return "";
+    
+    let finalQuery = searchTerm;
+    
+    // Añadir prefijo según el tipo de búsqueda
+    if (searchType === "author") {
+      finalQuery = `inauthor:${finalQuery}`;
+    } else {
+      finalQuery = `intitle:${finalQuery}`;
+    }
+    
+    // Añadir categoría si no es "all"
+    if (selectedCategory !== "all") {
+      finalQuery += ` subject:${selectedCategory}`;
+    }
+    
+    return finalQuery;
+  };
+
+  /**
    * Busca libros con el término de búsqueda proporcionado
    * @param {string} searchTerm - Término de búsqueda
    * @param {number} index - Índice de inicio para paginación
    */
   const fetchBooks = async (searchTerm, index = 0) => {
+    if (!searchTerm.trim()) return;
+    
     if (abortControllerRef.current) abortControllerRef.current.abort();
     const controller = new AbortController();
     abortControllerRef.current = controller;
@@ -54,7 +77,8 @@ export default function useBookSearch() {
     index === 0 ? setLoading(true) : setLoadingMore(true);
 
     try {
-      const result = await searchBooks(searchTerm, index);
+      const formattedQuery = buildSearchQuery(searchTerm);
+      const result = await searchBooks(formattedQuery, index, 40, filters);
 
       if (!controller.signal.aborted) {
         setBooks((prev) => (index === 0 ? result.items : [...prev, ...result.items]));
@@ -101,15 +125,55 @@ export default function useBookSearch() {
     fetchBooks(query, 0);
   };
 
+  /**
+   * Actualiza los filtros y realiza una nueva búsqueda
+   * @param {Object} newFilters - Nuevos filtros a aplicar
+   */
+  const updateFilters = (newFilters) => {
+    setFilters(newFilters);
+    setStartIndex(0);
+    fetchBooks(query, 0);
+  };
+
+  /**
+   * Actualiza el tipo de búsqueda y realiza una nueva búsqueda
+   * @param {string} type - Nuevo tipo de búsqueda
+   */
+  const updateSearchType = (type) => {
+    setSearchType(type);
+    if (query.trim()) {
+      setStartIndex(0);
+      fetchBooks(query, 0);
+    }
+  };
+
+  /**
+   * Actualiza la categoría y realiza una nueva búsqueda
+   * @param {string} category - Nueva categoría
+   */
+  const updateCategory = (category) => {
+    setSelectedCategory(category);
+    if (query.trim()) {
+      setStartIndex(0);
+      fetchBooks(query, 0);
+    }
+  };
+
   return {
     books,
     query,
     loading,
     loadingMore,
     totalItems,
+    searchType,
+    filters,
+    selectedCategory,
     handleChangeText,
     handleEndReached,
     handleSubmit,
-    setQuery
+    setQuery,
+    updateSearchType,
+    updateFilters,
+    updateCategory
   };
 }
