@@ -96,13 +96,18 @@ class BookService {
   }
 }
 	async addListaToUser(userId, nombreListaNueva) {
-    if(nombreListaNueva ==""){throw new Error("nombre de lista vacia")}
-		const userbook = await UserBook.findOne({ user: userId });
+    console.log(userId + nombreListaNueva);
+    if(nombreListaNueva ==""){
+      throw new Error("nombre de lista vacia");
+    }
+		const userbook = await UserBook.findOne({ userId: userId });
+    console.log(userbook);
 		if (userbook) {
 			const lista = await UserBook.findOne({
 				user: userId,
 				"libros.listas": nombreListaNueva,
 			});
+      console.log(lista);
 			if (lista) {
 				throw new Error("la lista ya existe");
 			}
