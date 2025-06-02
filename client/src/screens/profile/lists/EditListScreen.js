@@ -55,7 +55,7 @@ export default function EditListScreen(){
                 <TouchableOpacity onPress={() => navigation.navigate('ListsBooksScreen')} style={styles.doneBtn}>
                     <Text style={styles.btnText}>Done</Text>
                 </TouchableOpacity>
-                <ListBooksRemove ids={bookIds} />
+                <ListBooksRemove ids={bookIds} lista={listTitle} />
             </View>
         </View> 
     )
@@ -63,6 +63,7 @@ export default function EditListScreen(){
 
 const styles = StyleSheet.create({
   listDetailScreen: {
+    flex: 1,
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "center",
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flexDirection: "column",
+    flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
     backgroundColor: "#F0F0F0",
