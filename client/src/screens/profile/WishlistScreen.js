@@ -14,11 +14,11 @@ export default function WishlistScreen () {
   useEffect(() => {
     const fetchLibros = async () => {
       try {
-        const libros = await userBookService.getLista(authData.user.id, "Lista del Front", authData.token);
+        const libros = await userBookService.getLista(authData.user.id, "leyendo", authData.token);
         setBookIds(libros);
         
       } catch (error) {
-        console.error("Error obteniendo libros de lista:", error.message);
+        console.error("Error obteniendo libros de lista leyendo:", error.message);
       }
     };
     fetchLibros();
