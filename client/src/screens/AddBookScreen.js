@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 export default function AddBookScreen() {
   return (
     <View style={styles.container}>
-      <Text>¡Click to add a book!</Text>
+      <Text>Proximamente...</Text>
     </View>
   );
 }

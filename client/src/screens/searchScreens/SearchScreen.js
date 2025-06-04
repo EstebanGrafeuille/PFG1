@@ -24,16 +24,16 @@ import Layout from "../../constants/layout";
  */
 const SearchScreen = ({ navigation }) => {
   // Usar el hook personalizado para la búsqueda de libros
-  const { 
-    books, 
-    query, 
-    loading, 
-    loadingMore, 
+  const {
+    books,
+    query,
+    loading,
+    loadingMore,
     searchType,
     filters,
     selectedCategory,
-    handleChangeText, 
-    handleEndReached, 
+    handleChangeText,
+    handleEndReached,
     handleSubmit,
     updateSearchType,
     updateFilters,
@@ -54,13 +54,21 @@ const SearchScreen = ({ navigation }) => {
     setIsTypeDropdownOpen(isOpen);
   };
 
+  const handleBookPress = (book, index) => {
+    navigation.navigate("DetailBook", {
+      volumeId: book.id,
+      searchResults: searchResults,
+      currentIndex: index
+    });
+  };
+
   return (
     <View style={styles.container}>
       {/* Barra de búsqueda con selector de tipo y botón de filtros */}
       <View style={[styles.searchBarContainer, isTypeDropdownOpen && styles.elevatedContainer]}>
-        <SearchBar 
-          value={query} 
-          onChangeText={handleChangeText} 
+        <SearchBar
+          value={query}
+          onChangeText={handleChangeText}
           onSubmit={handleSubmit}
           searchType={searchType}
           onSearchTypeChange={handleSearchTypeChange}
@@ -70,10 +78,7 @@ const SearchScreen = ({ navigation }) => {
       </View>
 
       {/* Selector de categorías */}
-      <CategorySelector 
-        selectedCategory={selectedCategory}
-        onSelectCategory={updateCategory}
-      />
+      <CategorySelector selectedCategory={selectedCategory} onSelectCategory={updateCategory} />
 
       {/* Modal de filtros */}
       <FilterModal
@@ -90,7 +95,13 @@ const SearchScreen = ({ navigation }) => {
         <FlatList
           data={books}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <BookItem item={item} navigation={navigation} />}
+          renderItem={({ item, index }) => (
+            <BookItem
+              item={item}
+              navigation={navigation}
+              onPress={() => handleBookPress(item, index)}
+            />
+          )}
           onEndReached={handleEndReached}
           onEndReachedThreshold={0.5}
           ListFooterComponent={<LoadingFooter loading={loadingMore} />}
@@ -112,10 +123,10 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "ios" ? 50 : Layout.SPACING.L
   },
   searchBarContainer: {
-    zIndex: 1,
+    zIndex: 1
   },
   elevatedContainer: {
-    zIndex: 1000,
+    zIndex: 1000
   }
 });
 

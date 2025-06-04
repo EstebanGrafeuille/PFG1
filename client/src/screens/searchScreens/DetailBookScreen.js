@@ -15,7 +15,8 @@ import {
   SafeAreaView,
   Pressable,
   Alert,
-  Modal
+  Modal,
+  useWindowDimensions
 } from "react-native";
 // Importaciones actualizadas para la nueva estructura
 import useBookDetails from "../../hooks/useBookDetails";
@@ -29,7 +30,7 @@ import { formatDate, getLanguageName } from "../../utils/helpers";
 import userBookService from "../../services/userBook";
 import { AuthContext } from "../../context/AuthContext";
 import reviewService from "../../services/reviewService";
-
+import RenderHtml from "react-native-render-html";
 
 /**
  * Pantalla de detalles de libro
@@ -49,23 +50,20 @@ const DetailBook = ({ route }) => {
 
   const [listas, setListas] = useState([]);
   const { authData } = useContext(AuthContext);
-
   const [userReview, setUserReview] = useState(null);
 
   const fetchUserReview = async () => {
     try {
-      const response = await reviewService.getUserReview(authData.user.id, volumeId, authData.token);
+      const response = await reviewService.getUserReview(
+        authData.user.id,
+        volumeId,
+        authData.token
+      );
       setUserReview(response.data);
     } catch (err) {
       console.log("No hay reseña del usuario o error:", err.message);
     }
   };
-
-  useEffect(() => {
-    fetchListas();
-    fetchUserReview();
-  }, []);
-
 
   const fetchListas = async () => {
     try {
@@ -78,9 +76,11 @@ const DetailBook = ({ route }) => {
 
   useEffect(() => {
     fetchListas();
+    fetchUserReview();
   }, []);
 
   const options = listas;
+  const { width } = useWindowDimensions();
 
   if (loading) {
     return <LoadingIndicator fullScreen />;
@@ -123,7 +123,10 @@ const DetailBook = ({ route }) => {
         <View style={styles.headerContainer}>
           <Pressable onPress={() => navigation.goBack()}>
             <View style={styles.buttonContainer}>
-              <Image source={require("../../../assets/img/back-icon-white.png")} style={styles.icon} />
+              <Image
+                source={require("../../../assets/img/back-icon-white.png")}
+                style={styles.icon}
+              />
             </View>
           </Pressable>
           <View style={styles.headerInfo}>
@@ -243,6 +246,7 @@ const DetailBook = ({ route }) => {
               </View>
               <Text style={styles.iconText}>Next</Text>
             </Pressable>
+
             <Pressable
               onPress={() => navigation.navigate("Reviews", { volumeId: details.id })}
               style={styles.rowItemContainer}
@@ -260,8 +264,7 @@ const DetailBook = ({ route }) => {
             <Pressable
               onPress={() =>
                 userReview
-                  ? navigation.navigate("EditReview", {volumeId, review: userReview})
-
+                  ? navigation.navigate("EditReview", { volumeId, review: userReview })
                   : navigation.navigate("AddReview", { volumeId: details.id })
               }
             >
@@ -276,11 +279,19 @@ const DetailBook = ({ route }) => {
               {userReview ? "Ver mi reseña" : "Escribir una reseña"}
             </Text>
           </View>
-
           <View style={styles.textSection}>
             <Text style={styles.sectionTitle}>Descripción</Text>
             {info.description ? (
-              <Text style={styles.description}>{info.description}</Text>
+              <RenderHtml
+                contentWidth={width - 40}
+                source={{ html: info.description }}
+                baseStyle={{
+                  fontSize: Layout.FONT_SIZE.M,
+                  lineHeight: 20,
+                  color: Colors.TEXT_PRIMARY,
+                  fontFamily: "Roboto_400Regular"
+                }}
+              />
             ) : (
               <Text style={styles.noInfo}>No hay descripción disponible</Text>
             )}
@@ -465,14 +476,6 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%"
   },
-  reviewstButtonContainer: {
-    height: 32,
-    width: 32
-  },
-  reviewsIcon: {
-    height: "100%",
-    width: "100%"
-  },
   reviewContainer: {
     flexDirection: "column",
     justifyContent: "center",
@@ -484,6 +487,14 @@ const styles = StyleSheet.create({
     width: 270
   },
   reviewIcon: {
+    height: "100%",
+    width: "100%"
+  },
+  reviewsButtonContainer: {
+    height: 32,
+    width: 32
+  },
+  reviewsIcon: {
     height: "100%",
     width: "100%"
   },
@@ -583,5 +594,3 @@ const styles = StyleSheet.create({
 });
 
 export default DetailBook;
-
-
