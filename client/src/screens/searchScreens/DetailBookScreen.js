@@ -203,27 +203,6 @@ const fetchUserReview = async () => {
               </View>
               <Text style={styles.iconText}>Lists</Text>
             </Pressable>
-            {/*
-                  <Modal
-                    transparent={true}
-                    visible={visible}
-                    animationType="fade"
-                    onRequestClose={() => setVisible(false)}
-                  >
-                    <View style={styles.overlay}>
-                      <View style={styles.popup}>
-                        {options.map((opt, index) => (
-                          <TouchableOpacity key={index} onPress={() => {
-                            console.log('Elegiste:', opt);
-                            setVisible(false);
-                          }}>
-                            <Text style={styles.option}>{opt}</Text>
-                          </TouchableOpacity>
-                        ))}
-                      </View>
-                    </View>
-                  </Modal>
-                */}
             <Modal
               transparent={true}
               visible={visible}
@@ -287,7 +266,7 @@ const fetchUserReview = async () => {
               </View>
             </Pressable>
             <Text style={styles.iconText}>
-              {userReview ? "Ver mi reseña" : "Escribir una reseña"}
+              {userReview ? "Edit review" : "Add review"}
             </Text>
           </View>
 

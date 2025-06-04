@@ -1,13 +1,12 @@
 import asyncStorage from "./asyncStorage.js";
-
-const BASE_URL = "http://192.168.0.11:5000";
+import BASE_URL from '../services/connection.js'
 
 const login = (email, password) => {
   return new Promise((resolve, reject) => {
     console.log("En login");
     console.log(email, password);
 
-    fetch(`${BASE_URL}/api/auth/login/`, {
+    fetch(`${BASE_URL}/auth/login/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -37,7 +36,7 @@ const register = (username, email, password) => {
   console.log(email, password, username);
 
   return new Promise((resolve, reject) => {
-    fetch(`${BASE_URL}/api/auth/register/`, {
+    fetch(`${BASE_URL}/auth/register/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -69,7 +68,7 @@ const forgotPassword = (email) => {
   return new Promise((resolve, reject) => {
     console.log("Enviando solicitud a backend con:", email); // 🔍
 
-    fetch(`${BASE_URL}/api/auth/forgotPassword/`, {
+    fetch(`${BASE_URL}/auth/forgotPassword/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -102,7 +101,7 @@ const forgotPassword = (email) => {
 };
 
 const resetPassword = (email, code, newPassword) => {
-  return fetch(`${BASE_URL}/api/auth/resetPassword`, {
+  return fetch(`${BASE_URL}/auth/resetPassword`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

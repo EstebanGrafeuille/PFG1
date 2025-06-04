@@ -22,6 +22,10 @@ const EditReviewScreen = () => {
   const [loading, setLoading] = useState(false);
 
   const handleUpdateReview = async () => {
+    if (!reviewText.trim()) {
+      Alert.alert("Error", "La reseña no puede estar vacía.");
+      return;
+    }
     try {
       setLoading(true);
       await reviewService.updateReview(review._id, reviewText, authData.token);
