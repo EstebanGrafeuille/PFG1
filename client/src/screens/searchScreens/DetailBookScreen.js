@@ -183,7 +183,7 @@ const DetailBook = ({ route }) => {
         {/* Sección de descripción */}
         <View style={styles.infoSection}>
           <View style={styles.buttonRow}>
-            <Pressable onPress={() => Alert.alert("Add to Read")} style={styles.rowItemContainer}>
+            <Pressable onPress={() => handleAddBook("leidos")} style={styles.rowItemContainer}>
               <View style={styles.listButtonContainer}>
                 <Image
                   source={require("../../../assets/img/wishlist-icon.png")}
