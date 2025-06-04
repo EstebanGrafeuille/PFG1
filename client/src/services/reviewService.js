@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.0.11:5000/api"; // Cambiá si usás IP real o deploy
+const BASE_URL = "http://localhost:5000/api"; // Cambiá si usás IP real o deploy
 
 const addReview = async (googleId, comment, token) => {
   const response = await fetch(`${BASE_URL}/reviews`, {
