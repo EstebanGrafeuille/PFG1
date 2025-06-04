@@ -67,9 +67,6 @@ const handleDelete = (review) => {
   renderItem={({ item }) => (
     <ReviewCard
       review={item}
-      isOwnReview={item.user?._id === authData?.user?._id}
-      onEdit={handleEdit}
-      onDelete={handleDelete}
     />
   )}
 />
