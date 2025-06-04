@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 const ReviewCard = ({ review, isOwnReview, onEdit, onDelete }) => {
   return (
-    <View style={[styles.card, isOwnReview && styles.ownReview]}>
+    <View style={styles.card}>
       <View style={styles.header}>
         <Image
           source={require("../../assets/img/profile-picture-sample.png")}
@@ -14,16 +14,7 @@ const ReviewCard = ({ review, isOwnReview, onEdit, onDelete }) => {
 
       <Text style={styles.comment}>{review.comment}</Text>
 
-      {isOwnReview && (
-        <View style={styles.actions}>
-          <TouchableOpacity onPress={() => onEdit(review)} style={styles.button}>
-            <Text style={styles.buttonText}>Editar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => onDelete(review)} style={[styles.button, styles.deleteButton]}>
-            <Text style={[styles.buttonText, styles.deleteText]}>Eliminar</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+
     </View>
   );
 };

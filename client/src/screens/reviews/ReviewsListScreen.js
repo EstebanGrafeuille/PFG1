@@ -6,14 +6,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   SafeAreaView,
-<<<<<<< HEAD
   Image,
   Pressable
-=======
-  TouchableOpacity,
-  Pressable,
-  Image
->>>>>>> 253490f1040bcd4a7fa822331c60ebbcea3e4434
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import reviewService from "../../services/reviewService";
@@ -51,20 +45,7 @@ export default function ReviewListScreen() {
     console.log("Editar reseña:", review);
     // Lógica futura para editar
   };
-<<<<<<< HEAD
 
-  const handleDelete = (review) => {
-    console.log("Eliminar reseña:", review);
-    // Lógica futura para eliminar
-  };
-
-=======
->>>>>>> 253490f1040bcd4a7fa822331c60ebbcea3e4434
-
-  const handleDelete = (review) => {
-    console.log("Eliminar reseña:", review);
-    // Lógica futura para eliminar
-  };
 
   return (
     <SafeAreaView style={styles.container}>
