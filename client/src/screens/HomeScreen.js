@@ -179,7 +179,8 @@ const styles = StyleSheet.create({
   homeHeader: {
     alignSelf: "center",
     marginTop: 10,
-    marginBottom: 20
+    marginBottom: 20,
+    paddingTop: 36
   },
   homeHeaderBorder: {
     alignItems: "center",

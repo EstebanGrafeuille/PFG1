@@ -4,20 +4,23 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 export default function ListComponent({ title }) {
   const navigation = useNavigation();
 
-    return(
-        <Pressable onPress={() => navigation.navigate('ListDetailNavigation', {listTitle: title})}>
-            <View style={styles.listContainer}>
-                <View style={styles.listLeft}>
-                    <Text style={styles.listTitle}>{title}</Text>
-                    <Text style={styles.listOwner}>Your List</Text>
-                </View>
-                <View style={styles.listRight}>
-                    <Image source={require("../../assets/img/next-icon.png")}
-                        resizeMode="contain" style={{height: 18, width: 18}} />
-                </View>
-            </View>
-        </Pressable>
-    )
+  return (
+    <Pressable onPress={() => navigation.navigate("ListDetailNavigation", { listTitle: title })}>
+      <View style={styles.listContainer}>
+        <View style={styles.listLeft}>
+          <Text style={styles.listTitle}>{title}</Text>
+          <Text style={styles.listOwner}>Your List</Text>
+        </View>
+        <View style={styles.listRight}>
+          <Image
+            source={require("../../assets/img/next-icon.png")}
+            resizeMode="contain"
+            style={{ height: 18, width: 18 }}
+          />
+        </View>
+      </View>
+    </Pressable>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -46,7 +49,8 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto_900Black",
     fontSize: 20,
     color: "#FFFFFF",
-    paddingBottom: 12
+    paddingBottom: 12,
+    minHeight: 40
   },
   listOwner: {
     fontFamily: "Roboto_200ExtraLight",
