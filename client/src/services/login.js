@@ -1,5 +1,5 @@
 import asyncStorage from "./asyncStorage.js";
-import BASE_URL from '../services/connection.js'
+import BASE_URL from '../services/connection'
 
 const login = (email, password) => {
   return new Promise((resolve, reject) => {
@@ -43,11 +43,12 @@ const register = (username, email, password) => {
       },
       body: JSON.stringify({ username, email, password })
     })
-      .then((res) => {
+      .then(async (res) => {
         if (res.ok) {
           return res.json();
         } else {
-          throw new Error("Error al registrar usuario");
+          const errorData = await res.json();
+          throw new Error(errorData.message || "Error al registrar usuario");
         }
       })
       .then((authData) => {

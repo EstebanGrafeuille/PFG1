@@ -23,7 +23,7 @@ export default function RegisterLoginScreen() {
   const navigation = useNavigation();
 
   const HandleLogin = () => {
-    //TODO: Llamar al backend (o al servicio de autenticacion elegido) para obtener el token
+
     authService
       .login(email, password)
       .then((authData) => {
@@ -37,16 +37,17 @@ export default function RegisterLoginScreen() {
   };
 
   const HandleRegister = () => {
-    if (email && password && username) {
+    console.log("HandleRegister")
+    if (username && email && password ) {
       authService
         .register(username, email, password)
         .then((authData) => {
           setAuthData(authData);
           alert(`Bienvenido ${username}`);
         })
-        .catch(() => {
+        .catch((error) => {
           Alert.alert("", "Error al registrar. Por favor, inténtelo de nuevo.");
-          console.log("En registerLoggin");
+          console.log("En registerLoggin", error);
         });
     } else {
       Alert.alert("", "Por favor, complete todos los campos.");
