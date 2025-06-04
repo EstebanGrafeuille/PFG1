@@ -3,12 +3,13 @@ import {
   SafeAreaView,
   ScrollView,
   TextInput,
-  Button,
   StyleSheet,
-  Alert
+  Alert,
+  Text,
+  TouchableOpacity
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import reviewService from "../../services/reviewService"; // 👈 usamos el service correcto
+import reviewService from "../../services/reviewService";
 import { AuthContext } from "../../context/AuthContext";
 
 const EditReviewScreen = () => {
@@ -23,7 +24,7 @@ const EditReviewScreen = () => {
   const handleUpdateReview = async () => {
     try {
       setLoading(true);
-      await reviewService.update(review._id, authData.user.id, { comment: reviewText });
+      await reviewService.updateReview(review._id, reviewText, authData.token);
       Alert.alert("Listo", "Reseña actualizada");
       navigation.goBack();
     } catch (error) {
@@ -37,7 +38,7 @@ const EditReviewScreen = () => {
   const handleDeleteReview = async () => {
     try {
       setLoading(true);
-      await reviewService.remove(review._id, authData.user.id);
+      await reviewService.deleteReview(review._id, authData.token);
       Alert.alert("Listo", "Reseña eliminada");
       navigation.goBack();
     } catch (error) {
@@ -50,18 +51,30 @@ const EditReviewScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <TextInput
-          value={reviewText}
-          onChangeText={setReviewText}
-          multiline
-          placeholder="Editá tu reseña..."
-          numberOfLines={6}
-          style={styles.textInput}
-        />
-        <Button title="Actualizar Reseña" onPress={handleUpdateReview} disabled={loading} />
-        <Button title="Eliminar Reseña" onPress={handleDeleteReview} color="red" disabled={loading} />
-      </ScrollView>
+      <Text style={styles.title}>Editá tu reseña</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Modificá tu opinión sobre este libro..."
+        value={reviewText}
+        onChangeText={setReviewText}
+        multiline
+        maxLength={200}
+      />
+      <TouchableOpacity
+        style={[styles.button, loading && styles.disabled]}
+        onPress={handleUpdateReview}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>Actualizar reseña</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.button, styles.deleteButton, loading && styles.disabled]}
+        onPress={handleDeleteReview}
+        disabled={loading}
+      >
+        <Text style={[styles.buttonText, styles.deleteText]}>Eliminar reseña</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -69,20 +82,34 @@ const EditReviewScreen = () => {
 export default EditReviewScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff"
-  },
-  content: {
-    padding: 20
-  },
-  textInput: {
-    borderWidth: 1,
+  container: { flex: 1, padding: 20, backgroundColor: "#fff" },
+  title: { fontSize: 20, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
+  input: {
     borderColor: "#ccc",
-    borderRadius: 6,
-    padding: 10,
-    marginBottom: 20,
-    fontSize: 16,
-    textAlignVertical: "top"
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 15,
+    minHeight: 120,
+    textAlignVertical: "top",
+    backgroundColor: "#f9f9f9"
+  },
+  button: {
+    marginTop: 20,
+    backgroundColor: "#FFD700",
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: "center"
+  },
+  buttonText: { fontWeight: "bold", fontSize: 16, color: "#000" },
+  deleteButton: {
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#ff4d4d"
+  },
+  deleteText: {
+    color: "#ff4d4d"
+  },
+  disabled: {
+    opacity: 0.6
   }
 });

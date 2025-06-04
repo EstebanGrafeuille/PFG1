@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000/api"; // Cambiá si usás IP real o deploy
+const BASE_URL = "http://192.168.0.11:5000/api"; // Cambiá si usás IP real o deploy
 
 const addReview = async (googleId, comment, token) => {
   const response = await fetch(`${BASE_URL}/reviews`, {
@@ -47,8 +47,46 @@ const getUserReview = async (userId, googleId, token) => {
   return await response.json();
 };
 
+const updateReview = async (reviewId, comment, token) => {
+  const response = await fetch(`${BASE_URL}/reviews/${reviewId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ comment }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Error al actualizar la reseña");
+  }
+
+  return await response.json();
+};
+
+const deleteReview = async (reviewId, token) => {
+  const response = await fetch(`${BASE_URL}/reviews/${reviewId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Error al eliminar la reseña");
+  }
+
+  return await response.json();
+};
+
+
 export default {
   addReview,
   getReviewsByBook,
-  getUserReview
+  getUserReview,
+  deleteReview,
+  updateReview
 };

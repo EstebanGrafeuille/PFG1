@@ -1,6 +1,6 @@
 import asyncStorage from "./asyncStorage.js";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://192.168.0.11:5000";
 
 const login = (email, password) => {
   return new Promise((resolve, reject) => {

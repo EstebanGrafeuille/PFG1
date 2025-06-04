@@ -21,7 +21,7 @@ import {
 import RenderHtml from "react-native-render-html";
 // Importaciones actualizadas para la nueva estructura
 import useBookDetails from "../../hooks/useBookDetails";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import { LoadingIndicator } from "../../components/ui/LoadingIndicator";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../constants/colors";
@@ -31,6 +31,8 @@ import { formatDate, getLanguageName } from "../../utils/helpers";
 import userBookService from "../../services/userBook";
 import { AuthContext } from "../../context/AuthContext";
 import reviewService from "../../services/reviewService";
+import { useFocusEffect } from "@react-navigation/native";
+
 
 /**
  * Pantalla de detalles de libro
@@ -53,18 +55,24 @@ const DetailBook = ({ route }) => {
 
   const [userReview, setUserReview] = useState(null);
 
-  const fetchUserReview = async () => {
-    try {
-      const response = await reviewService.getUserReview(
-        authData.user.id,
-        volumeId,
-        authData.token
-      );
-      setUserReview(response.data);
-    } catch (err) {
-      console.log("No hay reseña del usuario o error:", err.message);
-    }
-  };
+  useFocusEffect(
+  useCallback(() => {;
+    fetchUserReview();
+    fetchListas();
+  }, [volumeId])
+);
+
+
+
+const fetchUserReview = async () => {
+  try {
+    const response = await reviewService.getUserReview(authData.user.id, volumeId, authData.token);
+    setUserReview(response.data);
+  } catch (err) {
+    setUserReview(null); 
+  }
+};
+
 
   useEffect(() => {
     fetchListas();
@@ -79,6 +87,8 @@ const DetailBook = ({ route }) => {
       console.error("Error al obtener listas:", error.message);
     }
   };
+
+
 
   const options = listas;
 
