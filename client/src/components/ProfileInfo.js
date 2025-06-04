@@ -1,9 +1,12 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, Pressable, Alert } from "react-native";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 export default function ProfileInfo() {
-
+  const { authData } = useContext(AuthContext);
+  
   const bioDescription = "I'm a 32 year old who enjoys reading classic novels and Argentinian politics like gaturro and many others.";
-  const userName = "juan_smith_420";
+  const userName = authData?.user?.username || "Usuario";
 
   return (
     <View
