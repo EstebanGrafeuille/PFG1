@@ -6,14 +6,15 @@ import {
   StyleSheet,
   ActivityIndicator,
   SafeAreaView,
-  TouchableOpacity
+  TouchableOpacity,
+  Pressable,
+  Image
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import reviewService from "../../services/reviewService";
 import ReviewCard from "../../components/ReviewCard";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext } from "react";
-
 
 export default function ReviewListScreen() {
   const { params } = useRoute();
@@ -24,7 +25,6 @@ export default function ReviewListScreen() {
   const [loading, setLoading] = useState(true);
 
   const { authData } = useContext(AuthContext);
-
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -41,38 +41,50 @@ export default function ReviewListScreen() {
     fetchReviews();
   }, [volumeId]);
 
-const handleEdit = (review) => {
-  console.log("Editar reseña:", review);
-  // Lógica futura para editar
-};
+  const handleEdit = (review) => {
+    console.log("Editar reseña:", review);
+    // Lógica futura para editar
+  };
 
-const handleDelete = (review) => {
-  console.log("Eliminar reseña:", review);
-  // Lógica futura para eliminar
-};
-
-
+  const handleDelete = (review) => {
+    console.log("Eliminar reseña:", review);
+    // Lógica futura para eliminar
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Reseñas del libro</Text>
+      {/* Espacio para status bar */}
+      <View style={styles.statusBarSpace} />
+
+      {/* Header con botón y título */}
+      <View style={styles.header}>
+        <View style={styles.leftSection}>
+          <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
+            <Image source={require("../../../assets/img/back-icon-grey.png")} style={styles.icon} />
+          </Pressable>
+        </View>
+        <Text style={styles.title}>Reseñas del libro</Text>
+        <View style={styles.rightSection} />
+      </View>
+
       {loading ? (
         <ActivityIndicator size="large" color="#FFD700" />
       ) : reviews.length === 0 ? (
         <Text style={styles.emptyText}>Todavía no hay reseñas para este libro.</Text>
       ) : (
-<FlatList
-  data={reviews}
-  keyExtractor={(item) => item._id}
-  renderItem={({ item }) => (
-    <ReviewCard
-      review={item}
-      isOwnReview={item.user?._id === authData?.user?._id}
-      onEdit={handleEdit}
-      onDelete={handleDelete}
-    />
-  )}
-/>
+        <FlatList
+          data={reviews}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <ReviewCard
+              review={item}
+              isOwnReview={item.user?._id === authData?.user?._id}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          )}
+          contentContainerStyle={styles.listContent}
+        />
       )}
     </SafeAreaView>
   );
@@ -82,16 +94,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    paddingBottom: 0, // Quitamos el padding inferior del container
     backgroundColor: "#fff"
+  },
+  // Espacio para el status bar
+  statusBarSpace: {
+    height: 20
+  },
+  // Estilos del header
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 20,
+    paddingTop: 10
+  },
+  leftSection: {
+    width: 50,
+    alignItems: "flex-start",
+    paddingLeft: 10
+  },
+  rightSection: {
+    width: 50
+  },
+  backButton: {
+    padding: 8
+  },
+  icon: {
+    height: 16,
+    width: 16
   },
   title: {
     fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center"
+    textAlign: "center",
+    flex: 1
   },
-  list: {
-    paddingBottom: 20
+  listContent: {
+    paddingBottom: 70 // Espacio para la barra de navegación
   },
   reviewCard: {
     padding: 15,
@@ -113,9 +153,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
     fontSize: 16,
     color: "#777"
-  },
-  backButton: {
-    marginBottom: 10
   },
   backButtonText: {
     color: "#FFD700",
