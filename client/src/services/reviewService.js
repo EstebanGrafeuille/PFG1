@@ -31,7 +31,24 @@ const getReviewsByBook = async (googleId) => {
   return await response.json();
 };
 
+const getUserReview = async (userId, googleId, token) => {
+  const response = await fetch(`${BASE_URL}/reviews/user/${userId}/book/${googleId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al obtener la reseña del usuario");
+  }
+
+  return await response.json();
+};
+
 export default {
   addReview,
-  getReviewsByBook
+  getReviewsByBook,
+  getUserReview
 };

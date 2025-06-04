@@ -29,6 +29,14 @@ class ReviewService {
     const res = await Review.deleteOne({ _id: id, user: userId });
     if (res.deletedCount === 0) throw new Error("Review no encontrada o sin permiso");
   }
+  
+  async getByUserAndBook(userId, googleId) {
+    const review = await Review.findOne({ user: userId, googleId }).populate("user", "username");
+    if (!review) throw new Error("Reseña no encontrada");
+    return review;
+  }
 }
+
+
 
 module.exports = new ReviewService();

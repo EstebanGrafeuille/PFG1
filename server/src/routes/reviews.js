@@ -7,6 +7,8 @@ const reviewCtrl = require("../controllers/reviewController");
 router.get("/book/:googleId", reviewCtrl.listByBook);
 router.get("/:id", reviewCtrl.getById);
 
+router.get("/user/:userId/book/:googleId", auth, reviewCtrl.getByUserAndBook);
+
 router.use(auth);
 
 router.post("/", reviewCtrl.create);

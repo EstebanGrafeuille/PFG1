@@ -28,6 +28,8 @@ import { useBooks } from "../../context/BooksContext";
 import { formatDate, getLanguageName } from "../../utils/helpers";
 import userBookService from "../../services/userBook";
 import { AuthContext } from "../../context/AuthContext";
+import reviewService from "../../services/reviewService";
+
 
 /**
  * Pantalla de detalles de libro
@@ -47,6 +49,23 @@ const DetailBook = ({ route }) => {
 
   const [listas, setListas] = useState([]);
   const { authData } = useContext(AuthContext);
+
+  const [userReview, setUserReview] = useState(null);
+
+  const fetchUserReview = async () => {
+    try {
+      const response = await reviewService.getUserReview(authData.user.id, volumeId, authData.token);
+      setUserReview(response.data);
+    } catch (err) {
+      console.log("No hay reseña del usuario o error:", err.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchListas();
+    fetchUserReview();
+  }, []);
+
 
   const fetchListas = async () => {
     try {
@@ -225,7 +244,7 @@ const DetailBook = ({ route }) => {
               <Text style={styles.iconText}>Next</Text>
             </Pressable>
             <Pressable
-              onPress={() =>navigation.navigate("Reviews", {volumeId: details.id})} 
+              onPress={() => navigation.navigate("Reviews", { volumeId: details.id })}
               style={styles.rowItemContainer}
             >
               <View style={styles.reviewstButtonContainer}>
@@ -238,7 +257,14 @@ const DetailBook = ({ route }) => {
             </Pressable>
           </View>
           <View style={styles.reviewContainer}>
-            <Pressable onPress={() => navigation.navigate("AddReview", { volumeId: details.id })}>
+            <Pressable
+              onPress={() =>
+                userReview
+                  ? navigation.navigate("EditReview", {volumeId, review: userReview})
+
+                  : navigation.navigate("AddReview", { volumeId: details.id })
+              }
+            >
               <View style={styles.reviewButtonContainer}>
                 <Image
                   source={require("../../../assets/img/review-icon.png")}
@@ -246,8 +272,11 @@ const DetailBook = ({ route }) => {
                 />
               </View>
             </Pressable>
-            <Text style={styles.iconText}>Write a Review</Text>
+            <Text style={styles.iconText}>
+              {userReview ? "Ver mi reseña" : "Escribir una reseña"}
+            </Text>
           </View>
+
           <View style={styles.textSection}>
             <Text style={styles.sectionTitle}>Descripción</Text>
             {info.description ? (
@@ -554,3 +583,5 @@ const styles = StyleSheet.create({
 });
 
 export default DetailBook;
+
+
