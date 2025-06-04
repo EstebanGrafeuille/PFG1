@@ -10,6 +10,7 @@ import {
   ScrollView,
   ActivityIndicator,
   SafeAreaView,
+  Alert,
   TouchableOpacity
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -24,12 +25,19 @@ export default function CreateListScreen() {
   const navigation = useNavigation();
 
   const handleCreateList = async () => {
+    if (newListName.trim() === "") {
+      Alert.alert("Error", "El nombre de la lista no puede estar vacío.");
+      console.log("Error", "El nombre de la lista no puede estar vacio")
+      return; // detenemos la ejecución
+    }
+
     try {
       await userBookService.addLista(authData.user.id, newListName, authData.token);
       setNewListName("");
       navigation.navigate("ListsBooksScreen");
     } catch (error) {
       console.error("Error al crear lista:", error.message);
+      Alert.alert("Error", "Ocurrió un problema al crear la lista.");
     }
   };
 
@@ -62,6 +70,7 @@ export default function CreateListScreen() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   listDetailScreen: {

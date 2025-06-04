@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, Image, Alert, Pressable, ScrollView, ActivityIn
 import userBookService from "../services/userBook";
 import { AuthContext } from "../context/AuthContext";
 
-export default function ListBooksRemove({ids}){
+export default function ListBooksRemove({ids, lista}){
 
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +55,7 @@ export default function ListBooksRemove({ids}){
   // Manejar eliminar libro de lista
     const handleRemoveBook = async (bookId) => {
       try {
-        await userBookService.removeFromLista(authData.user.id, "Favoritos", bookId, authData.token);
+        await userBookService.removeFromLista(authData.user.id, lista, bookId, authData.token);
         setBooks(prev => prev.filter(b => b.id !== bookId));
       } catch (error) {
         console.error("Error al eliminar de lista: ", error.message);
@@ -64,7 +64,9 @@ export default function ListBooksRemove({ids}){
     };
 
     return(
-        <View style={styles.container}>
+        
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>     
             <Text style={styles.title}>Remove Books</Text>
             <View style={styles.listContainer}>
                 {books.map((book) => (
@@ -77,15 +79,20 @@ export default function ListBooksRemove({ids}){
                           ))}
             </View>
         </View>
+        <View style={{height: 100}} />
+      </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
+  container: {
         flexDirection: "column",
         alignItems: "center",
-        width: 200,
+        width: "100%",
         paddingTop: 40
+    },
+  scrollContent: {
+    flex: 1,
     },
     listContainer: {
         flexDirection: "column",

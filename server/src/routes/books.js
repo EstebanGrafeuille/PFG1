@@ -13,5 +13,5 @@ router.post("/addLista", bookController.addLista);
 router.post("/addLibroToLista", bookController.addToLista);
 router.delete("/removeFromLista", bookController.removeFromLista);
 router.get("/getListas", bookController.getListas);
-
+router.post("/createUserBook",bookController.createUserBook);
 module.exports = router;

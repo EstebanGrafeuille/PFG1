@@ -7,16 +7,30 @@
  * @param {string} query - Término de búsqueda
  * @param {number} startIndex - Índice de inicio para paginación
  * @param {number} maxResults - Número máximo de resultados
+ * @param {Object} filters - Filtros adicionales para la búsqueda
  * @returns {Promise<Object>} - Resultados de la búsqueda
  */
-export const searchBooks = async (query, startIndex = 0, maxResults = 40) => {
+export const searchBooks = async (query, startIndex = 0, maxResults = 40, filters = {}) => {
   const trimmed = query.trim();
   if (!trimmed) return { items: [], totalItems: 0 };
 
   try {
-    const url =
-      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(trimmed)}` +
+    let url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(trimmed)}` +
       `&maxResults=${maxResults}&startIndex=${startIndex}`;
+    
+    // Añadir parámetros de filtro a la URL
+    if (filters.freeEbooks) {
+      url += "&filter=free-ebooks";
+    }
+    
+    if (filters.fullBooks) {
+      url += "&filter=full";
+    }
+    
+    if (filters.previewAvailable) {
+      url += "&filter=partial";
+    }
+    
     const response = await fetch(url);
 
     if (response.ok) {

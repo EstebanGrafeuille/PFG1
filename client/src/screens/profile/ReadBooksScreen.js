@@ -14,11 +14,11 @@ export default function ReadBooksScreen () {
   useEffect(() => {
     const fetchLibros = async () => {
       try {
-        const libros = await userBookService.getLista(authData.user.id, "Lista del Front", authData.token);
+        const libros = await userBookService.getLista(authData.user.id, "leidos", authData.token);
         setBookIds(libros);
         
       } catch (error) {
-        console.error("Error obteniendo libros de lista:", error.message);
+        console.error("Error obteniendo libros de lista leidos:", error.message);
       }
     };
     fetchLibros();

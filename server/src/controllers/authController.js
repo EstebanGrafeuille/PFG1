@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
+const bookService = require("../services/bookService")
 
 // Registrar un nuevo usuario
 exports.register = async (req, res) => {
@@ -21,7 +22,9 @@ exports.register = async (req, res) => {
     });
 
     await user.save();
-
+    console.log("creado user")
+    await bookService.createUB(user._id);
+    console.log("creado ub")
     // Generar token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 
@@ -35,6 +38,11 @@ exports.register = async (req, res) => {
       }
     });
   } catch (error) {
+    // Validación específica de Mongoose
+    if (error.name === "ValidationError") {
+      const messages = Object.values(error.errors).map((err) => err.message);
+      return res.status(400).json({ message: messages.join(", ") });
+    }
     res.status(500).json({ message: "Error al registrar usuario", error: error.message });
   }
 };
