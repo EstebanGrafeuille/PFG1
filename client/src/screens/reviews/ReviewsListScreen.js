@@ -41,22 +41,10 @@ export default function ReviewListScreen() {
     fetchReviews();
   }, [volumeId]);
 
-  const handleEdit = (review) => {
-    console.log("Editar reseña:", review);
-    // Lógica futura para editar
-  };
-
-  const handleDelete = (review) => {
-    console.log("Eliminar reseña:", review);
-    // Lógica futura para eliminar
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-      {/* Espacio para status bar */}
       <View style={styles.statusBarSpace} />
 
-      {/* Header con botón y título */}
       <View style={styles.header}>
         <View style={styles.leftSection}>
           <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -76,12 +64,7 @@ export default function ReviewListScreen() {
           data={reviews}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
-            <ReviewCard
-              review={item}
-              isOwnReview={item.user?._id === authData?.user?._id}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
+            <ReviewCard review={item} isOwnReview={item.user?._id === authData?.user?._id} />
           )}
           contentContainerStyle={styles.listContent}
         />
@@ -94,14 +77,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingBottom: 0, // Quitamos el padding inferior del container
+    paddingBottom: 0,
     backgroundColor: "#fff"
   },
-  // Espacio para el status bar
   statusBarSpace: {
     height: 20
   },
-  // Estilos del header
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -131,7 +112,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   listContent: {
-    paddingBottom: 70 // Espacio para la barra de navegación
+    paddingBottom: 70
   },
   reviewCard: {
     padding: 15,
