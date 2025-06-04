@@ -6,13 +6,15 @@ import {
   StyleSheet,
   ActivityIndicator,
   SafeAreaView,
-  TouchableOpacity
+  Image,
+  Pressable
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import reviewService from "../../services/reviewService";
 import ReviewCard from "../../components/ReviewCard";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext } from "react";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 
 export default function ReviewListScreen() {
@@ -41,35 +43,44 @@ export default function ReviewListScreen() {
     fetchReviews();
   }, [volumeId]);
 
-const handleEdit = (review) => {
-  console.log("Editar reseña:", review);
-  // Lógica futura para editar
-};
+  const handleEdit = (review) => {
+    console.log("Editar reseña:", review);
+    // Lógica futura para editar
+  };
 
-const handleDelete = (review) => {
-  console.log("Eliminar reseña:", review);
-  // Lógica futura para eliminar
-};
+  const handleDelete = (review) => {
+    console.log("Eliminar reseña:", review);
+    // Lógica futura para eliminar
+  };
 
 
 
   return (
     <SafeAreaView style={styles.container}>
+      <Pressable onPress={() => navigation.goBack()}>
+        <View style={styles.buttonContainer}>
+          <Image
+            source={require("../../../assets/img/back-icon-white.png")}
+            style={styles.icon}
+          />
+        </View>
+      </Pressable>
+
       <Text style={styles.title}>Reseñas del libro</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#FFD700" />
       ) : reviews.length === 0 ? (
         <Text style={styles.emptyText}>Todavía no hay reseñas para este libro.</Text>
       ) : (
-<FlatList
-  data={reviews}
-  keyExtractor={(item) => item._id}
-  renderItem={({ item }) => (
-    <ReviewCard
-      review={item}
-    />
-  )}
-/>
+        <FlatList
+          data={reviews}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <ReviewCard
+              review={item}
+            />
+          )}
+        />
       )}
     </SafeAreaView>
   );
@@ -118,5 +129,17 @@ const styles = StyleSheet.create({
     color: "#FFD700",
     fontWeight: "bold",
     fontSize: 16
-  }
+  },
+  buttonContainer: {
+    height: 16,
+    width: 16,
+    marginLeft: 20,
+    marginTop: 5,
+    marginBottom: 20,
+  },
+    icon: {
+    height: "100%",
+    width: "100%",
+
+  },
 });
