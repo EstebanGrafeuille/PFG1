@@ -15,7 +15,8 @@ import {
   SafeAreaView,
   Pressable,
   Alert,
-  Modal
+  Modal,
+  useWindowDimensions
 } from "react-native";
 // Importaciones actualizadas para la nueva estructura
 import useBookDetails from "../../hooks/useBookDetails";
@@ -28,6 +29,7 @@ import { useBooks } from "../../context/BooksContext";
 import { formatDate, getLanguageName } from "../../utils/helpers";
 import userBookService from "../../services/userBook";
 import { AuthContext } from "../../context/AuthContext";
+import RenderHtml from "react-native-render-html";
 
 /**
  * Pantalla de detalles de libro
@@ -62,6 +64,7 @@ const DetailBook = ({ route }) => {
   }, []);
 
   const options = listas;
+  const { width } = useWindowDimensions();
 
   if (loading) {
     return <LoadingIndicator fullScreen />;
@@ -103,10 +106,13 @@ const DetailBook = ({ route }) => {
         {/* Cabecera con imagen y datos básicos */}
         <View style={styles.headerContainer}>
           <Pressable onPress={() => navigation.goBack()}>
-              <View style={styles.buttonContainer}>
-                  <Image source={require("../../../assets/img/back-icon-white.png")} style={styles.icon}/>
-              </View>
-          </Pressable>       
+            <View style={styles.buttonContainer}>
+              <Image
+                source={require("../../../assets/img/back-icon-white.png")}
+                style={styles.icon}
+              />
+            </View>
+          </Pressable>
           <View style={styles.headerInfo}>
             <View style={styles.imageContainer}>
               {info.imageLinks?.thumbnail ? (
@@ -239,7 +245,16 @@ const DetailBook = ({ route }) => {
           <View style={styles.textSection}>
             <Text style={styles.sectionTitle}>Descripción</Text>
             {info.description ? (
-              <Text style={styles.description}>{info.description}</Text>
+              <RenderHtml
+                contentWidth={width - 40}
+                source={{ html: info.description }}
+                baseStyle={{
+                  fontSize: Layout.FONT_SIZE.M,
+                  lineHeight: 20,
+                  color: Colors.TEXT_PRIMARY,
+                  fontFamily: "Roboto_400Regular"
+                }}
+              />
             ) : (
               <Text style={styles.noInfo}>No hay descripción disponible</Text>
             )}

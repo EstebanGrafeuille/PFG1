@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  SafeAreaView,
+  useWindowDimensions
+} from "react-native";
 import BookRow from "../components/BookRow";
 
 export default function HomeScreen({ navigation }) {
+  const { width } = useWindowDimensions();
   const [newReleases, setNewReleases] = useState([]);
   const [bestRatings, setBestRatings] = useState([]);
   const [fiction, setFiction] = useState([]);
@@ -93,9 +102,14 @@ export default function HomeScreen({ navigation }) {
     );
   }
 
+  const mobile = width < 600;
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[styles.scrollContent, mobile && styles.scrollContentMobile]}
+      >
         <View style={styles.homeHeader}>
           <View style={styles.homeHeaderBorder}>
             <View style={styles.bookBox}>
@@ -106,32 +120,32 @@ export default function HomeScreen({ navigation }) {
           </View>
         </View>
 
-        <View style={styles.rowContainer}>
+        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
           <Text style={styles.rowTitle}>New Releases</Text>
-          <BookRow books={newReleases} navigation={navigation} isYellow={true} />
+          <BookRow books={newReleases} navigation={navigation} isYellow />
         </View>
 
-        <View style={styles.rowContainer}>
+        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
           <Text style={styles.rowTitle}>Best Ratings</Text>
-          <BookRow books={bestRatings} navigation={navigation} isYellow={true} />
+          <BookRow books={bestRatings} navigation={navigation} isYellow />
         </View>
 
-        <View style={styles.rowContainer}>
+        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
           <Text style={styles.rowTitle}>Fiction</Text>
           <BookRow books={fiction} navigation={navigation} />
         </View>
 
-        <View style={styles.rowContainer}>
+        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
           <Text style={styles.rowTitle}>Non-Fiction</Text>
           <BookRow books={nonFiction} navigation={navigation} />
         </View>
 
-        <View style={styles.rowContainer}>
+        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
           <Text style={styles.rowTitle}>Classics</Text>
           <BookRow books={classics} navigation={navigation} />
         </View>
 
-        <View style={styles.rowContainer}>
+        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
           <Text style={styles.rowTitle}>Science Fiction</Text>
           <BookRow books={scienceFiction} navigation={navigation} />
         </View>
@@ -156,38 +170,39 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 100,
-    flexDirection: "column",
     backgroundColor: "#080D17",
     alignItems: "center"
   },
+  scrollContentMobile: {
+    alignItems: "stretch"
+  },
   homeHeader: {
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    height: 80,
-    width: 220,
+    alignSelf: "center",
     marginTop: 10,
-    marginBottom: 20,
-    borderColor: "#FFCB20",
-    borderWidth: 1
+    marginBottom: 20
   },
   homeHeaderBorder: {
-    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     height: 80,
     width: 220,
-    marginTop: 12,
-    marginLeft: 12,
     borderColor: "#FFCB20",
-    borderWidth: 1
+    borderWidth: 1,
+    marginTop: 12,
+    marginBottom: 20
   },
   rowContainer: {
-    flexDirection: "column",
     justifyContent: "center",
     paddingLeft: 15,
     marginTop: 10,
     height: 190
+  },
+  rowMobile: {
+    height: "auto",
+    width: "100%",
+    paddingLeft: 20,
+    paddingRight: 15,
+    marginBottom: 15
   },
   rowTitle: {
     fontFamily: "Roboto_700Bold",
