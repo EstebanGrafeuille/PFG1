@@ -54,6 +54,11 @@ const DetailBook = ({ route }) => {
 
   const [userReview, setUserReview] = useState(null);
 
+  // ← FUNCIÓN PARA CAPITALIZAR PRIMERA LETRA
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  };
+
   useFocusEffect(
     useCallback(() => {
       fetchUserReview();
@@ -207,21 +212,27 @@ const DetailBook = ({ route }) => {
               animationType="fade"
               onRequestClose={() => setVisible(false)}
             >
-              <View style={styles.overlay}>
-                <View style={styles.popup}>
+              {/* ← OVERLAY MODIFICADO PARA CERRAR AL TOCAR AFUERA */}
+              <Pressable style={styles.overlay} onPress={() => setVisible(false)}>
+                <Pressable
+                  style={styles.popup}
+                  onPress={(e) => e.stopPropagation()} // ← EVITA QUE SE CIERRE AL TOCAR DENTRO DEL POPUP
+                >
                   {options.map((opt, index) => (
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        handleAddBook(opt); // ← Llama la función con el nombre de la lista
-                        setVisible(false); // ← Cierra el modal
+                        handleAddBook(opt);
+                        setVisible(false);
                       }}
+                      style={styles.optionContainer} // ← NUEVO ESTILO PARA EL CONTENEDOR
                     >
-                      <Text style={styles.option}>{opt}</Text>
+                      <Text style={styles.option}>{capitalizeFirstLetter(opt)}</Text>
+                      <Text style={styles.bullet}>•</Text> {/* ← PUNTO DE LISTA AGREGADO */}
                     </TouchableOpacity>
                   ))}
-                </View>
-              </View>
+                </Pressable>
+              </Pressable>
             </Modal>
             <Pressable
               onPress={() => navigation.navigate("Reviews", { volumeId: details.id })}
@@ -550,12 +561,26 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10
   },
+  // ← ESTILOS MODIFICADOS Y NUEVOS
+  optionContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 5
+  },
   option: {
     fontFamily: "Roboto_400Regular",
     fontSize: 18,
     marginVertical: 10,
-    textAlign: "center"
+    flex: 1
   },
+  bullet: {
+    fontFamily: "Roboto_400Regular",
+    fontSize: 18,
+    color: "#666",
+    marginLeft: 10
+  },
+  // ← FIN DE ESTILOS MODIFICADOS
   rowItemContainer: {
     flexDirection: "column",
     justifyContent: "center",
