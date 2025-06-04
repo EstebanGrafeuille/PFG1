@@ -22,10 +22,10 @@ import SearchTypeSelector from "./SearchTypeSelector";
  * @param {Function} props.onTypeDropdownToggle - Función para notificar cuando el dropdown cambia de estado
  * @returns {JSX.Element} - Componente de barra de búsqueda
  */
-const SearchBar = ({ 
-  value, 
-  onChangeText, 
-  onSubmit, 
+const SearchBar = ({
+  value,
+  onChangeText,
+  onSubmit,
   placeholder = "Buscar libros...",
   searchType = "title",
   onSearchTypeChange,
@@ -34,8 +34,8 @@ const SearchBar = ({
 }) => (
   <View style={styles.container}>
     <View style={styles.searchContainer}>
-      <SearchTypeSelector 
-        selectedType={searchType} 
+      <SearchTypeSelector
+        selectedType={searchType}
         onSelectType={onSearchTypeChange}
         onDropdownToggle={onTypeDropdownToggle}
       />
@@ -50,9 +50,9 @@ const SearchBar = ({
     </View>
     {onFilterPress && (
       <TouchableOpacity style={styles.filterButton} onPress={onFilterPress}>
-        <Image 
-          source={require("../../../assets/img/settings-icon.png")} 
-          style={styles.filterIcon} 
+        <Image
+          source={require("../../../assets/img/settings-icon.png")}
+          style={styles.filterIcon}
           resizeMode="contain"
         />
       </TouchableOpacity>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: Layout.SPACING.M,
+    marginBottom: Layout.SPACING.M
   },
   searchContainer: {
     flexDirection: "row",
@@ -76,12 +76,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: Layout.BORDER_RADIUS.S,
     height: 40,
-    alignItems: "center",
+    alignItems: "center"
   },
   input: {
     flex: 1,
     height: "100%",
-    paddingHorizontal: Layout.SPACING.M,
+    paddingHorizontal: Layout.SPACING.M
   },
   filterButton: {
     marginLeft: Layout.SPACING.S,
@@ -90,12 +90,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.PRIMARY,
-    borderRadius: Layout.BORDER_RADIUS.S,
+    borderRadius: Layout.BORDER_RADIUS.S
   },
   filterIcon: {
     width: 20,
     height: 20,
-    tintColor: Colors.TEXT_PRIMARY,
+    tintColor: Colors.TEXT_PRIMARY
   }
 });
 
