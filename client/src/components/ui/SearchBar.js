@@ -67,7 +67,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: Layout.SPACING.M
+    marginBottom: Layout.SPACING.M,
+    paaddingTop: 36
   },
   searchContainer: {
     flexDirection: "row",
