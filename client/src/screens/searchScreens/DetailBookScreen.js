@@ -33,7 +33,6 @@ import { AuthContext } from "../../context/AuthContext";
 import reviewService from "../../services/reviewService";
 import { useFocusEffect } from "@react-navigation/native";
 
-
 /**
  * Pantalla de detalles de libro
  * @param {Object} props - Propiedades del componente
@@ -56,23 +55,24 @@ const DetailBook = ({ route }) => {
   const [userReview, setUserReview] = useState(null);
 
   useFocusEffect(
-  useCallback(() => {;
-    fetchUserReview();
-    fetchListas();
-  }, [volumeId])
-);
+    useCallback(() => {
+      fetchUserReview();
+      fetchListas();
+    }, [volumeId])
+  );
 
-
-
-const fetchUserReview = async () => {
-  try {
-    const response = await reviewService.getUserReview(authData.user.id, volumeId, authData.token);
-    setUserReview(response.data);
-  } catch (err) {
-    setUserReview(null); 
-  }
-};
-
+  const fetchUserReview = async () => {
+    try {
+      const response = await reviewService.getUserReview(
+        authData.user.id,
+        volumeId,
+        authData.token
+      );
+      setUserReview(response.data);
+    } catch (err) {
+      setUserReview(null);
+    }
+  };
 
   useEffect(() => {
     fetchListas();
@@ -87,8 +87,6 @@ const fetchUserReview = async () => {
       console.error("Error al obtener listas:", error.message);
     }
   };
-
-
 
   const options = listas;
 
@@ -185,7 +183,7 @@ const fetchUserReview = async () => {
         {/* Sección de descripción */}
         <View style={styles.infoSection}>
           <View style={styles.buttonRow}>
-            <Pressable onPress={() => Alert.alert("Add to Read")} style={styles.rowItemContainer}>
+            <Pressable onPress={() => handleAddBook("leidos")} style={styles.rowItemContainer}>
               <View style={styles.listButtonContainer}>
                 <Image
                   source={require("../../../assets/img/wishlist-icon.png")}
@@ -226,18 +224,6 @@ const fetchUserReview = async () => {
               </View>
             </Modal>
             <Pressable
-              onPress={() => Alert.alert("Add to Wishlist")}
-              style={styles.rowItemContainer}
-            >
-              <View style={styles.listButtonContainer}>
-                <Image
-                  source={require("../../../assets/img/read-icon.png")}
-                  style={styles.listIcon}
-                />
-              </View>
-              <Text style={styles.iconText}>Next</Text>
-            </Pressable>
-            <Pressable
               onPress={() => navigation.navigate("Reviews", { volumeId: details.id })}
               style={styles.rowItemContainer}
             >
@@ -265,9 +251,7 @@ const fetchUserReview = async () => {
                 />
               </View>
             </Pressable>
-            <Text style={styles.iconText}>
-              {userReview ? "Edit review" : "Add review"}
-            </Text>
+            <Text style={styles.iconText}>{userReview ? "Edit review" : "Add review"}</Text>
           </View>
 
           <View style={styles.textSection}>
