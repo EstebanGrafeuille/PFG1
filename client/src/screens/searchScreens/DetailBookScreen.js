@@ -18,6 +18,7 @@ import {
   Modal,
   useWindowDimensions
 } from "react-native";
+import RenderHtml from "react-native-render-html";
 // Importaciones actualizadas para la nueva estructura
 import useBookDetails from "../../hooks/useBookDetails";
 import { useState, useContext, useEffect } from "react";
@@ -30,7 +31,6 @@ import { formatDate, getLanguageName } from "../../utils/helpers";
 import userBookService from "../../services/userBook";
 import { AuthContext } from "../../context/AuthContext";
 import reviewService from "../../services/reviewService";
-import RenderHtml from "react-native-render-html";
 
 /**
  * Pantalla de detalles de libro
@@ -50,6 +50,7 @@ const DetailBook = ({ route }) => {
 
   const [listas, setListas] = useState([]);
   const { authData } = useContext(AuthContext);
+
   const [userReview, setUserReview] = useState(null);
 
   const fetchUserReview = async () => {
@@ -65,6 +66,11 @@ const DetailBook = ({ route }) => {
     }
   };
 
+  useEffect(() => {
+    fetchListas();
+    fetchUserReview();
+  }, []);
+
   const fetchListas = async () => {
     try {
       const userBook = await userBookService.getListas(authData.user.id, authData.token);
@@ -74,12 +80,8 @@ const DetailBook = ({ route }) => {
     }
   };
 
-  useEffect(() => {
-    fetchListas();
-    fetchUserReview();
-  }, []);
-
   const options = listas;
+
   const { width } = useWindowDimensions();
 
   if (loading) {
@@ -246,7 +248,6 @@ const DetailBook = ({ route }) => {
               </View>
               <Text style={styles.iconText}>Next</Text>
             </Pressable>
-
             <Pressable
               onPress={() => navigation.navigate("Reviews", { volumeId: details.id })}
               style={styles.rowItemContainer}
@@ -279,6 +280,7 @@ const DetailBook = ({ route }) => {
               {userReview ? "Ver mi reseña" : "Escribir una reseña"}
             </Text>
           </View>
+
           <View style={styles.textSection}>
             <Text style={styles.sectionTitle}>Descripción</Text>
             {info.description ? (
@@ -476,6 +478,14 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%"
   },
+  reviewstButtonContainer: {
+    height: 32,
+    width: 32
+  },
+  reviewsIcon: {
+    height: "100%",
+    width: "100%"
+  },
   reviewContainer: {
     flexDirection: "column",
     justifyContent: "center",
@@ -487,14 +497,6 @@ const styles = StyleSheet.create({
     width: 270
   },
   reviewIcon: {
-    height: "100%",
-    width: "100%"
-  },
-  reviewsButtonContainer: {
-    height: 32,
-    width: 32
-  },
-  reviewsIcon: {
     height: "100%",
     width: "100%"
   },
