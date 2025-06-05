@@ -24,6 +24,14 @@ const getData = async (key) => {
   }
 };
 
+const removeItem = async (key) => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 const clearAll = async () => {
   try {
     await AsyncStorage.clear();
@@ -35,5 +43,6 @@ const clearAll = async () => {
 export default {
   storeData,
   getData,
+  removeItem,
   clearAll
 };

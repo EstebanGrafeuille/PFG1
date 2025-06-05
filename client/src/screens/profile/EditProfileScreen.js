@@ -1,116 +1,74 @@
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Pressable, Alert } from "react-native";
-import ProfileStats from "../../components/ProfileStats";
+import { 
+  View, 
+  Text, 
+  Image, 
+  TouchableOpacity, 
+  Pressable, 
+  Alert,
+  ScrollView,
+  SafeAreaView,
+  RefreshControl
+} from "react-native";
 import ProfileHeader from "../../components/ProfileHeader";
-import ProfileGraphic from "../../components/ProfileGraphic";
-import { useContext } from "react";
+import { useContext, useState, useCallback } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "../../services/asyncStorage";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import ProfileInfoEditable from "../../components/ProfileInfoEditable";
+import { profileStyles } from "../../styles/ProfileStyles";
 
 export default function EditProfileScreen() {
   const { setAuthData } = useContext(AuthContext);
+  const navigation = useNavigation();
+  const [refreshing, setRefreshing] = useState(false);
 
   const handleLogout = async () => {
     await AsyncStorage.clearAll();
     setAuthData(null);
   };
 
-  const navigation = useNavigation();
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    // Forzar recarga de componentes
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
 
   return (
-    <View style={styles.profileScreen}>
-      <ProfileHeader headerTitle="SETTINGS" />
-      <View style={styles.goBackContainer}>
-        <Pressable onPress={() => navigation.goBack()} style={styles.goBackContainerExtra}>
+    <SafeAreaView style={profileStyles.safeArea}>
+      <ScrollView
+        style={profileStyles.scroll}
+        contentContainerStyle={profileStyles.profileScreen}
+        keyboardShouldPersistTaps="handled"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <ProfileHeader headerTitle="EDITAR PERFIL" />
+        <View style={profileStyles.goBackContainer}>
+          <Pressable onPress={() => navigation.goBack()} style={profileStyles.goBackContainerExtra}>
             <View style={styles.buttonContainer}>
-                <Image source={require("../../../assets/img/back-icon-grey.png")} style={styles.goBack}/>
+              <Image source={require("../../../assets/img/back-icon-grey.png")} style={profileStyles.goBack}/>
             </View>
-        </Pressable>
-        <Text style={styles.infoText}>Press each field to edit it...</Text>
-        <View style={{width: 28}}></View>
-      </View>
-      <ProfileInfoEditable />
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutText}>Cerrar sesión</Text>
-      </TouchableOpacity>
-    </View>
+          </Pressable>
+          <Text style={profileStyles.infoText}>Toca cada campo para editarlo</Text>
+          <View style={{width: 28}}></View>
+        </View>
+        
+        <ProfileInfoEditable key={refreshing ? "refresh" : "normal"} />
+        
+        <TouchableOpacity style={profileStyles.logoutButton} onPress={handleLogout}>
+          <Text style={profileStyles.logoutText}>Cerrar sesión</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  profileScreen: {
-    flexGrow: 1,
-    alignItems: "center",
-    backgroundColor: "#f5f5f5",
-    paddingBottom: 40
-  },
-  goBackContainer: {
-    height: 20,
-    width: 350,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20
-  },
-  goBackContainerExtra: {
-  },
-  goBack: {
-    height: 28,
-    width: 28
-  },
-  infoText: {
-    fontFamily: "Roboto_200ExtraLight",
-    fontSize: 15,
-    paddingRight: 10,
-  },
-  profileInfo: {
-    flexDirection: "column",
-    height: 180,
-    width: 200,
-    marginTop: 30,
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
-  profileImage: {
-    height: 100,
-    width: 100
-  },
-  usernameRow: {
-    flexDirection: "row",
-    height: 20,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  username: {
-    fontFamily: "Roboto_700Bold",
-    fontSize: 15,
-    paddingRight: 10
-  },
-  editIconExtraContainer: {
-    height: 0,
-    width: 330,
-    flexDirection: "row",
-    justifyContent: "flex-end",
-  },
-  editIconContainer: {
-    marginTop: 30,
-    height: 28,
+const styles = {
+  buttonContainer: {
     width: 28,
-  },
-  editIcon: {
-    height: "100%",
-    width: "100%",
-  },
-  logoutButton: {
-    marginTop: 50,
-    backgroundColor: "#d9534f",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8
-  },
-  logoutText: {
-    color: "#fff",
-    fontSize: 16,
-    fontFamily: "Roboto_700Bold"
+    height: 28
   }
-});
+};

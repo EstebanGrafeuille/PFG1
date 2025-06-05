@@ -3,118 +3,147 @@ import {
   SafeAreaView,
   View,
   Text,
-  StyleSheet,
   Image,
   TouchableOpacity,
-  Pressable
+  Pressable,
+  RefreshControl
 } from "react-native";
 import ProfileStats from "../../components/ProfileStats";
 import ProfileHeader from "../../components/ProfileHeader";
 import ProfileGraphic from "../../components/ProfileGraphic";
-import { useContext } from "react";
+import { useContext, useState, useCallback, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "../../services/asyncStorage";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import ProfileInfo from "../../components/ProfileInfo";
+import { profileStyles } from "../../styles/ProfileStyles";
+import { getUserProfile } from "../../services/userService";
 
 export default function ProfileScreen() {
-  const { setAuthData } = useContext(AuthContext);
+  const { authData, setAuthData } = useContext(AuthContext);
   const navigation = useNavigation();
+  const [refreshing, setRefreshing] = useState(false);
+  const [userProfileData, setUserProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchUserProfile = useCallback(async () => {
+    try {
+      setLoading(true);
+      // Verificar si hay sesión activa
+      const authDataCurrent = await AsyncStorage.getData('authData');
+      if (!authDataCurrent || !authDataCurrent.token) {
+        console.log("No hay sesión activa en fetchUserProfile");
+        setLoading(false);
+        return;
+      }
+      
+      const userId = authDataCurrent?.user?.id || authDataCurrent?.user?._id;
+      if (!userId) {
+        console.log("No se encontró ID de usuario en ProfileScreen");
+        setLoading(false);
+        return;
+      }
+
+      console.log("ProfileScreen: Obteniendo perfil con ID:", userId);
+      const userData = await getUserProfile(userId);
+      setUserProfileData(userData);
+      
+      // Guardar en caché
+      await AsyncStorage.storeData("userProfileCache", {
+        data: userData,
+        timestamp: Date.now()
+      });
+      
+      console.log("ProfileScreen: Perfil actualizado y guardado en caché");
+    } catch (error) {
+      console.error("Error al cargar perfil en ProfileScreen:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  // Cargar datos cuando la pantalla obtiene el foco
+  useFocusEffect(
+    useCallback(() => {
+      const loadProfileData = async () => {
+        try {
+          // Intentar cargar desde caché primero
+          const cachedData = await AsyncStorage.getData("userProfileCache");
+          
+          // Si hay datos en caché y son recientes (menos de 5 minutos)
+          const isCacheValid = cachedData && 
+                              cachedData.timestamp && 
+                              (Date.now() - cachedData.timestamp < 5 * 60 * 1000);
+          
+          if (isCacheValid) {
+            console.log("ProfileScreen: Usando datos de caché");
+            setUserProfileData(cachedData.data);
+            setLoading(false);
+          }
+          
+          // Siempre actualizar desde el servidor, incluso si usamos caché inicialmente
+          fetchUserProfile();
+        } catch (error) {
+          console.error("Error al cargar datos de perfil:", error);
+          setLoading(false);
+        }
+      };
+      
+      loadProfileData();
+    }, [fetchUserProfile])
+  );
 
   const handleLogout = async () => {
+    // Limpiar todos los datos de AsyncStorage
     await AsyncStorage.clearAll();
     setAuthData(null);
   };
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    try {
+      fetchUserProfile();
+    } catch (error) {
+      console.error("Error al actualizar perfil:", error);
+      setRefreshing(false);
+    }
+  }, [fetchUserProfile]);
+
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={profileStyles.safeArea}>
       <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.profileScreen}
+        style={profileStyles.scroll}
+        contentContainerStyle={profileStyles.profileScreen}
         keyboardShouldPersistTaps="handled"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-        <ProfileHeader headerTitle="SETTINGS" />
-        <View style={styles.editIconExtraContainer}>
+        <ProfileHeader headerTitle="PERFIL" />
+        <View style={profileStyles.editIconExtraContainer}>
           <Pressable
             onPress={() => navigation.navigate("EditProfile")}
-            style={styles.editIconContainer}
+            style={profileStyles.editIconContainer}
           >
             <Image
               source={require("../../../assets/img/settings-icon.png")}
               resizeMode="contain"
-              style={styles.editIcon}
+              style={profileStyles.editIcon}
             />
           </Pressable>
         </View>
-        <ProfileInfo />
+        <ProfileInfo 
+          key={refreshing ? "refresh" : "normal"} 
+          userProfileData={userProfileData} 
+          isLoading={loading} 
+        />
         <ProfileGraphic />
         <ProfileStats />
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutText}>Cerrar sesión</Text>
+        <TouchableOpacity style={profileStyles.logoutButton} onPress={handleLogout}>
+          <Text style={profileStyles.logoutText}>Cerrar sesión</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#f5f5f5"
-  },
-  scroll: {
-    flex: 1
-  },
-  profileScreen: {
-    alignItems: "center",
-    paddingBottom: 40,
-    backgroundColor: "#f5f5f5"
-  },
-  editIconExtraContainer: {
-    height: 0,
-    width: 330,
-    flexDirection: "row",
-    justifyContent: "flex-end"
-  },
-  editIconContainer: {
-    marginTop: 30,
-    height: 28,
-    width: 28
-  },
-  editIcon: {
-    height: "100%",
-    width: "100%"
-  },
-  bio: {
-    fontFamily: "Roboto_200ExtraLight",
-    fontSize: 12,
-    textAlign: "justify"
-  },
-  profileImage: {
-    height: 100,
-    width: 100
-  },
-  usernameRow: {
-    flexDirection: "row",
-    height: 20,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  username: {
-    fontFamily: "Roboto_700Bold",
-    fontSize: 15,
-    paddingRight: 10
-  },
-  logoutButton: {
-    marginTop: 30,
-    backgroundColor: "#d9534f",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8
-  },
-  logoutText: {
-    color: "#fff",
-    fontSize: 16,
-    fontFamily: "Roboto_700Bold"
-  }
-});

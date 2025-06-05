@@ -9,30 +9,44 @@ class UserService {
   }
 
   async getById(id) {
-    const user = await User.findById(id).select("username email");
+    const user = await User.findById(id).select("username email biography image");
     if (!user) throw new Error("Usuario no encontrado");
     return user;
   }
 
   async updateUser(id, updateData) {
-    const { username, email } = updateData;
+    // Extraer los campos que pueden ser actualizados
+    const { username, email, biography, image } = updateData;
+    const updateFields = {};
+    
+    // Solo incluir los campos que están presentes en updateData
+    if (username !== undefined) updateFields.username = username;
+    if (email !== undefined) updateFields.email = email;
+    if (biography !== undefined) updateFields.biography = biography;
+    if (image !== undefined) updateFields.image = image;
+    
+    // Si se está actualizando username o email, verificar que no existan duplicados
+    if (username || email) {
+      const conditions = [];
+      if (username) conditions.push({ username });
+      if (email) conditions.push({ email });
+      
+      const existingUser = await User.findOne({
+        $or: conditions,
+        _id: { $ne: id } // Excluir al usuario actual
+      });
 
-    // Verificar si el nuevo username o email ya existen en otro usuario
-    const existingUser = await User.findOne({
-      $or: [{ username }, { email }],
-      _id: { $ne: id } // Excluir al usuario actual
-    });
-
-    if (existingUser) {
-      throw new Error("El nombre de usuario o email ya está en uso");
+      if (existingUser) {
+        throw new Error("El nombre de usuario o email ya está en uso");
+      }
     }
 
     // Actualizar y devolver el usuario
     const user = await User.findByIdAndUpdate(
       id,
-      { username, email },
+      updateFields,
       { new: true, runValidators: true }
-    ).select("username email");
+    ).select("username email biography image");
 
     if (!user) throw new Error("Usuario no encontrado");
     return user;

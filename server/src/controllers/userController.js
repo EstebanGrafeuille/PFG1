@@ -24,10 +24,22 @@ class UserController {
   updateUser = async (req, res) => {
     try {
       const { id } = req.params;
-      const { username, email } = req.body;
-      const updatedUser = await userService.updateUser(id, { username, email });
+      const { username, email, biography, image } = req.body;
+      
+      // Crear objeto con los campos que se van a actualizar
+      const updateData = {};
+      if (username !== undefined) updateData.username = username;
+      if (email !== undefined) updateData.email = email;
+      if (biography !== undefined) updateData.biography = biography;
+      if (image !== undefined) updateData.image = image;
+      
+      console.log(`Actualizando usuario ${id} con datos:`, updateData);
+      
+      const updatedUser = await userService.updateUser(id, updateData);
       res.status(200).send({ success: true, message: updatedUser });
     } catch (error) {
+      console.error("Error al actualizar usuario:", error);
+      
       // Validación específica de Mongoose
       if (error.name === "ValidationError") {
         const messages = Object.values(error.errors).map((err) => err.message);
