@@ -10,13 +10,13 @@ import Layout from "../../constants/layout";
 
 // Categorías populares de libros
 const CATEGORIES = [
-  { id: "all", label: "Todas" },
-  { id: "fiction", label: "Ficción" },
-  { id: "fantasy", label: "Fantasía" },
-  { id: "science", label: "Ciencia" },
-  { id: "biography", label: "Biografía" },
-  { id: "history", label: "Historia" },
-  { id: "poetry", label: "Poesía" },
+  { id: "all", label: "All" },
+  { id: "fiction", label: "Fiction" },
+  { id: "fantasy", label: "Fantasy" },
+  { id: "science", label: "Science" },
+  { id: "biography", label: "Biography" },
+  { id: "history", label: "History" },
+  { id: "poetry", label: "Poetry" },
   { id: "romance", label: "Romance" }
 ];
 

@@ -45,7 +45,7 @@ export default function ListBooksRemove({ids, lista}){
       
       return {
         id: item.id,
-        title: item.volumeInfo?.title || 'Sin título',
+        title: item.volumeInfo?.title || 'Untitled',
         authors: item.volumeInfo?.authors || [],
         thumbnail: thumbnail
       };

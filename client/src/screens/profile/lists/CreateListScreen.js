@@ -26,7 +26,7 @@ export default function CreateListScreen() {
 
   const handleCreateList = async () => {
     if (newListName.trim() === "") {
-      Alert.alert("Error", "El nombre de la lista no puede estar vacío.");
+      Alert.alert("Oops!", "Please enter a name for your list.");
       console.log("Error", "El nombre de la lista no puede estar vacio")
       return; // detenemos la ejecución
     }
@@ -37,7 +37,7 @@ export default function CreateListScreen() {
       navigation.navigate("ListsBooksScreen");
     } catch (error) {
       console.error("Error al crear lista:", error.message);
-      Alert.alert("Error", "Ocurrió un problema al crear la lista.");
+      Alert.alert("Oops!", "Something went wrong while creating your list.");
     }
   };
 

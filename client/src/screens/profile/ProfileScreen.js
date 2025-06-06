@@ -141,7 +141,7 @@ export default function ProfileScreen() {
         <ProfileGraphic />
         <ProfileStats />
         <TouchableOpacity style={profileStyles.logoutButton} onPress={handleLogout}>
-          <Text style={profileStyles.logoutText}>Cerrar sesión</Text>
+          <Text style={profileStyles.logoutText}>Sign out</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

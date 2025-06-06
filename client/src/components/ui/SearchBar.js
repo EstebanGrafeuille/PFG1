@@ -26,7 +26,7 @@ const SearchBar = ({
   value,
   onChangeText,
   onSubmit,
-  placeholder = "Buscar libros...",
+  placeholder = "Search books...",
   searchType = "title",
   onSearchTypeChange,
   onFilterPress,

@@ -1,9 +1,9 @@
-import { 
-  View, 
-  Text, 
-  Image, 
-  TouchableOpacity, 
-  Pressable, 
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Pressable,
   Alert,
   ScrollView,
   SafeAreaView,
@@ -49,17 +49,17 @@ export default function EditProfileScreen() {
         <View style={profileStyles.goBackContainer}>
           <Pressable onPress={() => navigation.goBack()} style={profileStyles.goBackContainerExtra}>
             <View style={styles.buttonContainer}>
-              <Image source={require("../../../assets/img/back-icon-grey.png")} style={profileStyles.goBack}/>
+              <Image source={require("../../../assets/img/back-icon-grey.png")} style={profileStyles.goBack} />
             </View>
           </Pressable>
-          <Text style={profileStyles.infoText}>Toca cada campo para editarlo</Text>
-          <View style={{width: 28}}></View>
+          <Text style={profileStyles.infoText}>Tap a field to make changes</Text>
+          <View style={{ width: 28 }}></View>
         </View>
-        
+
         <ProfileInfoEditable key={refreshing ? "refresh" : "normal"} />
-        
+
         <TouchableOpacity style={profileStyles.logoutButton} onPress={handleLogout}>
-          <Text style={profileStyles.logoutText}>Cerrar sesión</Text>
+          <Text style={profileStyles.logoutText}>Sign out</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

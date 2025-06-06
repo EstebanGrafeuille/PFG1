@@ -47,7 +47,7 @@ const FilterModal = ({ visible, onClose, filters, onApplyFilters }) => {
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <View style={styles.header}>
-            <Text style={styles.title}>Filtros</Text>
+            <Text style={styles.title}>Filters</Text>
             <TouchableOpacity onPress={onClose}>
               <Text style={styles.closeButton}>✕</Text>
             </TouchableOpacity>
@@ -55,10 +55,10 @@ const FilterModal = ({ visible, onClose, filters, onApplyFilters }) => {
 
           <ScrollView style={styles.filtersContainer}>
             <View style={styles.filterSection}>
-              <Text style={styles.sectionTitle}>Disponibilidad</Text>
+              <Text style={styles.sectionTitle}>Availability</Text>
               
               <View style={styles.filterItem}>
-                <Text style={styles.filterLabel}>Vista previa disponible</Text>
+                <Text style={styles.filterLabel}>Preview available</Text>
                 <Switch
                   value={localFilters.previewAvailable}
                   onValueChange={() => handleToggleFilter('previewAvailable')}
@@ -67,7 +67,7 @@ const FilterModal = ({ visible, onClose, filters, onApplyFilters }) => {
               </View>
               
               <View style={styles.filterItem}>
-                <Text style={styles.filterLabel}>Libros gratuitos</Text>
+                <Text style={styles.filterLabel}>Free books</Text>
                 <Switch
                   value={localFilters.freeEbooks}
                   onValueChange={() => handleToggleFilter('freeEbooks')}
@@ -77,10 +77,10 @@ const FilterModal = ({ visible, onClose, filters, onApplyFilters }) => {
             </View>
 
             <View style={styles.filterSection}>
-              <Text style={styles.sectionTitle}>Contenido</Text>
+              <Text style={styles.sectionTitle}>Content</Text>
               
               <View style={styles.filterItem}>
-                <Text style={styles.filterLabel}>Solo libros completos</Text>
+                <Text style={styles.filterLabel}>Only full books</Text>
                 <Switch
                   value={localFilters.fullBooks}
                   onValueChange={() => handleToggleFilter('fullBooks')}
@@ -99,14 +99,14 @@ const FilterModal = ({ visible, onClose, filters, onApplyFilters }) => {
                 fullBooks: false
               })}
             >
-              <Text style={styles.resetButtonText}>Restablecer</Text>
+              <Text style={styles.resetButtonText}>Reset</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
               style={[styles.button, styles.applyButton]} 
               onPress={handleApply}
             >
-              <Text style={styles.applyButtonText}>Aplicar</Text>
+              <Text style={styles.applyButtonText}>Apply</Text>
             </TouchableOpacity>
           </View>
         </View>

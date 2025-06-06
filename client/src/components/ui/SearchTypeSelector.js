@@ -21,11 +21,11 @@ const SearchTypeSelector = ({ selectedType, onSelectType, onDropdownToggle }) =>
   const dropdownHeight = useRef(new Animated.Value(0)).current;
   
   const searchTypes = [
-    { id: "title", label: "Título" },
-    { id: "author", label: "Autor" }
+    { id: "title", label: "Title" },
+    { id: "author", label: "Author" }
   ];
 
-  const selectedLabel = searchTypes.find(type => type.id === selectedType)?.label || "Título";
+  const selectedLabel = searchTypes.find(type => type.id === selectedType)?.label || "Title";
 
   useEffect(() => {
     Animated.timing(dropdownHeight, {

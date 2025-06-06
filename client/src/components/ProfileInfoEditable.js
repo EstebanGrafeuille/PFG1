@@ -1,11 +1,11 @@
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  Image, 
-  TouchableOpacity, 
-  Alert, 
-  ActivityIndicator 
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator
 } from "react-native";
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from "../context/AuthContext";
@@ -22,10 +22,10 @@ export default function ProfileInfoEditable() {
   // Estados para edición
   const [isEditingUser, setIsEditingUser] = useState(false);
   const [userName, setUserName] = useState(authData?.user?.username || "");
-  
+
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [description, setDescription] = useState("");
-  
+
   const [profileImage, setProfileImage] = useState(null);
 
   useEffect(() => {
@@ -41,14 +41,14 @@ export default function ProfileInfoEditable() {
       try {
         setIsLoading(true);
         setError(null);
-        
+
         console.log("Obteniendo perfil con ID:", userId);
         const userData = await getUserProfile(userId);
-        
+
         setUserName(userData.username || authData?.user?.username);
         setDescription(userData.biography || "");
         setProfileImage(userData.image || null);
-        
+
         console.log("Perfil cargado correctamente:", userData);
       } catch (error) {
         console.error("Error al cargar perfil:", error);
@@ -63,29 +63,29 @@ export default function ProfileInfoEditable() {
 
   const handleUpdateUsername = async () => {
     if (!userName.trim()) {
-      Alert.alert("Error", "El nombre de usuario no puede estar vacío");
+      Alert.alert("Error", "Username cannot be empty");
       return;
     }
-    
+
     // Usar id en lugar de _id ya que el backend devuelve id
     const userId = authData?.user?.id || authData?.user?._id;
     if (!userId) {
       console.error("No se puede identificar al usuario para actualizar nombre:", authData);
-      Alert.alert("Error", "No se puede identificar al usuario");
+      Alert.alert("Error", "User could not be identified");
       return;
     }
-    
+
     try {
       setIsSaving(true);
       setError(null);
-      
+
       console.log("Actualizando nombre de usuario con ID:", userId);
-      const updatedUser = await updateUserProfile(userId, { 
-        username: userName 
+      const updatedUser = await updateUserProfile(userId, {
+        username: userName
       });
-      
+
       console.log("Usuario actualizado:", updatedUser);
-      
+
       // Actualizar el contexto de autenticación si es necesario
       if (updatedUser && authData) {
         const newAuthData = {
@@ -98,12 +98,12 @@ export default function ProfileInfoEditable() {
         // Si tienes una función para actualizar el contexto de autenticación, úsala aquí
         // Por ejemplo: updateAuthContext(newAuthData);
       }
-      
-      Alert.alert("Éxito", "Nombre de usuario actualizado correctamente");
+
+      Alert.alert("Success", "Username updated successfully");
     } catch (error) {
       console.error("Error al actualizar nombre de usuario:", error);
       setError("No se pudo actualizar el nombre de usuario");
-      Alert.alert("Error", error.message || "No se pudo actualizar el nombre de usuario");
+      Alert.alert("Error", error.message || "Failed to update username");
     } finally {
       setIsSaving(false);
       setIsEditingUser(false);
@@ -115,26 +115,26 @@ export default function ProfileInfoEditable() {
     const userId = authData?.user?.id || authData?.user?._id;
     if (!userId) {
       console.error("No se puede identificar al usuario:", authData);
-      Alert.alert("Error", "No se puede identificar al usuario");
+      Alert.alert("Error", "User could not be identified");
       return;
     }
-    
+
     try {
       setIsSaving(true);
       setError(null);
-      
+
       console.log("Actualizando biografía para usuario ID:", userId);
       // Enviamos solo el campo biography sin username ni email
-      const updatedUser = await updateUserProfile(userId, { 
-        biography: description 
+      const updatedUser = await updateUserProfile(userId, {
+        biography: description
       });
-      
+
       console.log("Biografía actualizada:", updatedUser);
-      Alert.alert("Éxito", "Descripción actualizada correctamente");
+      Alert.alert("Success", "Description updated successfully");
     } catch (error) {
       console.error("Error al actualizar descripción:", error);
       setError("No se pudo actualizar la descripción");
-      Alert.alert("Error", error.message || "No se pudo actualizar la descripción");
+      Alert.alert("Error", error.message || "Failed to update description");
     } finally {
       setIsSaving(false);
       setIsEditingDescription(false);
@@ -146,49 +146,49 @@ export default function ProfileInfoEditable() {
     const userId = authData?.user?.id || authData?.user?._id;
     if (!userId) {
       console.error("No se puede identificar al usuario para actualizar imagen:", authData);
-      Alert.alert("Error", "No se puede identificar al usuario");
+      Alert.alert("Error", "User could not be identified");
       return;
     }
-    
+
     // Mostrar opciones al usuario
     Alert.alert(
-      "Cambiar imagen de perfil",
-      "Elige una opción:",
+  "Update profile picture",
+  "Pick an option:",
       [
         {
-          text: "Generar avatar automático",
+          text: "Create automatic avatar",
           onPress: async () => {
             try {
               setIsSaving(true);
               setError(null);
-              
+
               const username = authData?.user?.username || "User";
               console.log("Generando avatar para:", username);
-              
+
               const updatedUser = await updateUserImage(userId);
               console.log("Imagen actualizada:", updatedUser);
               setProfileImage(updatedUser.image);
-              Alert.alert("Éxito", "Avatar generado correctamente");
+              Alert.alert("Success", "Avatar generated successfully");
             } catch (error) {
               console.error("Error al generar avatar:", error);
               setError("No se pudo generar el avatar");
-              Alert.alert("Error", "No se pudo generar el avatar");
+              Alert.alert("Error", "Failed to generate avatar");
             } finally {
               setIsSaving(false);
             }
           }
         },
         {
-          text: "Usar imagen personalizada",
+          text: "Use custom image",
           onPress: async () => {
             try {
               const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-              
+
               if (!permissionResult.granted) {
-                Alert.alert("Permiso denegado", "Necesitamos permiso para acceder a tus fotos");
+                Alert.alert("Permission denied", "We need permission to access your photos");
                 return;
               }
-              
+
               const result = await ImagePicker.launchImageLibraryAsync({
                 mediaType: ["image"],
                 allowsEditing: true,
@@ -197,48 +197,49 @@ export default function ProfileInfoEditable() {
                 base64: true,
                 exif: false, // No incluir datos EXIF para reducir tamaño
               });
-              
+
               if (!result.canceled && result.assets && result.assets[0]) {
                 setIsSaving(true);
                 setError(null);
-                
+
                 const base64Image = result.assets[0].base64;
-                
+
                 if (!base64Image) {
-                  Alert.alert("Error", "No se pudo obtener la imagen en formato base64");
+                  Alert.alert("Oops!", "We couldn't retrieve the image in base64 format");
                   setIsSaving(false);
                   return;
                 }
-                
+
                 console.log("Imagen seleccionada y convertida a base64");
-                
+
                 try {
                   // Usar una URL externa para imágenes grandes
                   if (base64Image.length > 100000) {
                     console.log("Imagen demasiado grande, usando avatar generado");
                     const username = authData?.user?.username || "User";
-                    const randomColor = Math.floor(Math.random()*16777215).toString(16);
-                    const avatarUrl = "https://ui-avatars.com/api/?name=" + 
-                      encodeURIComponent(username) + 
+                    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+                    const avatarUrl = "https://ui-avatars.com/api/?name=" +
+                      encodeURIComponent(username) +
                       "&background=" + randomColor + "&color=fff&size=200";
-                    
+
                     const updatedUser = await updateUserImage(userId, avatarUrl);
                     console.log("Avatar generado en lugar de imagen grande");
                     setProfileImage(updatedUser.image);
-                    Alert.alert("Aviso", "La imagen seleccionada era demasiado grande. Se ha generado un avatar en su lugar.");
+                    Alert.alert("Heads up!", "The selected image was too large. We've generated an avatar for you instead.");
+
                   } else {
                     // Crear una URL de datos con la imagen en base64
                     const dataUrl = `data:image/jpeg;base64,${base64Image}`;
-                    
+
                     const updatedUser = await updateUserImage(userId, dataUrl);
                     console.log("Imagen actualizada:", updatedUser);
                     setProfileImage(updatedUser.image);
-                    Alert.alert("Éxito", "Imagen de perfil actualizada correctamente");
+                    Alert.alert("All set!", "Your profile picture has been updated");
                   }
                 } catch (error) {
                   console.error("Error al actualizar imagen:", error);
                   setError("No se pudo actualizar la imagen de perfil");
-                  Alert.alert("Error", "No se pudo actualizar la imagen de perfil");
+                  Alert.alert("Oops!", "We couldn’t update your profile picture");
                 } finally {
                   setIsSaving(false);
                 }
@@ -246,12 +247,12 @@ export default function ProfileInfoEditable() {
             } catch (error) {
               console.error("Error al seleccionar imagen:", error);
               setIsSaving(false);
-              Alert.alert("Error", "Ocurrió un problema al seleccionar la imagen");
+              Alert.alert("Oops!", "Something went wrong while choosing the image");
             }
           }
         },
         {
-          text: "Cancelar",
+          text: "Cancel",
           style: "cancel"
         }
       ]
@@ -283,7 +284,7 @@ export default function ProfileInfoEditable() {
           />
         )}
       </TouchableOpacity>
-      
+
       <View style={profileStyles.usernameRow}>
         {isEditingUser ? (
           <View style={styles.editContainer}>
@@ -293,12 +294,12 @@ export default function ProfileInfoEditable() {
               style={styles.usernameInput}
               autoFocus
             />
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={handleUpdateUsername}
               style={profileStyles.saveButton}
               disabled={isSaving}
             >
-              <Text style={profileStyles.buttonText}>Guardar</Text>
+              <Text style={profileStyles.buttonText}>Keep</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -309,7 +310,7 @@ export default function ProfileInfoEditable() {
           </TouchableOpacity>
         )}
       </View>
-      
+
       <View style={styles.descriptionContainer}>
         {isEditingDescription ? (
           <View style={styles.editContainer}>
@@ -321,29 +322,29 @@ export default function ProfileInfoEditable() {
               numberOfLines={4}
               autoFocus
             />
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={handleUpdateDescription}
               style={profileStyles.saveButton}
               disabled={isSaving}
             >
-              <Text style={profileStyles.buttonText}>Guardar</Text>
+              <Text style={profileStyles.buttonText}>Keep</Text>
             </TouchableOpacity>
           </View>
         ) : (
           <TouchableOpacity onPress={() => setIsEditingDescription(true)}>
             <Text style={profileStyles.bio}>
-              {description || "Añade una descripción..."}
+              {description || "Add something about yourself..."}
             </Text>
           </TouchableOpacity>
         )}
       </View>
-      
+
       {error && <Text style={styles.errorText}>{error}</Text>}
-      
+
       {isSaving && (
         <View style={styles.savingOverlay}>
           <ActivityIndicator size="small" color="#ffffff" />
-          <Text style={styles.savingText}>Guardando...</Text>
+          <Text style={styles.savingText}>Saving...</Text>
         </View>
       )}
     </View>

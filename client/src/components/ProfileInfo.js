@@ -6,7 +6,7 @@ import { profileStyles } from "../styles/ProfileStyles";
 export default function ProfileInfo({ userProfileData, isLoading }) {
   const { authData } = useContext(AuthContext);
   const [userProfile, setUserProfile] = useState({
-    username: authData?.user?.username || "Usuario",
+    username: authData?.user?.username || "User",
     biography: "",
     image: ""
   });
@@ -51,7 +51,7 @@ export default function ProfileInfo({ userProfileData, isLoading }) {
         <Text style={profileStyles.username}>{userProfile.username}</Text>
       </View>
       <Text style={profileStyles.bio}>
-        {userProfile.biography || "No hay biografía disponible."}
+        {userProfile.biography || "This book has no biography."}
       </Text>
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
