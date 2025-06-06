@@ -8,30 +8,28 @@ import React from "react";
 import {
   View,
   Text,
-  StyleSheet,
   Image,
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
   Pressable,
-  Alert,
   Modal,
   useWindowDimensions
 } from "react-native";
 import RenderHtml from "react-native-render-html";
-// Importaciones actualizadas para la nueva estructura
 import useBookDetails from "../../hooks/useBookDetails";
 import { useState, useContext, useEffect, useCallback } from "react";
 import { LoadingIndicator } from "../../components/ui/LoadingIndicator";
 import { useNavigation } from "@react-navigation/native";
-import Colors from "../../constants/colors";
-import Layout from "../../constants/layout";
+import styles from "../../styles/DetailBookScreenStyles";
 import { useBooks } from "../../context/BooksContext";
 import { formatDate, getLanguageName } from "../../utils/helpers";
 import userBookService from "../../services/userBook";
 import { AuthContext } from "../../context/AuthContext";
 import reviewService from "../../services/reviewService";
 import { useFocusEffect } from "@react-navigation/native";
+import Layout from "../../constants/layout";
+import Colors from "../../constants/colors";
 
 /**
  * Pantalla de detalles de libro
@@ -209,12 +207,15 @@ const DetailBook = ({ route }) => {
             >
               <View style={styles.overlay}>
                 <View style={styles.popup}>
+                  <Pressable onPress={() => setVisible(false)} style={styles.closeButton}>
+                    <Text style={styles.closeButtonText}>×</Text>
+                  </Pressable>
                   {options.map((opt, index) => (
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        handleAddBook(opt); // ← Llama la función con el nombre de la lista
-                        setVisible(false); // ← Cierra el modal
+                        handleAddBook(opt);
+                        setVisible(false);
                       }}
                     >
                       <Text style={styles.option}>{opt}</Text>
@@ -302,270 +303,5 @@ const DetailBook = ({ route }) => {
     </SafeAreaView>
   );
 };
-
-/**
- * Estilos para la pantalla de detalles
- */
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#080D17"
-  },
-  scrollView: {
-    flex: 1
-  },
-  scrollViewContent: {
-    paddingBottom: 140
-  },
-  bottomSpace: {
-    height: 80,
-    backgroundColor: "#FFFFFF",
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: Layout.SPACING.L
-  },
-  errorText: {
-    fontSize: Layout.FONT_SIZE.L,
-    color: Colors.ERROR,
-    textAlign: "center"
-  },
-  headerContainer: {
-    flexDirection: "column"
-  },
-  imageContainer: {
-    width: 115,
-    height: 160,
-    overflow: "hidden",
-    backgroundColor: Colors.PLACEHOLDER,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    borderRadius: 10,
-    borderColor: "#FFCB20",
-    borderRightWidth: 3,
-    borderBottomWidth: 3,
-    marginLeft: 30,
-    marginBottom: 20,
-    marginTop: "auto"
-  },
-  bookCover: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 5
-  },
-  noImageContainer: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: Colors.PRIMARY,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  noImageText: {
-    fontSize: 40,
-    fontWeight: Layout.FONT_WEIGHT.BOLD,
-    color: Colors.WHITE
-  },
-  buttonContainer: {
-    height: 16,
-    width: 16,
-    marginLeft: 20,
-    marginTop: 5,
-    marginBottom: 20
-  },
-  icon: {
-    height: "100%",
-    width: "100%"
-  },
-  headerInfo: {
-    flexDirection: "row",
-    height: 200
-  },
-  headerRight: {
-    flexDirection: "column",
-    justifyContent: "flex-end",
-    marginLeft: 20
-  },
-  title: {
-    fontFamily: "Roboto_900Black",
-    fontSize: 24,
-    color: "#FFFFFF",
-    marginBottom: 2
-  },
-  authors: {
-    fontFamily: "Roboto_200ExtraLight",
-    fontSize: 15,
-    color: "#FFFFFF",
-    marginBottom: 2
-  },
-  publishedDate: {
-    fontFamily: "Roboto_200ExtraLight",
-    fontSize: 12,
-    color: "#D2D2D2",
-    marginBottom: 20
-  },
-  stars: {
-    height: 20,
-    width: 144,
-    marginBottom: 10
-  },
-  categoriesContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginBottom: 20
-  },
-  categoryBadge: {
-    backgroundColor: Colors.PRIMARY,
-    paddingHorizontal: Layout.SPACING.M,
-    paddingVertical: Layout.SPACING.XS,
-    borderRadius: Layout.BORDER_RADIUS.L,
-    marginRight: Layout.SPACING.XS,
-    marginBottom: Layout.SPACING.XS
-  },
-  categoryText: {
-    fontSize: Layout.FONT_SIZE.XS,
-    color: Colors.TEXT_PRIMARY
-  },
-  infoSection: {
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20
-  },
-  buttonRow: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    height: 120,
-    alignItems: "center"
-  },
-  listButtonContainer: {
-    height: 32,
-    width: 32
-  },
-  listIcon: {
-    height: "100%",
-    width: "100%"
-  },
-  reviewstButtonContainer: {
-    height: 32,
-    width: 32
-  },
-  reviewsIcon: {
-    height: "100%",
-    width: "100%"
-  },
-  reviewContainer: {
-    flexDirection: "column",
-    justifyContent: "center",
-    height: 50,
-    alignItems: "center"
-  },
-  reviewButtonContainer: {
-    height: 46,
-    width: 270
-  },
-  reviewIcon: {
-    height: "100%",
-    width: "100%"
-  },
-  textSection: {
-    marginTop: 40,
-    paddingHorizontal: 20
-  },
-  sectionTitle: {
-    fontSize: Layout.FONT_SIZE.L,
-    fontWeight: Layout.FONT_WEIGHT.BOLD,
-    color: Colors.TEXT_PRIMARY,
-    marginBottom: Layout.SPACING.M
-  },
-  detailsTitle: {
-    fontSize: Layout.FONT_SIZE.L,
-    fontWeight: Layout.FONT_WEIGHT.BOLD,
-    color: Colors.TEXT_PRIMARY,
-    marginBottom: Layout.SPACING.M,
-    marginTop: 30
-  },
-  description: {
-    fontSize: Layout.FONT_SIZE.M,
-    lineHeight: 20,
-    color: Colors.TEXT_PRIMARY
-  },
-  noInfo: {
-    fontSize: Layout.FONT_SIZE.M,
-    color: Colors.TEXT_TERTIARY,
-    fontStyle: "italic"
-  },
-  detailRow: {
-    flexDirection: "row",
-    marginBottom: Layout.SPACING.S
-  },
-  detailLabel: {
-    fontSize: Layout.FONT_SIZE.M,
-    fontWeight: Layout.FONT_WEIGHT.BOLD,
-    color: Colors.TEXT_PRIMARY,
-    width: 80
-  },
-  detailValue: {
-    fontSize: Layout.FONT_SIZE.M,
-    color: Colors.TEXT_SECONDARY,
-    flex: 1
-  },
-  floatingButton: {
-    position: "absolute",
-    bottom: 80,
-    right: Layout.SPACING.L,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: Colors.PRIMARY,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3
-  },
-  floatingButtonText: {
-    fontSize: Layout.FONT_SIZE.XXL,
-    fontWeight: Layout.FONT_WEIGHT.BOLD,
-    color: Colors.WHITE
-  },
-  titleContainer: {
-    width: 230
-  },
-  overlay: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "rgba(0,0,0,0.4)"
-  },
-  popup: {
-    backgroundColor: "white",
-    marginHorizontal: 50,
-    padding: 20,
-    borderRadius: 10
-  },
-  option: {
-    fontFamily: "Roboto_400Regular",
-    fontSize: 18,
-    marginVertical: 10,
-    textAlign: "center"
-  },
-  rowItemContainer: {
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  iconText: {
-    fontFamily: "Roboto_200ExtraLight",
-    fontSize: 12,
-    marginTop: 5
-  }
-});
 
 export default DetailBook;

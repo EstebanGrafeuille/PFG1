@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-around",
     marginTop: 20,
-    marginBottom: 80,
+    marginBottom: 40,
     height: 150,
     width: 380
   },

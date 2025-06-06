@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const profileStyles = StyleSheet.create({
   safeArea: {
@@ -43,7 +43,7 @@ export const profileStyles = StyleSheet.create({
   infoText: {
     fontFamily: "Roboto_200ExtraLight",
     fontSize: 15,
-    paddingRight: 10,
+    paddingRight: 10
   },
   profileInfo: {
     flexDirection: "column",
@@ -79,7 +79,9 @@ export const profileStyles = StyleSheet.create({
     backgroundColor: "#d9534f",
     paddingHorizontal: 20,
     paddingVertical: 12,
-    borderRadius: 8
+    borderRadius: 8,
+    marginTop: 20,
+    marginBottom: 120
   },
   logoutText: {
     color: "#fff",
@@ -87,28 +89,28 @@ export const profileStyles = StyleSheet.create({
     fontFamily: "Roboto_700Bold"
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     marginTop: 15
   },
   saveButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginHorizontal: 5
   },
   cancelButton: {
-    backgroundColor: '#f44336',
+    backgroundColor: "#f44336",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginHorizontal: 5
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontFamily: "Roboto_500Medium",
     fontSize: 14,
-    textAlign: 'center'
+    textAlign: "center"
   }
 });
