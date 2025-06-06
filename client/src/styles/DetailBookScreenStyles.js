@@ -264,21 +264,20 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: "absolute",
-    top: Layout.SPACING.S,
-    right: Layout.SPACING.S,
+    top: -10,
+    right: -10,
     height: 30,
     width: 30,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.PRIMARY,
-    borderRadius: Layout.BORDER_RADIUS.ROUND
-  },
-  closeButtonText: {
-    fontSize: Layout.FONT_SIZE.L,
+    borderRadius: Layout.BORDER_RADIUS.ROUND,
+    fontSize: 24,
     color: Colors.TEXT_PRIMARY,
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    fontWeight: "bold"
   }
 });
 

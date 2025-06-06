@@ -205,10 +205,13 @@ const DetailBook = ({ route }) => {
               animationType="fade"
               onRequestClose={() => setVisible(false)}
             >
-              <View style={styles.overlay}>
+              <Pressable
+                style={[styles.overlay, { backgroundColor: "rgba(0, 0, 0, 0.5)" }]}
+                onPress={() => setVisible(false)}
+              >
                 <View style={styles.popup}>
                   <Pressable onPress={() => setVisible(false)} style={styles.closeButton}>
-                    <Text style={styles.closeButtonText}>×</Text>
+                    ×
                   </Pressable>
                   {options.map((opt, index) => (
                     <TouchableOpacity
@@ -222,7 +225,7 @@ const DetailBook = ({ route }) => {
                     </TouchableOpacity>
                   ))}
                 </View>
-              </View>
+              </Pressable>
             </Modal>
             <Pressable
               onPress={() => navigation.navigate("Reviews", { volumeId: details.id })}
