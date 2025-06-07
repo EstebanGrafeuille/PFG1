@@ -99,7 +99,7 @@ const DetailBook = ({ route }) => {
   if (error || !details) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>{error || "No se encontraron detalles del libro"}</Text>
+        <Text style={styles.errorText}>{error || "No book details found"}</Text>
       </View>
     );
   }
@@ -255,7 +255,7 @@ const DetailBook = ({ route }) => {
           </View>
 
           <View style={styles.textSection}>
-            <Text style={styles.sectionTitle}>Descripción</Text>
+            <Text style={styles.sectionTitle}>Description</Text>
             {info.description ? (
               <RenderHtml
                 contentWidth={width - 40}
@@ -268,22 +268,22 @@ const DetailBook = ({ route }) => {
                 }}
               />
             ) : (
-              <Text style={styles.noInfo}>No hay descripción disponible</Text>
+              <Text style={styles.noInfo}>No description available</Text>
             )}
             {/* SECCION de DETALLES */}
-            <Text style={styles.detailsTitle}>Detalles</Text>
+            <Text style={styles.detailsTitle}>Details</Text>
             <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Editorial:</Text>
-              <Text style={styles.detailValue}>{info.publisher || "No disponible"}</Text>
+              <Text style={styles.detailLabel}>Publisher:</Text>
+              <Text style={styles.detailValue}>{info.publisher || "Not available"}</Text>
             </View>
             <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Páginas:</Text>
-              <Text style={styles.detailValue}>{info.pageCount || "No disponible"}</Text>
+              <Text style={styles.detailLabel}>Pages:</Text>
+              <Text style={styles.detailValue}>{info.pageCount || "Not available"}</Text>
             </View>
             <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Idioma:</Text>
+              <Text style={styles.detailLabel}>Language:</Text>
               <Text style={styles.detailValue}>
-                {getLanguageName(info.language) || "No disponible"}
+                {getLanguageName(info.language) || "Not available"}
               </Text>
             </View>
             <View style={styles.detailRow}>

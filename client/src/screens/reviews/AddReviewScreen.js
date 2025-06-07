@@ -14,33 +14,33 @@ export default function AddReviewScreen() {
 
   const handleAddReview = async () => {
     if (!reviewText.trim()) {
-      Alert.alert("Error", "La reseña no puede estar vacía.");
+Alert.alert("Oops!", "Please write something before submitting your review.");
       return;
     }
 
     try {
       await reviewService.addReview(volumeId, reviewText, authData.token);
-      Alert.alert("Reseña guardada", "Gracias por tu opinión.");
+Alert.alert("Thank you!", "Your review has been saved.");
       navigation.goBack();
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", "No se pudo guardar la reseña.");
+Alert.alert("Oops!", "Something went wrong while saving your review.");
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Escribí tu reseña</Text>
+      <Text style={styles.title}>Write your review</Text>
       <TextInput
         style={styles.input}
-        placeholder="Escribí algo sobre este libro..."
+placeholder="Share your thoughts about this book..."
         value={reviewText}
         onChangeText={setReviewText}
         multiline
         maxLength={200}
       />
       <TouchableOpacity style={styles.button} onPress={handleAddReview}>
-        <Text style={styles.buttonText}>Enviar reseña</Text>
+        <Text style={styles.buttonText}>Send review</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

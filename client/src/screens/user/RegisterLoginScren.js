@@ -42,14 +42,14 @@ export default function RegisterLoginScreen() {
         .register(username, email, password)
         .then((authData) => {
           setAuthData(authData);
-          alert(`Bienvenido ${username}`);
+          alert(`Welcome ${username}`);
         })
         .catch(() => {
-          Alert.alert("", "Error al registrar. Por favor, inténtelo de nuevo.");
+          Alert.alert("", "Registration failed. Please try again.");
           console.log("En registerLoggin");
         });
     } else {
-      Alert.alert("", "Por favor, complete todos los campos.");
+      Alert.alert("", "Please fill in all fields.");
     }
   };
 
@@ -61,7 +61,7 @@ export default function RegisterLoginScreen() {
         {esLogin && (
           <TextInput
             style={styles.input}
-            placeholder="Nombre"
+            placeholder="Username"
             value={username}
             onChangeText={setUsername}
             placeholderTextColor="#999"
@@ -77,7 +77,7 @@ export default function RegisterLoginScreen() {
         />
         <TextInput
           style={styles.input}
-          placeholder="Contraseña"
+          placeholder="Password"
           value={password}
           onChangeText={setPassword}
           placeholderTextColor="#999"
@@ -86,16 +86,16 @@ export default function RegisterLoginScreen() {
         <View style={styles.buttonContainer}>
           {!esLogin ? (
             <TouchableOpacity style={styles.button} onPress={HandleLogin}>
-              <Text style={styles.buttonText}>Iniciar sesión</Text>
+              <Text style={styles.buttonText}>Log in</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity style={styles.button} onPress={HandleRegister}>
-              <Text style={styles.buttonText}>Crear cuenta</Text>
+              <Text style={styles.buttonText}>Create account</Text>
             </TouchableOpacity>
           )}
           <TouchableOpacity style={styles.secondaryButton} onPress={() => setEsLogin(!esLogin)}>
             <Text style={styles.secondaryButtonText}>
-              {esLogin ? "Ya tengo cuenta" : "Registrarse"}
+              {esLogin ? "I already have an account" : "Register"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -103,7 +103,7 @@ export default function RegisterLoginScreen() {
           style={styles.secondaryButton}
           onPress={() => navigation.navigate("ForgotPass")}
         >
-          <Text style={styles.secondaryButtonText}>{"Olvidaste tu contraseña?"}</Text>
+          <Text style={styles.secondaryButtonText}>{"Forgot your password?"}</Text>
         </TouchableOpacity>
       </View>
     </View>

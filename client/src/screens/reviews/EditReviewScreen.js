@@ -23,16 +23,16 @@ const EditReviewScreen = () => {
 
   const handleUpdateReview = async () => {
     if (!reviewText.trim()) {
-      Alert.alert("Error", "La reseña no puede estar vacía.");
+Alert.alert("Error", "Review cannot be empty");
       return;
     }
     try {
       setLoading(true);
       await reviewService.updateReview(review._id, reviewText, authData.token);
-      Alert.alert("Listo", "Reseña actualizada");
+Alert.alert("Done", "Review updated");
       navigation.goBack();
     } catch (error) {
-      Alert.alert("Error", "No se pudo actualizar la reseña");
+Alert.alert("Error", "Failed to update the review");
       console.error(error);
     } finally {
       setLoading(false);
@@ -43,10 +43,10 @@ const EditReviewScreen = () => {
     try {
       setLoading(true);
       await reviewService.deleteReview(review._id, authData.token);
-      Alert.alert("Listo", "Reseña eliminada");
+Alert.alert("Done", "Review deleted");
       navigation.goBack();
     } catch (error) {
-      Alert.alert("Error", "No se pudo eliminar la reseña");
+Alert.alert("Error", "Failed to delete the review");
       console.error(error);
     } finally {
       setLoading(false);
@@ -55,10 +55,10 @@ const EditReviewScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Editá tu reseña</Text>
+      <Text style={styles.title}>Edit your review</Text>
       <TextInput
         style={styles.input}
-        placeholder="Modificá tu opinión sobre este libro..."
+placeholder="Update your thoughts about this book..."
         value={reviewText}
         onChangeText={setReviewText}
         multiline
@@ -69,7 +69,7 @@ const EditReviewScreen = () => {
         onPress={handleUpdateReview}
         disabled={loading}
       >
-        <Text style={styles.buttonText}>Actualizar reseña</Text>
+        <Text style={styles.buttonText}>Update review</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -77,7 +77,7 @@ const EditReviewScreen = () => {
         onPress={handleDeleteReview}
         disabled={loading}
       >
-        <Text style={[styles.buttonText, styles.deleteText]}>Eliminar reseña</Text>
+        <Text style={[styles.buttonText, styles.deleteText]}>Delete review</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

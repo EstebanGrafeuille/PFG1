@@ -21,37 +21,37 @@ export default function ForgotPassScreen() {
 
   const HandleForgotPass = () => {
     if (!email) {
-      Alert.alert("Error, ingresa un correo elecronico");
+      Alert.alert("Error", "Please enter an email");
     }
 
     authService
       .forgotPassword(email)
       .then((res) => {
-        Alert.alert("Codigo enviado, revisa tu correo electrinico");
+        Alert.alert("Code sent", "Check your email inbox");
         setHaveCode(true);
       })
       .catch((error) => {
-        Alert.alert("Error", error.message || "No se pudo enviar el codigo");
+        Alert.alert("Error", error.message || "Failed to send the code");
       });
   };
 
   const HandleResetPass = () => {
     if (!email || !username || !password) {
-      Alert.alert("Error", "Completá todos los campos");
+      Alert.alert("Error", "Please fill in all fields");
       return;
     }
 
     authService
       .resetPassword(email, username, password)
       .then(() => {
-        Alert.alert("Contraseña actualizada", "Ya podés iniciar sesión");
+        Alert.alert("Password updated", "You can now log in");
         setHaveCode(false); // vuelve a la vista inicial
         setPassword("");
         setUsername("");
         navigation.navigate("RegisterLogin");
       })
       .catch((error) => {
-        Alert.alert("Error", error.message || "No se pudo cambiar la contraseña");
+        Alert.alert("Error", error.message || "Failed to change the password");
       });
   };
 
@@ -64,14 +64,14 @@ export default function ForgotPassScreen() {
           <>
             <TextInput
               style={styles.input}
-              placeholder="Codigo"
+              placeholder="Code"
               value={username}
               onChangeText={setUsername}
               placeholderTextColor="#999"
             />
             <TextInput
               style={styles.input}
-              placeholder="Nueva contraseña"
+              placeholder="New password"
               value={password}
               onChangeText={setPassword}
               placeholderTextColor="#999"
@@ -81,8 +81,7 @@ export default function ForgotPassScreen() {
         ) : (
           <>
             <Text style={styles.infoText}>
-              Por favor ingresa tu correo registrado para que podamos enviarte un codigo de
-              verificación
+              Please enter your registered email so we can send you a verification code
             </Text>
             <TextInput
               style={styles.input}
@@ -100,12 +99,13 @@ export default function ForgotPassScreen() {
             onPress={haveCode ? HandleResetPass : HandleForgotPass}
           >
             <Text style={styles.buttonText}>
-              {haveCode ? "Cambiar contraseña" : "Enviar a correo electronico"}
+              {haveCode ? "Change password" : "Send to email"}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.secondaryButton} onPress={() => setHaveCode(!haveCode)}>
-            <Text style={styles.secondaryButtonText}>{haveCode && "Volver a pedir codigo"}</Text>
+            <Text style={styles.secondaryButtonText}>  {haveCode && "Request code again"}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

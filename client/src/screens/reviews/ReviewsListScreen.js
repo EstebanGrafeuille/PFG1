@@ -51,14 +51,14 @@ export default function ReviewListScreen() {
             <Image source={require("../../../assets/img/back-icon-grey.png")} style={styles.icon} />
           </Pressable>
         </View>
-        <Text style={styles.title}>Reseñas del libro</Text>
+        <Text style={styles.title}>Book reviews</Text>
         <View style={styles.rightSection} />
       </View>
 
       {loading ? (
         <ActivityIndicator size="large" color="#FFD700" />
       ) : reviews.length === 0 ? (
-        <Text style={styles.emptyText}>Todavía no hay reseñas para este libro.</Text>
+        <Text style={styles.emptyText}>There are no reviews for this book yet.</Text>
       ) : (
         <FlatList
           data={reviews}
