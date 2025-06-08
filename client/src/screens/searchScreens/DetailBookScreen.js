@@ -161,10 +161,6 @@ const DetailBook = ({ route }) => {
               {info.publishedDate && (
                 <Text style={styles.publishedDate}>{formatDate(info.publishedDate)}</Text>
               )}
-              <Image
-                source={require("../../../assets/img/stars-static.png")}
-                style={styles.stars}
-              />
               {info.categories && (
                 <View style={styles.categoriesContainer}>
                   {info.categories.length > 0 && (
