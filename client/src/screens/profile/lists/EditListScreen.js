@@ -1,64 +1,81 @@
 // import { View, Text, StyleSheet, Button, Pressable, Image, Alert,ScrollView, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
 // import { useNavigation } from '@react-navigation/native';
-import ListBooksRemove from '../../../components/ListBooksRemove';
+import ListBooksRemove from "../../../components/ListBooksRemove";
 
-import { useEffect, useState, useContext } from 'react';
-import { useRoute } from '@react-navigation/native';
-import { View, Text, StyleSheet, Button, Pressable, Image, TouchableOpacity, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useEffect, useState, useContext } from "react";
+import { useRoute } from "@react-navigation/native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  Pressable,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+  SafeAreaView
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import BooksInList from "../../../components/BooksInList";
 import userBookService from "../../../services/userBook";
 import { AuthContext } from "../../../context/AuthContext";
 
-export default function EditListScreen(){
+export default function EditListScreen() {
+  const navigation = useNavigation();
 
-    const navigation = useNavigation();
+  const { authData } = useContext(AuthContext);
+  const [bookIds, setBookIds] = useState([]);
 
-    const { authData } = useContext(AuthContext);
-    const [bookIds, setBookIds] = useState([]);
+  const route = useRoute();
+  const { listTitle } = route.params;
 
-    const route = useRoute();
-    const { listTitle } = route.params;
-    
-    useEffect(() => {
+  useEffect(() => {
     const fetchLibros = async () => {
-        try {
+      try {
         const libros = await userBookService.getLista(authData.user.id, listTitle, authData.token);
         setBookIds(libros);
-        
-        } catch (error) {
+      } catch (error) {
         console.error("Error obteniendo libros de lista:", error.message);
-        }
+      }
     };
     fetchLibros();
-    }, []);
+  }, []);
 
-    return(
-        <View style={styles.listDetailScreen}>
-            <View style={styles.listContainer}>
-                <View style={styles.listHeader}>
-                    <Pressable onPress={() => navigation.navigate('ListDetailScreen')}>
-                        <View style={styles.buttonContainer}>
-                            <Image source={require("../../../../assets/img/back-icon-grey.png")} style={styles.icon}/>
-                        </View>
-                    </Pressable>
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.title}>{listTitle}</Text>
-                    </View>
-                    <Pressable onPress={() =>  Alert.alert('You want to delete List?')}>
-                        <View style={styles.buttonContainer}>
-                            <Image source={require("../../../../assets/img/trash-icon-grey.png")} style={styles.icon}/>
-                        </View>
-                    </Pressable>
-                </View>
-                <Text style={styles.author}>by user_name</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('ListsBooksScreen')} style={styles.doneBtn}>
-                    <Text style={styles.btnText}>Done</Text>
-                </TouchableOpacity>
-                <ListBooksRemove ids={bookIds} lista={listTitle} />
+  return (
+    <View style={styles.listDetailScreen}>
+      <View style={styles.listContainer}>
+        <View style={styles.listHeader}>
+          <Pressable onPress={() => navigation.navigate("ListDetailScreen")}>
+            <View style={styles.buttonContainer}>
+              <Image
+                source={require("../../../../assets/img/back-icon-grey.png")}
+                style={styles.icon}
+              />
             </View>
-        </View> 
-    )
+          </Pressable>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>{listTitle}</Text>
+          </View>
+          <Pressable onPress={() => Alert.alert("You want to delete List?")}>
+            <View style={styles.buttonContainer}>
+              <Image
+                source={require("../../../../assets/img/trash-icon-grey.png")}
+                style={styles.icon}
+              />
+            </View>
+          </Pressable>
+        </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("ListsBooksScreen")}
+          style={styles.doneBtn}
+        >
+          <Text style={styles.btnText}>Done</Text>
+        </TouchableOpacity>
+        <ListBooksRemove ids={bookIds} lista={listTitle} />
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

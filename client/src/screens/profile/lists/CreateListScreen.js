@@ -27,7 +27,7 @@ export default function CreateListScreen() {
   const handleCreateList = async () => {
     if (newListName.trim() === "") {
       Alert.alert("Oops!", "Please enter a name for your list.");
-      console.log("Error", "El nombre de la lista no puede estar vacio")
+      console.log("Error", "El nombre de la lista no puede estar vacio");
       return; // detenemos la ejecución
     }
 
@@ -62,7 +62,6 @@ export default function CreateListScreen() {
             onChangeText={setNewListName}
           />
         </View>
-        <Text style={styles.author}>by user_name</Text>
         <TouchableOpacity onPress={handleCreateList} style={styles.doneBtn}>
           <Text style={styles.btnText}>Done</Text>
         </TouchableOpacity>
@@ -70,7 +69,6 @@ export default function CreateListScreen() {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   listDetailScreen: {
