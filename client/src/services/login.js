@@ -1,5 +1,5 @@
 import asyncStorage from "./asyncStorage.js";
-import BASE_URL from '../services/connection.js'
+import BASE_URL from "../services/connection.js";
 
 const login = (email, password) => {
   return new Promise((resolve, reject) => {
@@ -32,31 +32,25 @@ const login = (email, password) => {
 };
 
 const register = (username, email, password) => {
-  console.log("En register1");
-  console.log(email, password, username);
+  return fetch(`${BASE_URL}/auth/register/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ username, email, password })
+  }).then(async (res) => {
+    const data = await res.json();
 
-  return new Promise((resolve, reject) => {
-    fetch(`${BASE_URL}/auth/register/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ username, email, password })
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw new Error("Error al registrar usuario");
-        }
-      })
-      .then((authData) => {
-        asyncStorage.storeData("authData", authData);
-        resolve(authData);
-      })
-      .catch((error) => {
-        reject(error.message);
-      });
+    if (!res.ok) {
+      if (data.errors) {
+        throw { type: "validation", errors: data.errors };
+      }
+
+      throw { type: "generic", message: data.message || "Error al registrar usuario" };
+    }
+
+    await asyncStorage.storeData("authData", data);
+    return data;
   });
 };
 

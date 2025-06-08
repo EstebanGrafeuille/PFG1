@@ -18,6 +18,7 @@ export default function RegisterLoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [esLogin, setEsLogin] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const { setAuthData } = useContext(AuthContext);
   const navigation = useNavigation();
@@ -38,15 +39,20 @@ export default function RegisterLoginScreen() {
 
   const HandleRegister = () => {
     if (email && password && username) {
+      setErrors({}); // Limpiar errores anteriores
+
       authService
         .register(username, email, password)
         .then((authData) => {
           setAuthData(authData);
           alert(`Welcome ${username}`);
         })
-        .catch(() => {
-          Alert.alert("", "Registration failed. Please try again.");
-          console.log("En registerLoggin");
+        .catch((error) => {
+          if (error.type === "validation") {
+            setErrors(error.errors);
+          } else {
+            Alert.alert("", error.message || "Error al registrar.");
+          }
         });
     } else {
       Alert.alert("", "Please fill in all fields.");
@@ -59,30 +65,42 @@ export default function RegisterLoginScreen() {
       <View style={styles.content}>
         <Text style={styles.title}>BookBox</Text>
         {esLogin && (
+          <>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Username"
+                value={username}
+                onChangeText={setUsername}
+                placeholderTextColor="#999"
+              />
+              {errors.username && <Text style={styles.errorText}>{errors.username}</Text>}
+            </View>
+          </>
+        )}
+        <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Username"
-            value={username}
-            onChangeText={setUsername}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
             placeholderTextColor="#999"
+            keyboardType="email-address"
           />
-        )}
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          placeholderTextColor="#999"
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          placeholderTextColor="#999"
-          secureTextEntry
-        />
+          {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            placeholderTextColor="#999"
+            secureTextEntry
+          />
+          {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+        </View>
+
         <View style={styles.buttonContainer}>
           {!esLogin ? (
             <TouchableOpacity style={styles.button} onPress={HandleLogin}>
@@ -135,7 +153,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "#fff",
     paddingHorizontal: 15,
-    marginBottom: 20,
     fontSize: 16,
     shadowColor: "#000",
     shadowOpacity: 0.05,
@@ -165,5 +182,13 @@ const styles = StyleSheet.create({
     color: "#333",
     fontSize: 14,
     textDecorationLine: "underline"
+  },
+  inputContainer: {
+    marginBottom: 20
+  },
+  errorText: {
+    color: "red",
+    fontSize: 14,
+    paddingHorizontal: 15
   }
 });

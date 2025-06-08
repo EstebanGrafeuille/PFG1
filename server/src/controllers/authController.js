@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
-const bookService = require("../services/bookService")
+const bookService = require("../services/bookService");
 
 // Registrar un nuevo usuario
 exports.register = async (req, res) => {
@@ -9,9 +9,17 @@ exports.register = async (req, res) => {
     const { username, email, password } = req.body;
 
     // Verificar si el usuario ya existe
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-    if (existingUser) {
-      return res.status(400).json({ message: "El usuario o email ya está registrado" });
+    const [emailExistente, usernameExistente] = await Promise.all([
+      User.findOne({ email }),
+      User.findOne({ username })
+    ]);
+    if (emailExistente || usernameExistente) {
+      return res.status(400).json({
+        errors: {
+          ...(emailExistente && { email: "Este email ya está en uso" }),
+          ...(usernameExistente && { username: "Este nombre de usuario ya está en uso" })
+        }
+      });
     }
 
     // Crear nuevo usuario
@@ -22,9 +30,9 @@ exports.register = async (req, res) => {
     });
 
     await user.save();
-    console.log("creado user")
+    console.log("creado user");
     await bookService.createUB(user._id);
-    console.log("creado ub")
+    console.log("creado ub");
     // Generar token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 
@@ -38,10 +46,13 @@ exports.register = async (req, res) => {
       }
     });
   } catch (error) {
-    // Validación específica de Mongoose
+    // Validación de campos (ej: minlength, required, etc)
     if (error.name === "ValidationError") {
-      const messages = Object.values(error.errors).map((err) => err.message);
-      return res.status(400).json({ message: messages.join(", ") });
+      const fieldErrors = {};
+      for (const key in error.errors) {
+        fieldErrors[key] = error.errors[key].message;
+      }
+      return res.status(400).json({ errors: fieldErrors });
     }
     res.status(500).json({ message: "Error al registrar usuario", error: error.message });
   }
