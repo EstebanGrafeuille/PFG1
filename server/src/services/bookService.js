@@ -15,7 +15,7 @@ class BookService {
       }else{
         const userbook = new UserBook({
           userId:id,
-          listasUser:["leidos","leyendo","favoritos"],
+          listasUser:["Read","Reading","Favorites"],
           libros:[]
         });
         //console.log(userbook)
@@ -50,18 +50,6 @@ class BookService {
 			status: "favorite",
 		});
 	}
-
-	// Eliminar libro de favoritos / listas personalizadas
-	// async removeFromLista(userId, lista, bookId) {
-	// 	try {
-	// 		await UserBook.updateOne(
-	// 			{ user: userId, "libros.googleId": bookId },
-	// 			{ $pull: { "libros.listasLibro": lista } }
-	// 		);
-	// 	} catch (error) {
-	// 		throw new Error("error al remover libro de la lista");
-	// 	}
-	// }
 
   async removeFromLista(userId, lista, libroId) {
   const userbook = await UserBook.findOne({ userId });
@@ -166,11 +154,12 @@ class BookService {
         }
       }
     ]);
-    console.log(results[1].libros.googleId)
+    //console.log(results)
     const libros = []
     results.forEach(function(result){
       libros.push(result.libros.googleId)
     });
+    console.log(libros)
     return libros
     }catch(error){
       return error.message
@@ -194,6 +183,41 @@ class BookService {
     }
     
   }
+
+  async deleteLista(userId,borrar){
+    try{
+      const userbook = await UserBook.findOne({"userId":userId})
+
+    if(!userbook){
+      throw new Error("user inexsistente");
+    }
+    //console.log(userbook)
+    const listaExiste = userbook.listasUser.includes(borrar);
+    //console.log(listaExiste)
+    
+    if (!listaExiste) {
+      throw new Error("lista inexistente");
+    }
+    console.log("busco los libros")
+    const librosEnLista = await this.getLista(userId,borrar)
+    console.log(librosEnLista)
+
+    librosEnLista.forEach(libro =>{
+      this.removeFromLista(userId,borrar,libro);
+    });
+
+    await UserBook.updateOne(
+      { userId },
+      { $pull: { "listasUser": borrar } }
+      );
+
+    return borrar
+    } catch(error){
+      throw new Error(error.message)
+    }
+    
+  }
+
   
 }
 
