@@ -5,9 +5,11 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
-  Alert
+  Alert,
+  Keyboard,
+  TouchableWithoutFeedback
 } from "react-native";
-import { useState, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import authService from "../../services/login";
 import { AuthContext } from "../../context/AuthContext";
 import asyncStorage from "../../services/asyncStorage";
@@ -23,6 +25,13 @@ export default function RegisterLoginScreen() {
   const { setAuthData } = useContext(AuthContext);
   const navigation = useNavigation();
 
+  useEffect(() => {
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setErrors({});
+  }, [esLogin]);
+
   const HandleLogin = () => {
     //TODO: Llamar al backend (o al servicio de autenticacion elegido) para obtener el token
     authService
@@ -33,39 +42,38 @@ export default function RegisterLoginScreen() {
         console.log("Auth data desde registerLoggin handlelogin: ", typeof authData, authData);
       })
       .catch((error) => {
-        alert(error);
+        if (error.type === "validation") {
+          setErrors(error.errors);
+        }
       });
   };
 
   const HandleRegister = () => {
-    if (email && password && username) {
-      setErrors({}); // Limpiar errores anteriores
+    setErrors({}); // Limpiar errores anteriores
 
-      authService
-        .register(username, email, password)
-        .then((authData) => {
-          setAuthData(authData);
-          alert(`Welcome ${username}`);
-        })
-        .catch((error) => {
-          if (error.type === "validation") {
-            setErrors(error.errors);
-          } else {
-            Alert.alert("", error.message || "Error al registrar.");
-          }
-        });
-    } else {
-      Alert.alert("", "Please fill in all fields.");
-    }
+    authService
+      .register(username, email, password)
+      .then((authData) => {
+        setAuthData(authData);
+        alert(`Welcome ${username}`);
+      })
+      .catch((error) => {
+        if (error.type === "validation") {
+          setErrors(error.errors);
+          console.log("En registerLoggin");
+        } else {
+          Alert.alert("", error.message || "Error al registrar.");
+        }
+      });
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <View style={styles.content}>
-        <Text style={styles.title}>BookBox</Text>
-        {esLogin && (
-          <>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <StatusBar style="auto" />
+        <View style={styles.content}>
+          <Text style={styles.title}>BookBox</Text>
+          {esLogin && (
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
@@ -76,55 +84,59 @@ export default function RegisterLoginScreen() {
               />
               {errors.username && <Text style={styles.errorText}>{errors.username}</Text>}
             </View>
-          </>
-        )}
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            placeholderTextColor="#999"
-            keyboardType="email-address"
-          />
-          {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            placeholderTextColor="#999"
-            secureTextEntry
-          />
-          {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
-        </View>
-
-        <View style={styles.buttonContainer}>
-          {!esLogin ? (
-            <TouchableOpacity style={styles.button} onPress={HandleLogin}>
-              <Text style={styles.buttonText}>Log in</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity style={styles.button} onPress={HandleRegister}>
-              <Text style={styles.buttonText}>Create account</Text>
-            </TouchableOpacity>
           )}
-          <TouchableOpacity style={styles.secondaryButton} onPress={() => setEsLogin(!esLogin)}>
-            <Text style={styles.secondaryButtonText}>
-              {esLogin ? "I already have an account" : "Register"}
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              placeholderTextColor="#999"
+              keyboardType="email-address"
+            />
+            {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              placeholderTextColor="#999"
+              secureTextEntry
+            />
+            {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+          </View>
+          {errors.general && (
+            <Text style={[styles.errorText, { textAlign: "center", marginBottom: 10 }]}>
+              {errors.general}
             </Text>
+          )}
+          <View style={styles.buttonContainer}>
+            {!esLogin ? (
+              <TouchableOpacity style={styles.button} onPress={HandleLogin}>
+                <Text style={styles.buttonText}>Log in</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.button} onPress={HandleRegister}>
+                <Text style={styles.buttonText}>Create account</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity style={styles.secondaryButton} onPress={() => setEsLogin(!esLogin)}>
+              <Text style={styles.secondaryButtonText}>
+                {esLogin ? "I already have an account" : "Register"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => navigation.navigate("ForgotPass")}
+          >
+            <Text style={styles.secondaryButtonText}>Forgot your password?</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.secondaryButton}
-          onPress={() => navigation.navigate("ForgotPass")}
-        >
-          <Text style={styles.secondaryButtonText}>{"Forgot your password?"}</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
