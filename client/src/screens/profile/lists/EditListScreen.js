@@ -14,7 +14,8 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-  SafeAreaView
+  SafeAreaView,
+  Alert
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import BooksInList from "../../../components/BooksInList";
@@ -42,6 +43,16 @@ export default function EditListScreen() {
     fetchLibros();
   }, []);
 
+  // Manejar eliminar lista
+      const hanldeDeleteList = async (list) => {
+        try {
+          await userBookService.removeList(authData.user.id, list, authData.token);
+          navigation.navigate("ListNavigation");
+        } catch (error) {
+          console.error("Error al eliminar lista: ", error.message);
+        }
+      };
+
   return (
     <View style={styles.listDetailScreen}>
       <View style={styles.listContainer}>
@@ -57,7 +68,28 @@ export default function EditListScreen() {
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{listTitle}</Text>
           </View>
-          <Pressable onPress={() => Alert.alert("You want to delete List?")}>
+          {listTitle === "Favorites" ? (
+            <Text>Box</Text>
+          ) : (
+            <Pressable
+              onPress={() =>
+              Alert.alert(
+                "Delete List",
+                `Are you sure you want to delete "${listTitle}"?`,
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel"
+                  },
+                  {
+                    text: "OK",
+                    onPress: () => hanldeDeleteList(listTitle)
+                  }
+                ],
+                { cancelable: true }
+              )
+            }
+          >
             <View style={styles.buttonContainer}>
               <Image
                 source={require("../../../../assets/img/trash-icon-grey.png")}
@@ -65,6 +97,7 @@ export default function EditListScreen() {
               />
             </View>
           </Pressable>
+          )}
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate("ListsBooksScreen")}

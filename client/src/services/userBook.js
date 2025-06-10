@@ -93,6 +93,30 @@ const removeFromLista = async (userId, lista, bookId, token) => {
   }
 };
 
+const removeList = async (userId, lista, token) => {
+  try {
+    const response = await fetch(`${BASE_URL}/books/deleteLista`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache"
+      },
+      body: JSON.stringify({ userId, lista })
+    });
+
+    if (!response.ok) {
+      throw new Error("No se pudo eliminar la lista");
+    }
+
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getLista = async (userId, lista, token) => {
   try {
     const response = await fetch(
@@ -150,5 +174,6 @@ export default {
   addToLista,
   getLista,
   removeFromLista,
-  isInLista
+  isInLista,
+  removeList
 };

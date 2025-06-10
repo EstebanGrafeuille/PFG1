@@ -4,15 +4,17 @@ import ReadBooksScreen from "../../../screens/profile/ReadBooksScreen";
 import WishlistScreen from "../../../screens/profile/WishlistScreen";
 import ListsNavigation from "./list/ListsNavigator";
 import SettingsNavigation from "./SettingsNavigator";
+import ReadBooksNavigation from "./ReadBooksNavigator";
+import WishlistNavigation from "./WishlistNavigator";
 
 const ProfileNavigation = () => {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="SettingsNavigation" component={SettingsNavigation} />
-      <Stack.Screen name="ReadBooks" component={ReadBooksScreen} />
+      <Stack.Screen name="ReadBooks" component={ReadBooksNavigation} />
       <Stack.Screen name="ListsNavigation" component={ListsNavigation} />
-      <Stack.Screen name="WishlistBooks" component={WishlistScreen} />
+      <Stack.Screen name="WishlistBooks" component={WishlistNavigation} />
     </Stack.Navigator>
   );
 };

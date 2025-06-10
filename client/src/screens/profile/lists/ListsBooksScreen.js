@@ -28,7 +28,7 @@ const ListsBooksScreen = () => {
       <ProfileHeader headerTitle="YOUR LISTS" />
       <ScrollView>
         <View style={styles.listColumn}>
-          {listas.map((nombreLista, index) => (
+          {listas.slice(2).map((nombreLista, index) => (
             <ListComponent key={index} title={nombreLista} />
           ))}
           <NewListComponent />

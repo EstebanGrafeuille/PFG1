@@ -1,4 +1,5 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, StyleSheet } from 'react-native';
 import ProfileHeader from '../../components/ProfileHeader';
 import BooksProfileComp from '../../components/BooksProfileComp';
@@ -11,23 +12,44 @@ export default function ReadBooksScreen () {
   const { authData } = useContext(AuthContext);
   const [bookIds, setBookIds] = useState([]);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   const fetchLibros = async () => {
+  //     try {
+  //       const libros = await userBookService.getLista(authData.user.id, "Read", authData.token);
+  //       setBookIds(libros);
+        
+  //     } catch (error) {
+  //       console.error("Error obteniendo libros de lista: Read", error.message);
+  //     }
+  //   };
+  //   fetchLibros();
+  // }, []);
+
+  useFocusEffect(
+  useCallback(() => {
     const fetchLibros = async () => {
       try {
-        const libros = await userBookService.getLista(authData.user.id, "leidos", authData.token);
+        const libros = await userBookService.getLista(authData.user.id, "Read", authData.token);
         setBookIds(libros);
-        
       } catch (error) {
-        console.error("Error obteniendo libros de lista leidos:", error.message);
+        console.error("Error obteniendo libros de lista: Read", error.message);
       }
     };
+
     fetchLibros();
-  }, []);
+
+    // Cleanup opcional si necesitás cancelar algo al salir de la pantalla
+    return () => {
+      // limpiar si es necesario
+    };
+  }, [authData])
+);
 
   return (
     <View style={styles.container}>
       <ProfileHeader headerTitle="YOUR LIBRARY"/>
       <BooksInList ids={bookIds} />
+      <View style={{ height: 50 }} />
     </View>
   );
 }
