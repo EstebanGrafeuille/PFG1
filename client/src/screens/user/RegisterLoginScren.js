@@ -7,7 +7,8 @@ import {
   StatusBar,
   Alert,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Platform
 } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import authService from "../../services/login";

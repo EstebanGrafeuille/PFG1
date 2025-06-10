@@ -7,7 +7,8 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Platform
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useContext } from "react";
