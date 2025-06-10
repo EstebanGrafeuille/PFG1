@@ -117,10 +117,38 @@ const getLista = async (userId, lista, token) => {
   }
 };
 
+const isInLista = async (userId, lista, bookId, token) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/books/getLista?userId=${userId}&lista=${lista}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Cache-Control": "no-cache"
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("No se pudo obtener la Lista");
+    }
+
+    const data = await response.json();
+
+    const exists = data.includes(bookId);
+
+    return exists;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   addLista,
   getListas,
   addToLista,
   getLista,
-  removeFromLista
+  removeFromLista,
+  isInLista
 };

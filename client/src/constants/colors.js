@@ -12,5 +12,6 @@ export default {
   BORDER: "#eee",
   PLACEHOLDER: "#f0f0f0",
   ERROR: "red",
-  WHITE: "white"
+  WHITE: "white",
+  DARK: "#080D17"
 };
