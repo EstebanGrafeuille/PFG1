@@ -104,6 +104,22 @@ class BookController {
 			});
     }
   }
+  deleteLista = async(req,res)=>{
+	try{
+		console.log("empiezo a borrar")
+		const borrada = await bookService.deleteLista(req.body.userId,req.body.lista)
+		console.log(borrada)
+		if (borrada instanceof Error){
+			throw borrada
+		}
+		res.status(201).json({message: "lista " + borrada +" borrada"})
+	}catch(error){
+		res.status(500).json({
+				message: "Error al borrar lista",
+				error: error.message,
+			});
+	}
+  }
 }
 
 module.exports = new BookController();
