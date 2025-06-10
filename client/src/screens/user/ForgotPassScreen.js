@@ -82,7 +82,12 @@ export default function ForgotPassScreen() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        if (Platform.OS !== "web") Keyboard.dismiss();
+      }}
+      accessible={false}
+    >
       <View style={styles.container}>
         <StatusBar style="auto" />
         <View style={styles.content}>
