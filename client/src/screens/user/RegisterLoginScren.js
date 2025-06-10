@@ -5,9 +5,12 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
-  Alert
+  Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Platform
 } from "react-native";
-import { useState, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import authService from "../../services/login";
 import { AuthContext } from "../../context/AuthContext";
 import asyncStorage from "../../services/asyncStorage";
@@ -18,9 +21,17 @@ export default function RegisterLoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [esLogin, setEsLogin] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const { setAuthData } = useContext(AuthContext);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setErrors({});
+  }, [esLogin]);
 
   const HandleLogin = () => {
     //TODO: Llamar al backend (o al servicio de autenticacion elegido) para obtener el token
@@ -32,81 +43,106 @@ export default function RegisterLoginScreen() {
         console.log("Auth data desde registerLoggin handlelogin: ", typeof authData, authData);
       })
       .catch((error) => {
-        alert(error);
+        if (error.type === "validation") {
+          setErrors(error.errors);
+        }
       });
   };
 
   const HandleRegister = () => {
-    if (email && password && username) {
-      authService
-        .register(username, email, password)
-        .then((authData) => {
-          setAuthData(authData);
-          alert(`Welcome ${username}`);
-        })
-        .catch(() => {
-          Alert.alert("", "Registration failed. Please try again.");
+    setErrors({}); // Limpiar errores anteriores
+
+    authService
+      .register(username, email, password)
+      .then((authData) => {
+        setAuthData(authData);
+        alert(`Welcome ${username}`);
+      })
+      .catch((error) => {
+        if (error.type === "validation") {
+          setErrors(error.errors);
           console.log("En registerLoggin");
-        });
-    } else {
-      Alert.alert("", "Please fill in all fields.");
-    }
+        } else {
+          Alert.alert("", error.message || "Error al registrar.");
+        }
+      });
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <View style={styles.content}>
-        <Text style={styles.title}>BookBox</Text>
-        {esLogin && (
-          <TextInput
-            style={styles.input}
-            placeholder="Username"
-            value={username}
-            onChangeText={setUsername}
-            placeholderTextColor="#999"
-          />
-        )}
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          placeholderTextColor="#999"
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          placeholderTextColor="#999"
-          secureTextEntry
-        />
-        <View style={styles.buttonContainer}>
-          {!esLogin ? (
-            <TouchableOpacity style={styles.button} onPress={HandleLogin}>
-              <Text style={styles.buttonText}>Log in</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity style={styles.button} onPress={HandleRegister}>
-              <Text style={styles.buttonText}>Create account</Text>
-            </TouchableOpacity>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        if (Platform.OS !== "web") Keyboard.dismiss();
+      }}
+      accessible={false}
+    >
+      <View style={styles.container}>
+        <StatusBar style="auto" />
+        <View style={styles.content}>
+          <Text style={styles.title}>BookBox</Text>
+          {esLogin && (
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Username"
+                value={username}
+                onChangeText={setUsername}
+                placeholderTextColor="#999"
+              />
+              {errors.username && <Text style={styles.errorText}>{errors.username}</Text>}
+            </View>
           )}
-          <TouchableOpacity style={styles.secondaryButton} onPress={() => setEsLogin(!esLogin)}>
-            <Text style={styles.secondaryButtonText}>
-              {esLogin ? "I already have an account" : "Register"}
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              placeholderTextColor="#999"
+              keyboardType="email-address"
+            />
+            {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              placeholderTextColor="#999"
+              secureTextEntry
+            />
+            {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+          </View>
+          {errors.general && (
+            <Text style={[styles.errorText, { textAlign: "center", marginBottom: 10 }]}>
+              {errors.general}
             </Text>
+          )}
+          <View style={styles.buttonContainer}>
+            {!esLogin ? (
+              <TouchableOpacity style={styles.button} onPress={HandleLogin}>
+                <Text style={styles.buttonText}>Log in</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.button} onPress={HandleRegister}>
+                <Text style={styles.buttonText}>Create account</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity style={styles.secondaryButton} onPress={() => setEsLogin(!esLogin)}>
+              <Text style={styles.secondaryButtonText}>
+                {esLogin ? "I already have an account" : "Register"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => navigation.navigate("ForgotPass")}
+          >
+            <Text style={styles.secondaryButtonText}>Forgot your password?</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.secondaryButton}
-          onPress={() => navigation.navigate("ForgotPass")}
-        >
-          <Text style={styles.secondaryButtonText}>{"Forgot your password?"}</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -135,7 +171,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "#fff",
     paddingHorizontal: 15,
-    marginBottom: 20,
     fontSize: 16,
     shadowColor: "#000",
     shadowOpacity: 0.05,
@@ -165,5 +200,13 @@ const styles = StyleSheet.create({
     color: "#333",
     fontSize: 14,
     textDecorationLine: "underline"
+  },
+  inputContainer: {
+    marginBottom: 20
+  },
+  errorText: {
+    color: "red",
+    fontSize: 14,
+    paddingHorizontal: 15
   }
 });
