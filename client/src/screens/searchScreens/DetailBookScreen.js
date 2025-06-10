@@ -207,7 +207,7 @@ const DetailBook = ({ route }) => {
               >
                 <View style={styles.popup}>
                   <Pressable onPress={() => setVisible(false)} style={styles.closeButton}>
-                    ×
+                    <Text>×</Text>
                   </Pressable>
                   {options.map((opt, index) => (
                     <TouchableOpacity

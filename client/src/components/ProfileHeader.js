@@ -35,6 +35,12 @@ export default function ProfileHeader(props) {
           Lists
         </Text>
         <View style={styles.headerDivider} />
+        <Text
+          style={[styles.headerText, isFocused("WishlistBooks") && styles.headerTextFocused]}
+          onPress={() => navigation.navigate("WishlistBooks")}
+        >
+          Next
+        </Text>
       </View>
     </View>
   );

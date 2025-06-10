@@ -30,6 +30,10 @@ export const profileStyles = StyleSheet.create({
     height: "100%",
     width: "100%"
   },
+  settingsIcon: {
+    height: 18,
+    width: 18
+  },
   goBackContainer: {
     height: Layout.SPACING.L,
     width: 350,
