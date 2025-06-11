@@ -6,6 +6,7 @@
     "client": "cd client && npx expo start --tunnel",
     "server": "cd server && npm run dev",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev:qr": "start cmd /k \"npm run server\" && start cmd /k \"npm run client\"",
     "install-all": "npm install && cd client && npm install && cd ../server && npm install"
   },
   "devDependencies": {
