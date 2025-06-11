@@ -37,10 +37,7 @@ export default function ReadBooksScreen () {
     };
 
     fetchLibros();
-
-    // Cleanup opcional si necesitás cancelar algo al salir de la pantalla
     return () => {
-      // limpiar si es necesario
     };
   }, [authData])
 );

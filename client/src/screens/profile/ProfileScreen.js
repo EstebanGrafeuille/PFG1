@@ -121,6 +121,7 @@ export default function ProfileScreen() {
         }
       >
         <ProfileHeader headerTitle="PERFIL" />
+        <View style={{height: 10}}></View>
         <View style={profileStyles.editIconExtraContainer}>
           <Pressable
             onPress={() => navigation.navigate("EditProfile")}
@@ -138,8 +139,7 @@ export default function ProfileScreen() {
           userProfileData={userProfileData} 
           isLoading={loading} 
         />
-        <ProfileGraphic />
-        <ProfileStats />
+        <ProfileStats userProfileData={userProfileData}/>
         <TouchableOpacity style={profileStyles.logoutButton} onPress={handleLogout}>
           <Text style={profileStyles.logoutText}>Sign out</Text>
         </TouchableOpacity>
