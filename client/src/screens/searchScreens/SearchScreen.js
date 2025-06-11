@@ -5,7 +5,7 @@
  * @module screens/searchScreens/SearchScreen
  */
 import React, { useState } from "react";
-import { View, FlatList, StyleSheet, Platform } from "react-native";
+import { View, FlatList, StyleSheet, Platform, SafeAreaView } from "react-native";
 // Importaciones actualizadas para la nueva estructura
 import BookItem from "../../components/BookItem";
 import useBookSearch from "../../hooks/useBookSearch";
@@ -63,52 +63,54 @@ const SearchScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Barra de búsqueda con selector de tipo y botón de filtros */}
-      <View style={[styles.searchBarContainer, isTypeDropdownOpen && styles.elevatedContainer]}>
-        <SearchBar
-          value={query}
-          onChangeText={handleChangeText}
-          onSubmit={handleSubmit}
-          searchType={searchType}
-          onSearchTypeChange={handleSearchTypeChange}
-          onFilterPress={() => setFilterModalVisible(true)}
-          onTypeDropdownToggle={handleToggleTypeDropdown}
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        {/* Barra de búsqueda con selector de tipo y botón de filtros */}
+        <View style={[styles.searchBarContainer, isTypeDropdownOpen && styles.elevatedContainer]}>
+          <SearchBar
+            value={query}
+            onChangeText={handleChangeText}
+            onSubmit={handleSubmit}
+            searchType={searchType}
+            onSearchTypeChange={handleSearchTypeChange}
+            onFilterPress={() => setFilterModalVisible(true)}
+            onTypeDropdownToggle={handleToggleTypeDropdown}
+          />
+        </View>
+
+        {/* Selector de categorías */}
+        <CategorySelector selectedCategory={selectedCategory} onSelectCategory={updateCategory} />
+
+        {/* Modal de filtros */}
+        <FilterModal
+          visible={filterModalVisible}
+          onClose={() => setFilterModalVisible(false)}
+          filters={filters}
+          onApplyFilters={updateFilters}
         />
+
+        {/* Mostrar indicador de carga o lista de libros */}
+        {loading && books.length === 0 ? (
+          <LoadingIndicator fullScreen />
+        ) : (
+          <FlatList
+            data={books}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item, index }) => (
+              <BookItem
+                item={item}
+                navigation={navigation}
+                onPress={() => handleBookPress(item, index)}
+              />
+            )}
+            onEndReached={handleEndReached}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={<LoadingFooter loading={loadingMore} />}
+            keyboardShouldPersistTaps="handled"
+          />
+        )}
       </View>
-
-      {/* Selector de categorías */}
-      <CategorySelector selectedCategory={selectedCategory} onSelectCategory={updateCategory} />
-
-      {/* Modal de filtros */}
-      <FilterModal
-        visible={filterModalVisible}
-        onClose={() => setFilterModalVisible(false)}
-        filters={filters}
-        onApplyFilters={updateFilters}
-      />
-
-      {/* Mostrar indicador de carga o lista de libros */}
-      {loading && books.length === 0 ? (
-        <LoadingIndicator fullScreen />
-      ) : (
-        <FlatList
-          data={books}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item, index }) => (
-            <BookItem
-              item={item}
-              navigation={navigation}
-              onPress={() => handleBookPress(item, index)}
-            />
-          )}
-          onEndReached={handleEndReached}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={<LoadingFooter loading={loadingMore} />}
-          keyboardShouldPersistTaps="handled"
-        />
-      )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -116,14 +118,19 @@ const SearchScreen = ({ navigation }) => {
  * Estilos para la pantalla de búsqueda
  */
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: Colors.BACKGROUND,
-    paddingHorizontal: Layout.SPACING.L,
-    paddingTop: Platform.OS === "ios" ? 50 : Layout.SPACING.L
+    marginTop: Platform.OS === "android" ? 30 : 0
+  },
+  container: {
+    flex: 1,
+    paddingHorizontal: Layout.SPACING.S,
+    paddingTop: Layout.SPACING.M
   },
   searchBarContainer: {
-    zIndex: 1
+    zIndex: 1,
+    marginBottom: Layout.SPACING.S
   },
   elevatedContainer: {
     zIndex: 1000
