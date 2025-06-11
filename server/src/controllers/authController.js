@@ -1,20 +1,30 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
-const bookService = require("../services/bookService")
+const bookService = require("../services/bookService");
+const { isValidEmail } = require("../utils/helpers");
 
 // Registrar un nuevo usuario
 exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // Verificar si el usuario ya existe
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-    if (existingUser) {
-      return res.status(400).json({ message: "El usuario o email ya está registrado" });
+    // Check if the user already exists
+    const [existingEmail, existingUsername] = await Promise.all([
+      User.findOne({ email }),
+      User.findOne({ username })
+    ]);
+
+    if (existingEmail || existingUsername) {
+      return res.status(400).json({
+        errors: {
+          ...(existingEmail && { email: "This email is already in use" }),
+          ...(existingUsername && { username: "This username is already taken" })
+        }
+      });
     }
 
-    // Crear nuevo usuario
+    // Create new user
     const user = new User({
       username,
       email,
@@ -22,14 +32,15 @@ exports.register = async (req, res) => {
     });
 
     await user.save();
-    console.log("creado user")
+    console.log("User created");
     await bookService.createUB(user._id);
-    console.log("creado ub")
-    // Generar token
+    console.log("UB created");
+
+    // Generate token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 
     res.status(201).json({
-      message: "Usuario registrado con éxito",
+      message: "User registered successfully",
       token,
       user: {
         id: user._id,
@@ -38,12 +49,19 @@ exports.register = async (req, res) => {
       }
     });
   } catch (error) {
-    // Validación específica de Mongoose
+    // Field validation (e.g., minlength, required, etc.)
     if (error.name === "ValidationError") {
-      const messages = Object.values(error.errors).map((err) => err.message);
-      return res.status(400).json({ message: messages.join(", ") });
+      const fieldErrors = {};
+      for (const key in error.errors) {
+        fieldErrors[key] = error.errors[key].message;
+      }
+      return res.status(400).json({ errors: fieldErrors });
     }
-    res.status(500).json({ message: "Error al registrar usuario", error: error.message });
+
+    res.status(500).json({
+      message: "An error occurred while registering the user",
+      error: error.message
+    });
   }
 };
 
@@ -52,23 +70,29 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Buscar usuario por email
+    const errors = {};
+    if (!email) errors.email = "Email is required";
+    if (!password) errors.password = "Password is required";
+
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ errors });
+    }
+
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ message: "Credenciales inválidas" });
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(401).json({
+        errors: {
+          general: "Invalid email or password"
+        }
+      });
     }
 
-    // Verificar contraseña
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Credenciales inválidas" });
-    }
-
-    // Generar token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "30d"
+    });
 
     res.json({
-      message: "Inicio de sesión exitoso",
+      message: "Login successful",
       token,
       user: {
         id: user._id,
@@ -77,7 +101,10 @@ exports.login = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ message: "Error al iniciar sesión", error: error.message });
+    res.status(500).json({
+      message: "An error occurred while logging in",
+      error: error.message
+    });
   }
 };
 
@@ -94,36 +121,59 @@ exports.getMe = async (req, res) => {
 exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ email });
 
-    if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
+    // Manual validation for required field
+    if (!email || typeof email !== "string" || email.trim() === "") {
+      return res.status(400).json({
+        errors: {
+          email: "Email is required"
+        }
+      });
+    }
 
-    const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6 dígitos
+    if (!isValidEmail(email)) {
+      return res.status(400).json({
+        errors: { email: "Invalid email format" }
+      });
+    }
+
+    const user = await User.findOne({ email: email.trim() });
+    if (!user) {
+      return res.status(404).json({
+        errors: {
+          email: "No account found with this email"
+        }
+      });
+    }
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
     user.resetCode = code;
     user.resetCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
-
     await user.save();
 
     await sendEmail(
       email,
-      "Recuperación de contraseña - BookBox",
-      `¡Hola!
+      "Password Recovery - BookBox",
+      `Hi there!
 
-      Recibimos una solicitud para restablecer tu contraseña en BookBox.
+We received a request to reset your BookBox password.
 
-      Tu código de verificación es: ${code}
+Your verification code is: ${code}
 
-      Este código es válido por los próximos 10 minutos.
+This code will expire in 10 minutes.
 
-      Si no solicitaste este cambio, podés ignorar este mensaje.
+If you didn’t request a password reset, feel free to ignore this message.
 
-      Saludos,
-      El equipo de BookBox 📚`
+Best,  
+The BookBox Team 📚`
     );
 
-    res.json({ message: "Código enviado al correo" });
+    res.json({ message: "Verification code sent to your email" });
   } catch (error) {
-    res.status(500).json({ message: "Error al enviar código", error: error.message });
+    res.status(500).json({
+      message: "An error occurred while sending the code",
+      error: error.message
+    });
   }
 };
 
@@ -133,7 +183,11 @@ exports.resetPassword = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user || user.resetCode !== code || user.resetCodeExpires < Date.now()) {
-      return res.status(400).json({ message: "Código inválido o expirado" });
+      return res.status(400).json({
+        errors: {
+          code: "Invalid or expired code"
+        }
+      });
     }
 
     user.password = newPassword;
@@ -144,6 +198,17 @@ exports.resetPassword = async (req, res) => {
 
     res.json({ message: "Contraseña actualizada correctamente" });
   } catch (error) {
-    res.status(500).json({ message: "Error al restablecer la contraseña", error: error.message });
+    if (error.name === "ValidationError") {
+      const fieldErrors = {};
+      for (const key in error.errors) {
+        fieldErrors[key] = error.errors[key].message;
+      }
+      return res.status(400).json({ errors: fieldErrors });
+    }
+
+    res.status(500).json({
+      message: "An error occurred while resetting the password",
+      error: error.message
+    });
   }
 };

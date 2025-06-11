@@ -1,5 +1,5 @@
 import asyncStorage from "./asyncStorage.js";
-import BASE_URL from '../services/connection.js'
+import BASE_URL from "../services/connection.js";
 
 const login = (email, password) => {
   return new Promise((resolve, reject) => {
@@ -13,20 +13,22 @@ const login = (email, password) => {
       },
       body: JSON.stringify({ email, password })
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
+      .then(async (res) => {
+        const data = await res.json();
+
+        if (!res.ok) {
+          if (data.errors) {
+            reject({ type: "validation", errors: data.errors }); // ✅ clave para que el frontend los muestre
+          } else {
+            reject({ type: "generic", message: data.message || "Login failed" });
+          }
         } else {
-          throw new Error("Usuario o contraseña incorrectos");
+          await asyncStorage.storeData("authData", data);
+          resolve(data);
         }
       })
-      .then((authData) => {
-        asyncStorage.storeData("authData", authData);
-        console.log("Guardando data", authData);
-        resolve(authData);
-      })
       .catch((error) => {
-        reject(error.message);
+        reject({ type: "generic", message: error.message || "Unexpected error" });
       });
   });
 };
@@ -35,28 +37,25 @@ const register = (username, email, password) => {
   console.log("En register1");
   console.log(email, password, username);
 
-  return new Promise((resolve, reject) => {
-    fetch(`${BASE_URL}/auth/register/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ username, email, password })
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw new Error("Error al registrar usuario");
-        }
-      })
-      .then((authData) => {
-        asyncStorage.storeData("authData", authData);
-        resolve(authData);
-      })
-      .catch((error) => {
-        reject(error.message);
-      });
+  return fetch(`${BASE_URL}/auth/register/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ username, email, password })
+  }).then(async (res) => {
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (data.errors) {
+        throw { type: "validation", errors: data.errors };
+      }
+
+      throw { type: "generic", message: data.message || "Error al registrar usuario" };
+    }
+
+    await asyncStorage.storeData("authData", data);
+    return data;
   });
 };
 
@@ -65,39 +64,42 @@ const logout = async () => {
 };
 
 const forgotPassword = (email) => {
-  return new Promise((resolve, reject) => {
-    console.log("Enviando solicitud a backend con:", email); // 🔍
+  console.log("Enviando solicitud a backend con:", email); // 🔍
 
-    fetch(`${BASE_URL}/auth/forgotPassword/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email })
+  return fetch(`${BASE_URL}/auth/forgotPassword/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email })
+  })
+    .then(async (res) => {
+      console.log("Respuesta del backend:", res.status); // 🔍
+
+      const body = await res.json();
+
+      if (res.ok) {
+        console.log("Éxito:", body); // 🔍
+        return body;
+      }
+
+      console.log("Error real desde backend:", body); // 🔍
+
+      if (body.errors) {
+        throw { type: "validation", errors: body.errors };
+      }
+
+      throw { type: "generic", message: body.message || "Unknown error" };
     })
-      .then((res) => {
-        console.log("Respuesta del backend:", res.status); // 🔍
+    .catch((error) => {
+      console.log("Catch del forgotPassword:", error); // 🔍
 
-        if (res.ok) {
-          return res.json();
-        } else {
-          return res.json().then((errorBody) => {
-            console.log("Error real desde backend:", errorBody);
-            throw new Error(errorBody.message || "Error desconocido");
-          });
-        }
-      })
-      .then((data) => {
-        console.log("Éxito:", data); // 🔍
+      if (error.type === "validation" || error.type === "generic") {
+        throw error;
+      }
 
-        resolve(data);
-      })
-      .catch((error) => {
-        console.log("Catch del forgotPassword:", error); // 🔍
-
-        reject(error.message);
-      });
-  });
+      throw { type: "generic", message: error.message || "Unexpected error" };
+    });
 };
 
 const resetPassword = (email, code, newPassword) => {
@@ -107,13 +109,18 @@ const resetPassword = (email, code, newPassword) => {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ email, code, newPassword })
-  }).then((res) => {
+  }).then(async (res) => {
+    const data = await res.json();
+
     if (!res.ok) {
-      return res.json().then((err) => {
-        throw new Error(err.message || "Error al restablecer contraseña");
-      });
+      if (data.errors) {
+        throw { type: "validation", errors: data.errors }; // 👈 ESTO ES CLAVE
+      }
+
+      throw { message: data.message || "Error resetting password" };
     }
-    return res.json();
+
+    return data;
   });
 };
 

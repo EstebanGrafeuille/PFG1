@@ -1,27 +1,50 @@
 import { View, Text, StyleSheet, Image } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
+import { useEffect, useState, useContext, useCallback } from 'react';
+import userBookService from "../services/userBook";
+import { AuthContext } from "../context/AuthContext";
 
 export default function ProfileStats() {
+
+const { authData } = useContext(AuthContext);
+const [bookIds, setBookIds] = useState([]);
+const [numberLists, setNumberLists] = useState(5)
+const [numberLibros, setNumberLibros] = useState(5)
+
+const fetchLibros = async () => {
+  try {
+    const librosObtenidos = await userBookService.getLista(authData.user.id, "Read", authData.token);
+    setNumberLibros(librosObtenidos.length)
+  } catch (error) {
+    console.error("Error al obtener listas:", error.message);
+  }
+};
+
+const fetchListas = async () => {
+  try {
+    const userBook = await userBookService.getListas(authData.user.id, authData.token);
+    const listasObtenidas = (userBook[0] && userBook[0].listasUser) || [];
+    setNumberLists(listasObtenidas.length)
+  } catch (error) {
+    console.error("Error al obtener listas:", error.message);
+  }
+};
+
+useEffect(() => {
+  fetchListas();
+  fetchLibros();
+}, []);
+
   return (
     <View style={styles.profileStatsContainer}>
       <View style={styles.horizontalLine} />
       <View style={styles.profileStatRow}>
         <Text style={styles.statText}>Books Read</Text>
         <View style={styles.statRight}>
-          <Text style={styles.statValue}>28</Text>
+          <Text style={styles.statValue}>{numberLibros}</Text>
           <Image
-            source={require("../../assets/img/next-icon.png")}
-            style={{ height: 18, width: 18 }}
-          />
-        </View>
-      </View>
-      <View style={styles.horizontalLine} />
-      <View style={styles.profileStatRow}>
-        <Text style={styles.statText}>My Reviews</Text>
-        <View style={styles.statRight}>
-          <Text style={styles.statValue}>8</Text>
-          <Image
-            source={require("../../assets/img/next-icon.png")}
-            style={{ height: 18, width: 18 }}
+            source={require("../../assets/img/bullet-point.png")}
+            style={{ height: 8, width: 8 , marginLeft: 5}}
           />
         </View>
       </View>
@@ -29,10 +52,10 @@ export default function ProfileStats() {
       <View style={styles.profileStatRow}>
         <Text style={styles.statText}>Lists</Text>
         <View style={styles.statRight}>
-          <Text style={styles.statValue}>3</Text>
+          <Text style={styles.statValue}>{numberLists}</Text>
           <Image
-            source={require("../../assets/img/next-icon.png")}
-            style={{ height: 18, width: 18 }}
+            source={require("../../assets/img/bullet-point.png")}
+            style={{ height: 8, width: 8 , marginLeft: 5}}
           />
         </View>
       </View>
@@ -40,10 +63,10 @@ export default function ProfileStats() {
       <View style={styles.profileStatRow}>
         <Text style={styles.statText}>Friends</Text>
         <View style={styles.statRight}>
-          <Text style={styles.statValue}>6</Text>
+          <Text style={styles.statValue}>Coming Soon...</Text>
           <Image
-            source={require("../../assets/img/next-icon.png")}
-            style={{ height: 18, width: 18 }}
+            source={require("../../assets/img/bullet-point.png")}
+            style={{ height: 8, width: 8 , marginLeft: 5}}
           />
         </View>
       </View>
@@ -70,7 +93,9 @@ const styles = StyleSheet.create({
   },
 
   statRight: {
-    flexDirection: "row"
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
   },
 
   statText: {

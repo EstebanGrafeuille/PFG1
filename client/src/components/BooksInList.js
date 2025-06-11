@@ -134,7 +134,7 @@ books.forEach((book, index) => {
           ))}
         </View>
       </View>
-      <View style={{ height: 100 }} />
+      <View style={{ height: 50 }} />
     </ScrollView>
 
   );
@@ -150,6 +150,7 @@ columnsContainer: {
   justifyContent: 'space-between',
   width: "90%",
   marginTop: 20,
+  flex: 1
 },
 
 column: {

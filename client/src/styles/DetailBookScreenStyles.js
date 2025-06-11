@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   infoSection: {
     backgroundColor: Colors.WHITE,
     borderTopLeftRadius: Layout.BORDER_RADIUS.L,
-    borderTopRightRadius: Layout.BORDER_RADIUS.L
+    borderTopRightRadius: Layout.BORDER_RADIUS.L,
   },
   buttonRow: {
     flexDirection: "row",
@@ -156,14 +156,44 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   reviewContainer: {
-    flexDirection: "column",
-    justifyContent: "center",
-    height: 50,
-    alignItems: "center"
+    flexDirection: "row",
+    justifyContent: "space-around",
+    height: 60,
+    alignItems: "center",
+    marginLeft: 30,
+    marginRight: 30
   },
   reviewButtonContainer: {
-    height: 46,
-    width: 270
+  },
+  addReviewBtn: {
+    backgroundColor: Colors.PRIMARY,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 30,
+    height: 47,
+    width: 150
+  },
+  reviewBtn: {
+    backgroundColor: Colors.WHITE,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 30,
+    height: 47,
+    width: 150,
+    borderColor: Colors.PRIMARY,
+    borderWidth: 2
+  },
+  addReviewBtnText: {
+    fontSize: 15,
+    fontWeight: Layout.FONT_WEIGHT.BOLD,
+    color: Colors.WHITE,
+  },
+  reviewBtnText: {
+    fontSize: 15,
+    fontWeight: Layout.FONT_WEIGHT.BOLD,
+    color: Colors.PRIMARY,
   },
   reviewIcon: {
     height: "100%",
