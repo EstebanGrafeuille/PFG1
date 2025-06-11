@@ -31,8 +31,9 @@ app.use((err, req, res, next) => {
 });
 
 // Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Servidor corriendo en http://0.0.0.0:${PORT}`);
+  console.log(`🌐 Accesible desde la red en http://192.168.100.6:${PORT}`);
 });
 
 module.exports = app;
