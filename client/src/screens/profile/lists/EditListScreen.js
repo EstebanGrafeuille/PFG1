@@ -69,12 +69,27 @@ export default function EditListScreen() {
             <Text style={styles.title}>{listTitle}</Text>
           </View>
           {listTitle === "Favorites" ? (
-            <View style={styles.buttonContainerFav}>
-              <Image
-                source={require("../../../../assets/img/trash-icon-grey.png")}
-                style={styles.iconFav}
-              />
-            </View>
+            <Pressable
+              onPress={() =>
+              Alert.alert(
+                "Good try...",
+                `${listTitle} is a default list, you can't delete it.`,
+                [
+                  {
+                    text: "OK"
+                  }
+                ],
+                { cancelable: true }
+                )
+              }
+            >
+              <View style={styles.buttonContainer}>
+                <Image
+                  source={require("../../../../assets/img/trash-icon-grey.png")}
+                  style={styles.iconFav}
+                />
+              </View>
+            </Pressable>
           ) : (
             <Pressable
               onPress={() =>
