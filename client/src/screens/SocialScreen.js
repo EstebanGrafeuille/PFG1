@@ -5,8 +5,8 @@ export default function SocialScreen() {
   return (
     <ScrollView style={styles.socialScreen}>
       <View style={styles.socialHeader}>
-        <Text style={styles.headerTitle1}>Notifications</Text>
-        <Text style={styles.headerTitle2}>• Your Friends Activity</Text>
+        <Text style={styles.headerTitle1}>Working on it</Text>
+        <Text style={styles.headerTitle2}>• Coming soon...</Text>
       </View>
       <View style={styles.notificationContainer}>
         <Notification isNew={true} />

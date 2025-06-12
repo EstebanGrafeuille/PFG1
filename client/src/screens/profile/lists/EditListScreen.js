@@ -69,7 +69,12 @@ export default function EditListScreen() {
             <Text style={styles.title}>{listTitle}</Text>
           </View>
           {listTitle === "Favorites" ? (
-            <Text>Box</Text>
+            <View style={styles.buttonContainerFav}>
+              <Image
+                source={require("../../../../assets/img/trash-icon-grey.png")}
+                style={styles.iconFav}
+              />
+            </View>
           ) : (
             <Pressable
               onPress={() =>
@@ -152,6 +157,11 @@ const styles = StyleSheet.create({
   icon: {
     height: 26,
     width: 26
+  },
+  iconFav: {
+    height: 26,
+    width: 26,
+    opacity: 0.25
   },
   doneBtn: {
     height: 42,

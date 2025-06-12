@@ -11,12 +11,12 @@ export default function Notification({ isNew }) {
       </View>
       <View style={styles.textContainer}>
         <View style={styles.textUp}>
-          <Text style={styles.profileName}>Gonzalo_56</Text>
-          <Text style={styles.rating}>Rated 3.5 ⭐</Text>
+          <Text style={styles.profileName}>user_name</Text>
+          <Text style={styles.rating}>Added a Review ⭐</Text>
         </View>
         <View style={styles.textDown}>
-          <Text style={styles.bookName}>El Castillo - Franz Kafka - </Text>
-          <Text style={styles.timeText}>Yesterday</Text>
+          <Text style={styles.bookName}>Book Name - Author - </Text>
+          <Text style={styles.timeText}>Date</Text>
         </View>
       </View>
       <View style={styles.buttonContainer}>

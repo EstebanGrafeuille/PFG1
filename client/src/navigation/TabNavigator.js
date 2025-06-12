@@ -20,7 +20,9 @@ const TabNavigation = () => {
         tabBarStyle: {
           backgroundColor: "#FFCB20",
           position: "absolute",
-          height: 60
+          height: 60,
+          paddingLeft: 5,
+          paddingRight: 5
         }
       }}
     >
@@ -54,9 +56,9 @@ const TabNavigation = () => {
           )
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="AddBookScreen"
-        component={AddBookScreen}
+        component={AddBookScreen} // No se renderiza nada
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={[styles.tabIconContainer, focused && styles.tabIconContainerFocused]}>
@@ -68,7 +70,12 @@ const TabNavigation = () => {
             </View>
           )
         }}
-      />
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault(); // Evita Navegacion
+          }
+        }}
+      /> */}
       <Tab.Screen
         name="SocialScreen"
         component={SocialScreen}
