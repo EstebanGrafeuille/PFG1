@@ -6,6 +6,7 @@ import CreateListScreen from "../../../../screens/profile/lists/CreateListScreen
 import ListDetailScreen from "../../../../screens/profile/lists/ListDetailScreen";
 import ListDetailNavigation from "./ListDetailNavigator";
 
+
 const Stack = createNativeStackNavigator();
 
 export default function ListsNavigation() {

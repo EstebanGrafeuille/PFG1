@@ -7,6 +7,8 @@ import ListNavigation from '../list/ListsNavigator'
 import ListsBooksScreen from "../../../../screens/profile/lists/ListsBooksScreen";
 import { useRoute } from '@react-navigation/native';
 
+
+
 const Stack = createNativeStackNavigator();
 
 export default function ListDetailNavigation() {
@@ -36,6 +38,7 @@ export default function ListDetailNavigation() {
         name="ListNavigation"
         component={ListNavigation}
       />
+
     </Stack.Navigator>
   );
 }

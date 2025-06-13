@@ -120,7 +120,7 @@ export default function ProfileScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <ProfileHeader headerTitle="PERFIL" />
+        <ProfileHeader headerTitle="PROFILE" />
         <View style={{height: 10}}></View>
         <View style={profileStyles.editIconExtraContainer}>
           <Pressable

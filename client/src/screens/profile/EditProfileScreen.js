@@ -45,7 +45,7 @@ export default function EditProfileScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <ProfileHeader headerTitle="EDITAR PERFIL" />
+        <ProfileHeader headerTitle="EDIT PROFILE" />
         <View style={profileStyles.goBackContainer}>
           <Pressable onPress={() => navigation.goBack()} style={profileStyles.goBackContainerExtra}>
             <View style={styles.buttonContainer}>

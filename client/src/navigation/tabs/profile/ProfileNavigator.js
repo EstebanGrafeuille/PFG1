@@ -6,6 +6,9 @@ import ListsNavigation from "./list/ListsNavigator";
 import SettingsNavigation from "./SettingsNavigator";
 import ReadBooksNavigation from "./ReadBooksNavigator";
 import WishlistNavigation from "./WishlistNavigator";
+import AddReview from "../../../screens/reviews/AddReviewScreen";
+import EditReview from "../../../screens/reviews/EditReviewScreen";
+import Reviews from "../../../screens/reviews/ReviewsListScreen"
 
 const ProfileNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -15,6 +18,18 @@ const ProfileNavigation = () => {
       <Stack.Screen name="ReadBooks" component={ReadBooksNavigation} />
       <Stack.Screen name="ListsNavigation" component={ListsNavigation} />
       <Stack.Screen name="WishlistBooks" component={WishlistNavigation} />
+            <Stack.Screen 
+        name="AddReview" 
+        component={AddReview}
+      />
+      <Stack.Screen 
+        name="EditReview" 
+        component={EditReview}
+      />
+      <Stack.Screen 
+        name="Reviews" 
+        component={Reviews}
+      />
     </Stack.Navigator>
   );
 };
