@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from "react-native"; // ✅ AGREGADO: Image
 import { useRoute, useNavigation } from "@react-navigation/native";
 import reviewService from "../../services/reviewService";
 import { AuthContext } from "../../context/AuthContext";
@@ -14,26 +14,37 @@ export default function AddReviewScreen() {
 
   const handleAddReview = async () => {
     if (!reviewText.trim()) {
-Alert.alert("Oops!", "Please write something before submitting your review.");
+      Alert.alert("Oops!", "Please write something before submitting your review.");
       return;
     }
 
     try {
       await reviewService.addReview(volumeId, reviewText, authData.token);
-Alert.alert("Thank you!", "Your review has been saved.");
+      Alert.alert("Thank you!", "Your review has been saved.");
       navigation.goBack();
     } catch (error) {
       console.error(error);
-Alert.alert("Oops!", "Something went wrong while saving your review.");
+      Alert.alert("Oops!", "Something went wrong while saving your review.");
     }
+  };
+
+  const handleGoBack = () => {
+    navigation.goBack();
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Write your review</Text>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+          <Image source={require("../../../assets/img/back-icon-grey.png")} style={styles.icon} />
+        </TouchableOpacity>
+        <Text style={styles.title}>Write your review</Text>
+        <View style={styles.placeholder} />
+      </View>
+
       <TextInput
         style={styles.input}
-placeholder="Share your thoughts about this book..."
+        placeholder="Share your thoughts about this book..."
         value={reviewText}
         onChangeText={setReviewText}
         multiline
@@ -48,7 +59,29 @@ placeholder="Share your thoughts about this book..."
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: "#fff" },
-  title: { fontSize: 20, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
+
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 20
+  },
+  backButton: {
+    padding: 5
+  },
+  icon: {
+    height: 16,
+    width: 16
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    flex: 1,
+    textAlign: "center"
+  },
+  placeholder: {
+    width: 34
+  },
   input: {
     borderColor: "#ccc",
     borderWidth: 1,

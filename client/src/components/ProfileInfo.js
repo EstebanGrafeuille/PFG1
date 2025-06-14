@@ -51,7 +51,7 @@ export default function ProfileInfo({ userProfileData, isLoading }) {
         <Text style={profileStyles.username}>{userProfile.username}</Text>
       </View>
       <Text style={profileStyles.bio}>
-        {userProfile.biography || "This book has no biography."}
+        {userProfile.biography || "This user hasn’t added a bio yet."}
       </Text>
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
@@ -61,13 +61,13 @@ export default function ProfileInfo({ userProfileData, isLoading }) {
 const styles = {
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 50
   },
   errorText: {
-    color: 'red',
-    textAlign: 'center',
+    color: "red",
+    textAlign: "center",
     marginTop: 10
   }
 };
