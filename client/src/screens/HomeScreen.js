@@ -126,11 +126,6 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
-          <Text style={styles.rowTitle}>Best Ratings</Text>
-          <BookRow books={bestRatings} navigation={navigation} isYellow />
-        </View>
-
-        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
           <Text style={styles.rowTitle}>Fiction</Text>
           <BookRow books={fiction} navigation={navigation} />
         </View>
