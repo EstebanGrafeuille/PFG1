@@ -5,11 +5,11 @@ import {
   FlatList,
   StyleSheet,
   ActivityIndicator,
-  SafeAreaView,
   TouchableOpacity,
   Pressable,
   Image
 } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import reviewService from "../../services/reviewService";
 import ReviewCard from "../../components/ReviewCard";
@@ -42,34 +42,37 @@ export default function ReviewListScreen() {
   }, [volumeId]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.statusBarSpace} />
-
-      <View style={styles.header}>
-        <View style={styles.leftSection}>
-          <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
-            <Image source={require("../../../assets/img/back-icon-grey.png")} style={styles.icon} />
-          </Pressable>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.leftSection}>
+            <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
+              <Image
+                source={require("../../../assets/img/back-icon-grey.png")}
+                style={styles.icon}
+              />
+            </Pressable>
+          </View>
+          <Text style={styles.title}>Book reviews</Text>
+          <View style={styles.rightSection} />
         </View>
-        <Text style={styles.title}>Book reviews</Text>
-        <View style={styles.rightSection} />
-      </View>
 
-      {loading ? (
-        <ActivityIndicator size="large" color="#FFD700" />
-      ) : reviews.length === 0 ? (
-        <Text style={styles.emptyText}>There are no reviews for this book yet.</Text>
-      ) : (
-        <FlatList
-          data={reviews}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => (
-            <ReviewCard review={item} isOwnReview={item.user?._id === authData?.user?._id} />
-          )}
-          contentContainerStyle={styles.listContent}
-        />
-      )}
-    </SafeAreaView>
+        {loading ? (
+          <ActivityIndicator size="large" color="#FFD700" />
+        ) : reviews.length === 0 ? (
+          <Text style={styles.emptyText}>There are no reviews for this book yet.</Text>
+        ) : (
+          <FlatList
+            data={reviews}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item }) => (
+              <ReviewCard review={item} isOwnReview={item.user?._id === authData?.user?._id} />
+            )}
+            contentContainerStyle={styles.listContent}
+          />
+        )}
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -77,11 +80,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingBottom: 0,
     backgroundColor: "#fff"
-  },
-  statusBarSpace: {
-    height: 20
   },
   header: {
     flexDirection: "row",

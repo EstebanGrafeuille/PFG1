@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from "react-native"; // ✅ AGREGADO: Image
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import reviewService from "../../services/reviewService";
 import { AuthContext } from "../../context/AuthContext";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AddReviewScreen() {
   const [reviewText, setReviewText] = useState("");
@@ -33,32 +33,38 @@ export default function AddReviewScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-          <Image source={require("../../../assets/img/back-icon-grey.png")} style={styles.icon} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Write your review</Text>
-        <View style={styles.placeholder} />
-      </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+            <Image source={require("../../../assets/img/back-icon-grey.png")} style={styles.icon} />
+          </TouchableOpacity>
+          <Text style={styles.title}>Write your review</Text>
+          <View style={styles.placeholder} />
+        </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Share your thoughts about this book..."
-        value={reviewText}
-        onChangeText={setReviewText}
-        multiline
-        maxLength={200}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleAddReview}>
-        <Text style={styles.buttonText}>Send review</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <TextInput
+          style={styles.input}
+          placeholder="Share your thoughts about this book..."
+          value={reviewText}
+          onChangeText={setReviewText}
+          multiline
+          maxLength={200}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleAddReview}>
+          <Text style={styles.buttonText}>Send review</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: "#fff" },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#fff"
+  },
 
   header: {
     flexDirection: "row",

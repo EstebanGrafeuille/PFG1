@@ -11,12 +11,12 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   Pressable,
   Modal,
   useWindowDimensions,
   Alert
 } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import RenderHtml from "react-native-render-html";
 import useBookDetails from "../../hooks/useBookDetails";
 import { useState, useContext, useEffect, useCallback } from "react";
@@ -123,242 +123,259 @@ const DetailBook = ({ route }) => {
 
   // Manejar añadir libro a lista
   const handleAddBook = async (listName) => {
-    if (listName === "Read" && isInRead){
+    if (listName === "Read" && isInRead) {
       handleRemoveBook("Read");
-    } else if (listName === "Reading" && isInWishlist){
+    } else if (listName === "Reading" && isInWishlist) {
       handleRemoveBook("Reading");
-    } 
-     else {
-    try {
-      await userBookService.addToLista(authData.user.id, listName, bookData.id, authData.token);
-      checkIfInRead();
-      checkIfInWishlist();
-    } catch (error) {
-      console.error("Error al agregar a lista:", error.message);
-    }
-  }
-  };
-
-// Manejar eliminar libro de lista
-    const handleRemoveBook = async (list) => {
+    } else {
       try {
-        await userBookService.removeFromLista(authData.user.id, list, bookData.id, authData.token);
+        await userBookService.addToLista(authData.user.id, listName, bookData.id, authData.token);
         checkIfInRead();
         checkIfInWishlist();
       } catch (error) {
-        console.error("Error al eliminar de lista: ", error.message);
+        console.error("Error al agregar a lista:", error.message);
       }
-    };
+    }
+  };
+
+  // Manejar eliminar libro de lista
+  const handleRemoveBook = async (list) => {
+    try {
+      await userBookService.removeFromLista(authData.user.id, list, bookData.id, authData.token);
+      checkIfInRead();
+      checkIfInWishlist();
+    } catch (error) {
+      console.error("Error al eliminar de lista: ", error.message);
+    }
+  };
 
   async function checkIfInRead() {
     try {
-      const inList = await userBookService.isInLista(authData.user.id, "Read", volumeId, authData.token);
+      const inList = await userBookService.isInLista(
+        authData.user.id,
+        "Read",
+        volumeId,
+        authData.token
+      );
       setIsInRead(inList);
     } catch (error) {
       console.error("Error verificando si el libro está en la lista:", error.message);
     }
-  };
+  }
 
   async function checkIfInWishlist() {
     try {
-      const inList = await userBookService.isInLista(authData.user.id, "Reading", volumeId, authData.token);
+      const inList = await userBookService.isInLista(
+        authData.user.id,
+        "Reading",
+        volumeId,
+        authData.token
+      );
       setIsInWishlist(inList);
     } catch (error) {
       console.error("Error verificando si el libro está en la lista:", error.message);
     }
-  };
+  }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
-        {/* Cabecera con imagen y datos básicos */}
-        <View style={styles.headerContainer}>
-          <Pressable onPress={() => navigation.goBack()}>
-            <View style={styles.buttonContainer}>
-              <Image
-                source={require("../../../assets/img/back-icon-grey.png")}
-                style={styles.icon}
-              />
-            </View>
-          </Pressable>
-          <View style={styles.headerInfo}>
-            <View style={styles.imageContainer}>
-              {info.imageLinks?.thumbnail ? (
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+          {/* Cabecera con imagen y datos básicos */}
+          <View style={styles.headerContainer}>
+            <Pressable onPress={() => navigation.goBack()}>
+              <View style={styles.buttonContainer}>
                 <Image
-                  source={{ uri: info.imageLinks.thumbnail }}
-                  style={styles.bookCover}
-                  resizeMode="cover"
+                  source={require("../../../assets/img/back-icon-grey.png")}
+                  style={styles.icon}
                 />
-              ) : (
-                <View style={styles.noImageContainer}>
-                  <Text style={styles.noImageText}>
-                    {info.title ? info.title.substring(0, 1) : "?"}
-                  </Text>
-                </View>
-              )}
-            </View>
-            <View style={styles.headerRight}>
-              <View style={styles.titleContainer}>
-                <Text style={styles.title}>{info.title}</Text>
-                {info.authors && <Text style={styles.authors}>{info.authors.join(", ")}</Text>}
               </View>
-              {info.publishedDate && (
-                <Text style={styles.publishedDate}>{formatDate(info.publishedDate)}</Text>
-              )}
-              {info.categories && (
-                <View style={styles.categoriesContainer}>
-                  {info.categories.length > 0 && (
-                    <View style={styles.categoryBadge}>
-                      <Text style={styles.categoryText}>{info.categories[0]}</Text>
-                    </View>
+            </Pressable>
+            <View style={styles.headerInfo}>
+              <View style={styles.imageContainer}>
+                {info.imageLinks?.thumbnail ? (
+                  <Image
+                    source={{ uri: info.imageLinks.thumbnail }}
+                    style={styles.bookCover}
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <View style={styles.noImageContainer}>
+                    <Text style={styles.noImageText}>
+                      {info.title ? info.title.substring(0, 1) : "?"}
+                    </Text>
+                  </View>
+                )}
+              </View>
+              <View style={styles.headerRight}>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.title}>{info.title}</Text>
+                  {info.authors && <Text style={styles.authors}>{info.authors.join(", ")}</Text>}
+                </View>
+                {info.publishedDate && (
+                  <Text style={styles.publishedDate}>{formatDate(info.publishedDate)}</Text>
+                )}
+                {info.categories && (
+                  <View style={styles.categoriesContainer}>
+                    {info.categories.length > 0 && (
+                      <View style={styles.categoryBadge}>
+                        <Text style={styles.categoryText}>{info.categories[0]}</Text>
+                      </View>
+                    )}
+                  </View>
+                )}
+              </View>
+            </View>
+          </View>
+
+          {/* Sección de descripción */}
+          <View style={styles.infoSection}>
+            <View style={styles.buttonRow}>
+              <Pressable onPress={() => handleAddBook("Read")} style={styles.rowItemContainer}>
+                <View style={styles.listButtonContainer}>
+                  {isInRead ? (
+                    <Image
+                      source={require("../../../assets/img/read-icon-active.png")}
+                      style={styles.listIcon}
+                    />
+                  ) : (
+                    <Image
+                      source={require("../../../assets/img/read-icon.png")}
+                      style={styles.listIcon}
+                    />
                   )}
                 </View>
-              )}
-            </View>
-          </View>
-        </View>
-
-        {/* Sección de descripción */}
-        <View style={styles.infoSection}>
-          <View style={styles.buttonRow}>
-            <Pressable onPress={() => handleAddBook("Read")} style={styles.rowItemContainer}>
-              <View style={styles.listButtonContainer}>
-                {isInRead ? (
-                  <Image
-                  source={require("../../../assets/img/read-icon-active.png")}
-                  style={styles.listIcon}
-                />
-                ) : (
-                  <Image
-                  source={require("../../../assets/img/read-icon.png")}
-                  style={styles.listIcon}
-                />
-                )}
-              </View>
-              <Text style={styles.iconText}>Read</Text>
-            </Pressable>
-            <Pressable onPress={() => setVisible(true)} style={styles.rowItemContainer}>
-              <View style={styles.listButtonContainer}>
-                <Image
-                  source={require("../../../assets/img/lists-icon.png")}
-                  style={styles.listIcon}
-                />
-              </View>
-              <Text style={styles.iconText}>Lists</Text>
-            </Pressable>
-            <Modal
-              transparent={true}
-              visible={visible}
-              animationType="fade"
-              onRequestClose={() => setVisible(false)}
-            >
-              <Pressable
-                style={[styles.overlay, { backgroundColor: "rgba(0, 0, 0, 0.5)" }]}
-                onPress={() => setVisible(false)}
-              >
-                <View style={styles.popup}>
-                  <Pressable onPress={() => setVisible(false)} style={styles.closeButton}>
-                    <Text>×</Text>
-                  </Pressable>
-                  {options.slice(2).map((opt, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        handleAddBook(opt);
-                        setVisible(false);
-                      }}
-                    >
-                      <Text style={styles.option}>{opt}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
+                <Text style={styles.iconText}>Read</Text>
               </Pressable>
-            </Modal>
-            <Pressable onPress={() => handleAddBook("Reading")} style={styles.rowItemContainer}>
-              <View style={styles.reviewstButtonContainer}>
-                {isInWishlist ? (
+              <Pressable onPress={() => setVisible(true)} style={styles.rowItemContainer}>
+                <View style={styles.listButtonContainer}>
                   <Image
-                  source={require("../../../assets/img/wishlist-icon-active.png")}
-                  style={styles.listIcon}
-                />
-                ) : (
-                  <Image
-                  source={require("../../../assets/img/wishlist-icon.png")}
-                  style={styles.listIcon}
-                />
-                )}
-              </View>
-              <Text style={styles.iconText}>Next</Text>
-            </Pressable>
-          </View>
-          <View style={{height: 1, width: "100%", backgroundColor: Colors.BORDER, marginBottom: 20}}></View>
-          <View style={styles.reviewContainer}>
+                    source={require("../../../assets/img/lists-icon.png")}
+                    style={styles.listIcon}
+                  />
+                </View>
+                <Text style={styles.iconText}>Lists</Text>
+              </Pressable>
+              <Modal
+                transparent={true}
+                visible={visible}
+                animationType="fade"
+                onRequestClose={() => setVisible(false)}
+              >
+                <Pressable
+                  style={[styles.overlay, { backgroundColor: "rgba(0, 0, 0, 0.5)" }]}
+                  onPress={() => setVisible(false)}
+                >
+                  <View style={styles.popup}>
+                    <Pressable onPress={() => setVisible(false)} style={styles.closeButton}>
+                      <Text>×</Text>
+                    </Pressable>
+                    {options.slice(2).map((opt, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          handleAddBook(opt);
+                          setVisible(false);
+                        }}
+                      >
+                        <Text style={styles.option}>{opt}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </Pressable>
+              </Modal>
+              <Pressable onPress={() => handleAddBook("Reading")} style={styles.rowItemContainer}>
+                <View style={styles.reviewstButtonContainer}>
+                  {isInWishlist ? (
+                    <Image
+                      source={require("../../../assets/img/wishlist-icon-active.png")}
+                      style={styles.listIcon}
+                    />
+                  ) : (
+                    <Image
+                      source={require("../../../assets/img/wishlist-icon.png")}
+                      style={styles.listIcon}
+                    />
+                  )}
+                </View>
+                <Text style={styles.iconText}>Next</Text>
+              </Pressable>
+            </View>
+            <View
+              style={{ height: 1, width: "100%", backgroundColor: Colors.BORDER, marginBottom: 20 }}
+            ></View>
+            <View style={styles.reviewContainer}>
               <View style={styles.reviewButtonContainer}>
-                <TouchableOpacity 
+                <TouchableOpacity
                   onPress={() =>
-                  userReview
-                    ? navigation.navigate("EditReview", { volumeId, review: userReview })
-                    : navigation.navigate("AddReview", { volumeId: details.id })
+                    userReview
+                      ? navigation.navigate("EditReview", { volumeId, review: userReview })
+                      : navigation.navigate("AddReview", { volumeId: details.id })
                   }
-                  style={styles.addReviewBtn}>
-                    <Text style={styles.addReviewBtnText}>{userReview ? "Edit review" : "Add review"}</Text>
-                  </TouchableOpacity>
+                  style={styles.addReviewBtn}
+                >
+                  <Text style={styles.addReviewBtnText}>
+                    {userReview ? "Edit review" : "Add review"}
+                  </Text>
+                </TouchableOpacity>
               </View>
               <View style={styles.reviewButtonContainer}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate("Reviews", { volumeId: details.id })}
-                  style={styles.reviewBtn}>
-                    <Text style={styles.reviewBtnText}>Reviews</Text>
+                  style={styles.reviewBtn}
+                >
+                  <Text style={styles.reviewBtnText}>Reviews</Text>
                 </TouchableOpacity>
               </View>
+            </View>
+
+            <View style={styles.textSection}>
+              <Text style={styles.sectionTitle}>Description</Text>
+              {info.description ? (
+                <RenderHtml
+                  contentWidth={width - 40}
+                  source={{ html: info.description }}
+                  baseStyle={{
+                    fontSize: Layout.FONT_SIZE.M,
+                    lineHeight: 20,
+                    color: Colors.TEXT_PRIMARY,
+                    fontFamily: "Roboto_400Regular"
+                  }}
+                />
+              ) : (
+                <Text style={styles.noInfo}>No description available</Text>
+              )}
+              {/* SECCION de DETALLES */}
+              <Text style={styles.detailsTitle}>Details</Text>
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>Publisher:</Text>
+                <Text style={styles.detailValue}>{info.publisher || "Not available"}</Text>
+              </View>
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>Pages:</Text>
+                <Text style={styles.detailValue}>{info.pageCount || "Not available"}</Text>
+              </View>
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>Language:</Text>
+                <Text style={styles.detailValue}>
+                  {getLanguageName(info.language) || "Not available"}
+                </Text>
+              </View>
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>ISBN:</Text>
+                <Text style={styles.detailValue}>
+                  {info.industryIdentifiers?.find((id) => id.type === "ISBN_13")?.identifier ||
+                    info.industryIdentifiers?.find((id) => id.type === "ISBN_10")?.identifier ||
+                    "No disponible"}
+                </Text>
+              </View>
+            </View>
           </View>
 
-          <View style={styles.textSection}>
-            <Text style={styles.sectionTitle}>Description</Text>
-            {info.description ? (
-              <RenderHtml
-                contentWidth={width - 40}
-                source={{ html: info.description }}
-                baseStyle={{
-                  fontSize: Layout.FONT_SIZE.M,
-                  lineHeight: 20,
-                  color: Colors.TEXT_PRIMARY,
-                  fontFamily: "Roboto_400Regular"
-                }}
-              />
-            ) : (
-              <Text style={styles.noInfo}>No description available</Text>
-            )}
-            {/* SECCION de DETALLES */}
-            <Text style={styles.detailsTitle}>Details</Text>
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Publisher:</Text>
-              <Text style={styles.detailValue}>{info.publisher || "Not available"}</Text>
-            </View>
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Pages:</Text>
-              <Text style={styles.detailValue}>{info.pageCount || "Not available"}</Text>
-            </View>
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Language:</Text>
-              <Text style={styles.detailValue}>
-                {getLanguageName(info.language) || "Not available"}
-              </Text>
-            </View>
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>ISBN:</Text>
-              <Text style={styles.detailValue}>
-                {info.industryIdentifiers?.find((id) => id.type === "ISBN_13")?.identifier ||
-                  info.industryIdentifiers?.find((id) => id.type === "ISBN_10")?.identifier ||
-                  "No disponible"}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.bottomSpace} />
-      </ScrollView>
-    </SafeAreaView>
+          <View style={styles.bottomSpace} />
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

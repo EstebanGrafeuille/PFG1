@@ -1,3 +1,5 @@
+import React, { useState, useCallback, useContext } from "react";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import {
   View,
   Text,
@@ -6,11 +8,9 @@ import {
   Pressable,
   Alert,
   ScrollView,
-  SafeAreaView,
   RefreshControl
 } from "react-native";
 import ProfileHeader from "../../components/ProfileHeader";
-import { useContext, useState, useCallback } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "../../services/asyncStorage";
 import { useNavigation } from "@react-navigation/native";
@@ -36,39 +36,49 @@ export default function EditProfileScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={profileStyles.safeArea}>
-      <ScrollView
-        style={profileStyles.scroll}
-        contentContainerStyle={profileStyles.profileScreen}
-        keyboardShouldPersistTaps="handled"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <ProfileHeader headerTitle="EDIT PROFILE" />
-        <View style={profileStyles.goBackContainer}>
-          <Pressable onPress={() => navigation.goBack()} style={profileStyles.goBackContainerExtra}>
-            <View style={styles.buttonContainer}>
-              <Image source={require("../../../assets/img/back-icon-grey.png")} style={profileStyles.goBack} />
-            </View>
-          </Pressable>
-          <Text style={profileStyles.infoText}>Tap a field to make changes</Text>
-          <View style={{ width: 28 }}></View>
-        </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <ScrollView
+          style={profileStyles.scroll}
+          contentContainerStyle={profileStyles.profileScreen}
+          keyboardShouldPersistTaps="handled"
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
+          <ProfileHeader headerTitle="EDIT PROFILE" />
+          <View style={profileStyles.goBackContainer}>
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={profileStyles.goBackContainerExtra}
+            >
+              <View style={styles.buttonContainer}>
+                <Image
+                  source={require("../../../assets/img/back-icon-grey.png")}
+                  style={profileStyles.goBack}
+                />
+              </View>
+            </Pressable>
+            <Text style={profileStyles.infoText}>Tap a field to make changes</Text>
+            <View style={{ width: 28 }}></View>
+          </View>
 
-        <ProfileInfoEditable key={refreshing ? "refresh" : "normal"} />
+          <ProfileInfoEditable key={refreshing ? "refresh" : "normal"} />
 
-        <TouchableOpacity style={profileStyles.logoutButton} onPress={handleLogout}>
-          <Text style={profileStyles.logoutText}>Sign out</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
+          <TouchableOpacity style={profileStyles.logoutButton} onPress={handleLogout}>
+            <Text style={profileStyles.logoutText}>Sign out</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff"
+  },
   buttonContainer: {
     width: 28,
     height: 28
   }
-};
+});

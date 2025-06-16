@@ -8,6 +8,7 @@ import {
   Pressable,
   RefreshControl
 } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import ProfileStats from "../../components/ProfileStats";
 import ProfileHeader from "../../components/ProfileHeader";
 import ProfileGraphic from "../../components/ProfileGraphic";
@@ -30,13 +31,13 @@ export default function ProfileScreen() {
     try {
       setLoading(true);
       // Verificar si hay sesión activa
-      const authDataCurrent = await AsyncStorage.getData('authData');
+      const authDataCurrent = await AsyncStorage.getData("authData");
       if (!authDataCurrent || !authDataCurrent.token) {
         console.log("No hay sesión activa en fetchUserProfile");
         setLoading(false);
         return;
       }
-      
+
       const userId = authDataCurrent?.user?.id || authDataCurrent?.user?._id;
       if (!userId) {
         console.log("No se encontró ID de usuario en ProfileScreen");
@@ -47,13 +48,13 @@ export default function ProfileScreen() {
       console.log("ProfileScreen: Obteniendo perfil con ID:", userId);
       const userData = await getUserProfile(userId);
       setUserProfileData(userData);
-      
+
       // Guardar en caché
       await AsyncStorage.storeData("userProfileCache", {
         data: userData,
         timestamp: Date.now()
       });
-      
+
       console.log("ProfileScreen: Perfil actualizado y guardado en caché");
     } catch (error) {
       console.error("Error al cargar perfil en ProfileScreen:", error);
@@ -70,18 +71,17 @@ export default function ProfileScreen() {
         try {
           // Intentar cargar desde caché primero
           const cachedData = await AsyncStorage.getData("userProfileCache");
-          
+
           // Si hay datos en caché y son recientes (menos de 5 minutos)
-          const isCacheValid = cachedData && 
-                              cachedData.timestamp && 
-                              (Date.now() - cachedData.timestamp < 5 * 60 * 1000);
-          
+          const isCacheValid =
+            cachedData && cachedData.timestamp && Date.now() - cachedData.timestamp < 5 * 60 * 1000;
+
           if (isCacheValid) {
             console.log("ProfileScreen: Usando datos de caché");
             setUserProfileData(cachedData.data);
             setLoading(false);
           }
-          
+
           // Siempre actualizar desde el servidor, incluso si usamos caché inicialmente
           fetchUserProfile();
         } catch (error) {
@@ -89,7 +89,7 @@ export default function ProfileScreen() {
           setLoading(false);
         }
       };
-      
+
       loadProfileData();
     }, [fetchUserProfile])
   );
@@ -111,40 +111,40 @@ export default function ProfileScreen() {
   }, [fetchUserProfile]);
 
   return (
-    <SafeAreaView style={profileStyles.safeArea}>
-      <ScrollView
-        style={profileStyles.scroll}
-        contentContainerStyle={profileStyles.profileScreen}
-        keyboardShouldPersistTaps="handled"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <ProfileHeader headerTitle="PROFILE" />
-        <View style={{height: 10}}></View>
-        <View style={profileStyles.editIconExtraContainer}>
-          <Pressable
-            onPress={() => navigation.navigate("EditProfile")}
-            style={profileStyles.editIconContainer}
-          >
-            <Image
-              source={require("../../../assets/img/settings-icon.png")}
-              resizeMode="contain"
-              style={profileStyles.settingsIcon}
-            />
-          </Pressable>
-        </View>
-        <ProfileInfo 
-          key={refreshing ? "refresh" : "normal"} 
-          userProfileData={userProfileData} 
-          isLoading={loading} 
-        />
-        <ProfileStats userProfileData={userProfileData}/>
-        <TouchableOpacity style={profileStyles.logoutButton} onPress={handleLogout}>
-          <Text style={profileStyles.logoutText}>Sign out</Text>
-        </TouchableOpacity>
-        <View style={{height: 50}}></View>
-      </ScrollView>
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={profileStyles.safeArea}>
+        <ScrollView
+          style={profileStyles.scroll}
+          contentContainerStyle={profileStyles.profileScreen}
+          keyboardShouldPersistTaps="handled"
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
+          <ProfileHeader headerTitle="PROFILE" />
+          <View style={{ height: 10 }}></View>
+          <View style={profileStyles.editIconExtraContainer}>
+            <Pressable
+              onPress={() => navigation.navigate("EditProfile")}
+              style={profileStyles.editIconContainer}
+            >
+              <Image
+                source={require("../../../assets/img/settings-icon.png")}
+                resizeMode="contain"
+                style={profileStyles.settingsIcon}
+              />
+            </Pressable>
+          </View>
+          <ProfileInfo
+            key={refreshing ? "refresh" : "normal"}
+            userProfileData={userProfileData}
+            isLoading={loading}
+          />
+          <ProfileStats userProfileData={userProfileData} />
+          <TouchableOpacity style={profileStyles.logoutButton} onPress={handleLogout}>
+            <Text style={profileStyles.logoutText}>Sign out</Text>
+          </TouchableOpacity>
+          <View style={{ height: 50 }}></View>
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }

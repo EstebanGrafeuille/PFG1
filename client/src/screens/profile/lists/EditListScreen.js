@@ -14,9 +14,9 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-  SafeAreaView,
   Alert
 } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import BooksInList from "../../../components/BooksInList";
 import userBookService from "../../../services/userBook";
@@ -44,90 +44,92 @@ export default function EditListScreen() {
   }, []);
 
   // Manejar eliminar lista
-      const hanldeDeleteList = async (list) => {
-        try {
-          await userBookService.removeList(authData.user.id, list, authData.token);
-          navigation.navigate("ListNavigation");
-        } catch (error) {
-          console.error("Error al eliminar lista: ", error.message);
-        }
-      };
+  const hanldeDeleteList = async (list) => {
+    try {
+      await userBookService.removeList(authData.user.id, list, authData.token);
+      navigation.navigate("ListNavigation");
+    } catch (error) {
+      console.error("Error al eliminar lista: ", error.message);
+    }
+  };
 
   return (
-    <View style={styles.listDetailScreen}>
-      <View style={styles.listContainer}>
-        <View style={styles.listHeader}>
-          <Pressable onPress={() => navigation.navigate("ListDetailScreen")}>
-            <View style={styles.buttonContainer}>
-              <Image
-                source={require("../../../../assets/img/back-icon-grey.png")}
-                style={styles.icon}
-              />
-            </View>
-          </Pressable>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>{listTitle}</Text>
-          </View>
-          {listTitle === "Favorites" ? (
-            <Pressable
-              onPress={() =>
-              Alert.alert(
-                "Good try...",
-                `${listTitle} is a default list, you can't delete it.`,
-                [
-                  {
-                    text: "OK"
-                  }
-                ],
-                { cancelable: true }
-                )
-              }
-            >
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.listDetailScreen}>
+        <View style={styles.listContainer}>
+          <View style={styles.listHeader}>
+            <Pressable onPress={() => navigation.navigate("ListDetailScreen")}>
               <View style={styles.buttonContainer}>
                 <Image
-                  source={require("../../../../assets/img/trash-icon-grey.png")}
-                  style={styles.iconFav}
+                  source={require("../../../../assets/img/back-icon-grey.png")}
+                  style={styles.icon}
                 />
               </View>
             </Pressable>
-          ) : (
-            <Pressable
-              onPress={() =>
-              Alert.alert(
-                "Delete List",
-                `Are you sure you want to delete "${listTitle}"?`,
-                [
-                  {
-                    text: "Cancel",
-                    style: "cancel"
-                  },
-                  {
-                    text: "OK",
-                    onPress: () => hanldeDeleteList(listTitle)
-                  }
-                ],
-                { cancelable: true }
-              )
-            }
-          >
-            <View style={styles.buttonContainer}>
-              <Image
-                source={require("../../../../assets/img/trash-icon-grey.png")}
-                style={styles.icon}
-              />
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>{listTitle}</Text>
             </View>
-          </Pressable>
-          )}
+            {listTitle === "Favorites" ? (
+              <Pressable
+                onPress={() =>
+                  Alert.alert(
+                    "Good try...",
+                    `${listTitle} is a default list, you can't delete it.`,
+                    [
+                      {
+                        text: "OK"
+                      }
+                    ],
+                    { cancelable: true }
+                  )
+                }
+              >
+                <View style={styles.buttonContainer}>
+                  <Image
+                    source={require("../../../../assets/img/trash-icon-grey.png")}
+                    style={styles.iconFav}
+                  />
+                </View>
+              </Pressable>
+            ) : (
+              <Pressable
+                onPress={() =>
+                  Alert.alert(
+                    "Delete List",
+                    `Are you sure you want to delete "${listTitle}"?`,
+                    [
+                      {
+                        text: "Cancel",
+                        style: "cancel"
+                      },
+                      {
+                        text: "OK",
+                        onPress: () => hanldeDeleteList(listTitle)
+                      }
+                    ],
+                    { cancelable: true }
+                  )
+                }
+              >
+                <View style={styles.buttonContainer}>
+                  <Image
+                    source={require("../../../../assets/img/trash-icon-grey.png")}
+                    style={styles.icon}
+                  />
+                </View>
+              </Pressable>
+            )}
+          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ListsBooksScreen")}
+            style={styles.doneBtn}
+          >
+            <Text style={styles.btnText}>Done</Text>
+          </TouchableOpacity>
+          <ListBooksRemove ids={bookIds} lista={listTitle} />
         </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("ListsBooksScreen")}
-          style={styles.doneBtn}
-        >
-          <Text style={styles.btnText}>Done</Text>
-        </TouchableOpacity>
-        <ListBooksRemove ids={bookIds} lista={listTitle} />
-      </View>
-    </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -146,7 +148,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#F0F0F0",
     width: "100%",
-    marginTop: 30,
     borderRadius: 20
   },
   listHeader: {

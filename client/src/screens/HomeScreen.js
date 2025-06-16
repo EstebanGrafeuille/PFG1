@@ -5,9 +5,9 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
-  SafeAreaView,
   useWindowDimensions
 } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import BookRow from "../components/BookRow";
 
 export default function HomeScreen({ navigation }) {
@@ -105,55 +105,57 @@ export default function HomeScreen({ navigation }) {
   const mobile = width < 600;
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={[styles.scrollContent, mobile && styles.scrollContentMobile]}
-      >
-        <View style={styles.homeHeader}>
-          <View style={styles.homeHeaderBorder}>
-            <View style={styles.bookBox}>
-              <Text style={styles.headerTitle1}>Book</Text>
-              <Text style={styles.headerTitle2}>Box</Text>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[styles.scrollContent, mobile && styles.scrollContentMobile]}
+        >
+          <View style={styles.homeHeader}>
+            <View style={styles.homeHeaderBorder}>
+              <View style={styles.bookBox}>
+                <Text style={styles.headerTitle1}>Book</Text>
+                <Text style={styles.headerTitle2}>Box</Text>
+              </View>
+              <Text style={styles.headersubTitle}>Find your next favourite book</Text>
             </View>
-            <Text style={styles.headersubTitle}>Find your next favourite book</Text>
           </View>
-        </View>
 
-        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
-          <Text style={styles.rowTitle}>New Releases</Text>
-          <BookRow books={newReleases} navigation={navigation} isYellow />
-        </View>
+          <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
+            <Text style={styles.rowTitle}>New Releases</Text>
+            <BookRow books={newReleases} navigation={navigation} isYellow />
+          </View>
 
-        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
-          <Text style={styles.rowTitle}>Best Ratings</Text>
-          <BookRow books={bestRatings} navigation={navigation} isYellow />
-        </View>
+          <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
+            <Text style={styles.rowTitle}>Best Ratings</Text>
+            <BookRow books={bestRatings} navigation={navigation} isYellow />
+          </View>
 
-        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
-          <Text style={styles.rowTitle}>Fiction</Text>
-          <BookRow books={fiction} navigation={navigation} />
-        </View>
+          <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
+            <Text style={styles.rowTitle}>Fiction</Text>
+            <BookRow books={fiction} navigation={navigation} />
+          </View>
 
-        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
-          <Text style={styles.rowTitle}>Non-Fiction</Text>
-          <BookRow books={nonFiction} navigation={navigation} />
-        </View>
+          <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
+            <Text style={styles.rowTitle}>Non-Fiction</Text>
+            <BookRow books={nonFiction} navigation={navigation} />
+          </View>
 
-        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
-          <Text style={styles.rowTitle}>Classics</Text>
-          <BookRow books={classics} navigation={navigation} />
-        </View>
+          <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
+            <Text style={styles.rowTitle}>Classics</Text>
+            <BookRow books={classics} navigation={navigation} />
+          </View>
 
-        <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
-          <Text style={styles.rowTitle}>Science Fiction</Text>
-          <BookRow books={scienceFiction} navigation={navigation} />
-        </View>
+          <View style={[styles.rowContainer, mobile && styles.rowMobile]}>
+            <Text style={styles.rowTitle}>Science Fiction</Text>
+            <BookRow books={scienceFiction} navigation={navigation} />
+          </View>
 
-        {/* Espacio adicional para evitar que el contenido se oculte detrás del footer */}
-        <View style={styles.footerSpace} />
-      </ScrollView>
-    </SafeAreaView>
+          {/* Espacio adicional para evitar que el contenido se oculte detrás del footer */}
+          <View style={styles.footerSpace} />
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 

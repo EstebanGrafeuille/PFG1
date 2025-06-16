@@ -1,13 +1,6 @@
 import React, { useState, useContext } from "react";
-import {
-  SafeAreaView,
-  ScrollView,
-  TextInput,
-  StyleSheet,
-  Alert,
-  Text,
-  TouchableOpacity
-} from "react-native";
+import { ScrollView, TextInput, StyleSheet, Alert, Text, TouchableOpacity } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import reviewService from "../../services/reviewService";
 import { AuthContext } from "../../context/AuthContext";
@@ -23,16 +16,16 @@ const EditReviewScreen = () => {
 
   const handleUpdateReview = async () => {
     if (!reviewText.trim()) {
-Alert.alert("Error", "Review cannot be empty");
+      Alert.alert("Error", "Review cannot be empty");
       return;
     }
     try {
       setLoading(true);
       await reviewService.updateReview(review._id, reviewText, authData.token);
-Alert.alert("Done", "Review updated");
+      Alert.alert("Done", "Review updated");
       navigation.goBack();
     } catch (error) {
-Alert.alert("Error", "Failed to update the review");
+      Alert.alert("Error", "Failed to update the review");
       console.error(error);
     } finally {
       setLoading(false);
@@ -43,10 +36,10 @@ Alert.alert("Error", "Failed to update the review");
     try {
       setLoading(true);
       await reviewService.deleteReview(review._id, authData.token);
-Alert.alert("Done", "Review deleted");
+      Alert.alert("Done", "Review deleted");
       navigation.goBack();
     } catch (error) {
-Alert.alert("Error", "Failed to delete the review");
+      Alert.alert("Error", "Failed to delete the review");
       console.error(error);
     } finally {
       setLoading(false);
@@ -54,32 +47,34 @@ Alert.alert("Error", "Failed to delete the review");
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Edit your review</Text>
-      <TextInput
-        style={styles.input}
-placeholder="Update your thoughts about this book..."
-        value={reviewText}
-        onChangeText={setReviewText}
-        multiline
-        maxLength={200}
-      />
-      <TouchableOpacity
-        style={[styles.button, loading && styles.disabled]}
-        onPress={handleUpdateReview}
-        disabled={loading}
-      >
-        <Text style={styles.buttonText}>Update review</Text>
-      </TouchableOpacity>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>Edit your review</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Update your thoughts about this book..."
+          value={reviewText}
+          onChangeText={setReviewText}
+          multiline
+          maxLength={200}
+        />
+        <TouchableOpacity
+          style={[styles.button, loading && styles.disabled]}
+          onPress={handleUpdateReview}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>Update review</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[styles.button, styles.deleteButton, loading && styles.disabled]}
-        onPress={handleDeleteReview}
-        disabled={loading}
-      >
-        <Text style={[styles.buttonText, styles.deleteText]}>Delete review</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <TouchableOpacity
+          style={[styles.button, styles.deleteButton, loading && styles.disabled]}
+          onPress={handleDeleteReview}
+          disabled={loading}
+        >
+          <Text style={[styles.buttonText, styles.deleteText]}>Delete review</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

@@ -8,9 +8,9 @@ import {
   Pressable,
   Image,
   ScrollView,
-  ActivityIndicator,
-  SafeAreaView
+  ActivityIndicator
 } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import BooksInList from "../../../components/BooksInList";
 import userBookService from "../../../services/userBook";
@@ -38,32 +38,34 @@ export default function ListDetailScreen() {
   }, []);
 
   return (
-    <View style={styles.listDetailScreen}>
-      <View style={styles.listContainer}>
-        <View style={styles.listHeader}>
-          <Pressable onPress={() => navigation.navigate("ListsBooksScreen")}>
-            <View style={styles.buttonContainer}>
-              <Image
-                source={require("../../../../assets/img/back-icon-grey.png")}
-                style={styles.icon}
-              />
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.listDetailScreen}>
+        <View style={styles.listContainer}>
+          <View style={styles.listHeader}>
+            <Pressable onPress={() => navigation.navigate("ListsBooksScreen")}>
+              <View style={styles.buttonContainer}>
+                <Image
+                  source={require("../../../../assets/img/back-icon-grey.png")}
+                  style={styles.icon}
+                />
+              </View>
+            </Pressable>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>{listTitle}</Text>
             </View>
-          </Pressable>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>{listTitle}</Text>
+            <Pressable onPress={() => navigation.navigate("EditListScreen")}>
+              <View style={styles.buttonContainer}>
+                <Image
+                  source={require("../../../../assets/img/edit-icon-yellow.png")}
+                  style={styles.icon}
+                />
+              </View>
+            </Pressable>
           </View>
-          <Pressable onPress={() => navigation.navigate("EditListScreen")}>
-            <View style={styles.buttonContainer}>
-              <Image
-                source={require("../../../../assets/img/edit-icon-yellow.png")}
-                style={styles.icon}
-              />
-            </View>
-          </Pressable>
+          <BooksInList ids={bookIds} nav={navigation} />
         </View>
-        <BooksInList ids={bookIds} nav={navigation} />
-      </View>
-    </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -82,7 +84,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#F0F0F0",
     width: "100%",
-    marginTop: 30,
     borderRadius: 20
   },
   listHeader: {
