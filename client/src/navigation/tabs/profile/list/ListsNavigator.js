@@ -1,10 +1,7 @@
-import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import ListsBooksScreen from "../../../../screens/profile/lists/ListsBooksScreen";
 import CreateListScreen from "../../../../screens/profile/lists/CreateListScreen";
-import ListDetailScreen from "../../../../screens/profile/lists/ListDetailScreen";
-import ListDetailNavigation from "./ListDetailNavigator";
+import ListsBooksScreen from "../../../../screens/profile/lists/ListsBooksScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -23,10 +20,9 @@ export default function ListsNavigation() {
         name="CreateListScreen"
         component={CreateListScreen}
         options={{ title: "Create New List" }}
-      />
-      <Stack.Screen
+      />      <Stack.Screen
         name="ListDetailNavigation"
-        component={ListDetailNavigation}
+        component={require('./NavigationHelpers').getListDetailNavigationComponent()}
         options={({ route }) => ({ title: route.params?.listTitle || "List Detail" })}
       />
     </Stack.Navigator>

@@ -3,27 +3,30 @@ const UserBook = require("../models/UserBook");
 
 class BookService {
 	// Obtener libros favoritos del usuario
-
   async createUB(id){
-    console.log("creando userbook con id " + id)
+    console.log("Creando UserBook con ID: " + id)
     try{
-      const existente = await UserBook.findOne({userId:id});
-      
+      // Verificar si el usuario ya tiene un UserBook
+      const existente = await UserBook.findOne({userId: id});
+
       if(existente != null){
-        console.log("ya existe el userbook " + existente)
-        throw new Error("usuario ya tiene lista")
-      }else{
+        console.log("Ya existe el UserBook:", existente)
+        return existente; // Devolver el existente en lugar de lanzar un error
+      } else {
+        // Crear un nuevo UserBook con las listas predeterminadas
         const userbook = new UserBook({
-          userId:id,
-          listasUser:["Read","Reading","Favorites"],
-          libros:[]
+          userId: id,
+          listasUser: ["Read", "Reading", "Favorites"],
+          libros: []
         });
-        //console.log(userbook)
+
+        console.log("Creando nuevo UserBook:", userbook);
         await userbook.save();
-        return userbook
+        return userbook;
       }
-    }catch(error){
-      return error.message
+    } catch(error) {
+      console.error("Error al crear UserBook:", error);
+      throw error; // Propagar el error para manejarlo en el controlador
     }
   }
 	async getFavorites(userId) {
@@ -107,28 +110,61 @@ class BookService {
 			return nombreListaNueva;
 		}
 		throw new Error("usuario no encontrado");
-	}
+	}  async addLibroToLista(userId, lista, libroId){
+    try {
+      // Validaciones iniciales
+      if(!userId) throw new Error("ID de usuario no proporcionado");
+      if(!lista) throw new Error("Nombre de lista no proporcionado");
+      if(!libroId) throw new Error("ID del libro no proporcionado");
 
-  async addLibroToLista(userId,lista,libroId){
-    const userbook = await UserBook.findOne({"userId":userId});
-    console.log([userId,lista,libroId]);
-    if(userbook){
-      if(await UserBook.findOne({"userId":userId,"listasUser":lista})){
-        if(await UserBook.findOne({"userId":userId,"libros.googleId":libroId})){
-          
-          await UserBook.updateOne({"userId":userId,"libros.googleId":libroId},{$push:{"libros.$.listasLibro":lista}})
-        }else{
-          
-          await UserBook.updateOne({"userId":userId},{$push:{"libros":{
-            "googleId":libroId,
-            "listasLibro":[lista]
-          }}});
-        }
-      }else{
-        throw new Error("lista inexistente")
+      console.log("Service params validados:", userId, lista, libroId);
+
+      // Buscar el UserBook
+      const userbook = await UserBook.findOne({"userId": userId});
+
+      if(!userbook) {
+        throw new Error("Usuario inexistente");
       }
-    }else{
-          throw new Error("usuario inexistente")
+
+      // Comprobar si la lista existe
+      if(!userbook.listasUser.includes(lista)) {
+        throw new Error("Lista inexistente");
+      }
+
+      // Comprobar si el libro ya está en las listas del usuario
+      const libroExistente = userbook.libros.find(
+        libro => libro.googleId === libroId
+      );
+
+      let resultado;
+
+      if(libroExistente) {
+        // Si el libro ya existe, agregarlo a la lista específica si no está ya
+        if(!libroExistente.listasLibro.includes(lista)) {
+          resultado = await UserBook.updateOne(
+            {"userId": userId, "libros.googleId": libroId},
+            {$addToSet: {"libros.$.listasLibro": lista}}
+          );
+        } else {
+          console.log("El libro ya está en esta lista");
+          return { message: "El libro ya está en esta lista" };
+        }
+      } else {
+        // Si el libro no existe, crear nuevo registro
+        resultado = await UserBook.updateOne(
+          {"userId": userId},
+          {$push: {"libros": {
+            "googleId": libroId,
+            "listasLibro": [lista]
+          }}}
+        );
+      }
+
+      console.log("Operación completada:", resultado);
+      return resultado;
+    } catch(error) {
+      console.error("Error en addLibroToLista:", error);
+      throw error;
     }
   }
   async getLista(userId,lista){
@@ -181,7 +217,7 @@ class BookService {
     }catch(error){
       return error.message;
     }
-    
+
   }
 
   async deleteLista(userId,borrar){
@@ -194,7 +230,7 @@ class BookService {
     //console.log(userbook)
     const listaExiste = userbook.listasUser.includes(borrar);
     //console.log(listaExiste)
-    
+
     if (!listaExiste) {
       throw new Error("lista inexistente");
     }
@@ -215,10 +251,10 @@ class BookService {
     } catch(error){
       throw new Error(error.message)
     }
-    
+
   }
 
-  
+
 }
 
 module.exports = new BookService();

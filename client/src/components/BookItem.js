@@ -3,7 +3,7 @@
  *
  * @module components/books/BookItem
  */
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Colors from "../constants/colors";
 import Layout from "../constants/layout";
 
@@ -29,8 +29,7 @@ const BookItem = ({ item, navigation }) => (
       <View style={styles.textContainer}>
         <Text style={styles.title} numberOfLines={1}>
           {item.title}
-        </Text>
-        {item.authors.length > 0 && (
+        </Text>        {Array.isArray(item.authors) && item.authors.length > 0 && (
           <Text style={styles.authors} numberOfLines={1}>
             {item.authors.join(", ")}
           </Text>

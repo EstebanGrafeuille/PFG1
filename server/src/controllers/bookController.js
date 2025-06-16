@@ -34,20 +34,46 @@ class BookController {
 				.status(500)
 				.json({ message: "error al agregar lista", error: error.message });
 		}
-	};
-
-	addToLista = async (req, res) => {
+	};	addToLista = async (req, res) => {
 		try {
-			await bookService.addLibroToLista(
-				req.body.userId,
-				req.body.lista,
-				req.body.bookId
-			);
-			res.status(201).json({ message: "Libro añadido a lista" });
+			const { userId, lista, bookId } = req.body;
+
+			console.log("Controller recibió:", { userId, lista, bookId });
+
+			// Validaciones de entrada
+			if (!userId) {
+				return res.status(400).json({ message: "Error: ID de usuario no proporcionado" });
+			}
+
+			if (!lista) {
+				return res.status(400).json({ message: "Error: Nombre de lista no proporcionado" });
+			}
+
+			if (!bookId) {
+				return res.status(400).json({ message: "Error: ID del libro no proporcionado" });
+			}
+
+			// Intentar agregar el libro a la lista
+			const resultado = await bookService.addLibroToLista(userId, lista, bookId);
+
+			res.status(201).json({
+				message: "Libro añadido a lista",
+				resultado
+			});
 		} catch (error) {
+			console.error("Error en controlador addToLista:", error);
+
+			// Manejar diferentes tipos de errores
+			if (error.message.includes("inexistente")) {
+				return res.status(404).json({
+					message: "Error al añadir a lista",
+					error: error.message
+				});
+			}
+
 			res.status(500).json({
 				message: "Error al añadir a lista",
-				error: error.message,
+				error: error.message
 			});
 		}
 	};

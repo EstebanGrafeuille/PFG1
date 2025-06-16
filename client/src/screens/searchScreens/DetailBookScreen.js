@@ -4,33 +4,30 @@
  *
  * @module screens/searchScreens/DetailBookScreen
  */
-import React from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-  Pressable,
-  Modal,
-  useWindowDimensions,
-  Alert
+    Image,
+    Modal,
+    Pressable,
+    SafeAreaView,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    useWindowDimensions,
+    View
 } from "react-native";
 import RenderHtml from "react-native-render-html";
-import useBookDetails from "../../hooks/useBookDetails";
-import { useState, useContext, useEffect, useCallback } from "react";
 import { LoadingIndicator } from "../../components/ui/LoadingIndicator";
-import { useNavigation } from "@react-navigation/native";
-import styles from "../../styles/DetailBookScreenStyles";
-import { useBooks } from "../../context/BooksContext";
-import { formatDate, getLanguageName } from "../../utils/helpers";
-import userBookService from "../../services/userBook";
-import { AuthContext } from "../../context/AuthContext";
-import reviewService from "../../services/reviewService";
-import { useFocusEffect } from "@react-navigation/native";
-import Layout from "../../constants/layout";
 import Colors from "../../constants/colors";
+import Layout from "../../constants/layout";
+import { AuthContext } from "../../context/AuthContext";
+import { useBooks } from "../../context/BooksContext";
+import useBookDetails from "../../hooks/useBookDetails";
+import reviewService from "../../services/reviewService";
+import userBookService from "../../services/userBook";
+import styles from "../../styles/DetailBookScreenStyles";
+import { formatDate, getLanguageName } from "../../utils/helpers";
 
 /**
  * Pantalla de detalles de libro
@@ -75,13 +72,25 @@ const DetailBook = ({ route }) => {
       setUserReview(null);
     }
   };
-
   useEffect(() => {
-    fetchListas();
-    fetchUserReview();
-    checkIfInRead();
-    checkIfInWishlist();
-  }, []);
+    // Solo ejecutar si tenemos un ID de usuario y un volumeId
+    if (authData?.user?.id && volumeId) {
+      console.log("Inicializando datos del libro...");
+      const initialize = async () => {
+        try {
+          await fetchListas();
+          await fetchUserReview();
+          await checkIfInRead();
+          await checkIfInWishlist();
+          console.log("Inicialización completada");
+        } catch (error) {
+          console.error("Error al inicializar los datos:", error);
+        }
+      };
+
+      initialize();
+    }
+  }, [authData?.user?.id, volumeId]);
 
   const fetchListas = async () => {
     try {
@@ -92,7 +101,8 @@ const DetailBook = ({ route }) => {
     }
   };
 
-  const options = listas;
+  // Asegurar que options siempre sea un array
+  const options = Array.isArray(listas) ? listas : [];
 
   const { width } = useWindowDimensions();
 
@@ -107,64 +117,151 @@ const DetailBook = ({ route }) => {
       </View>
     );
   }
+  // Normalizar y validar la estructura de datos del libro
+  const normalizeBookInfo = (bookDetails) => {
+    if (!bookDetails || !bookDetails.volumeInfo) {
+      return {
+        volumeInfo: {
+          title: 'Título no disponible',
+          authors: [],
+          publishedDate: null,
+          description: '',
+          categories: [],
+          pageCount: 0,
+          language: '',
+          imageLinks: {}
+        }
+      };
+    }
 
-  const info = details.volumeInfo;
+    const info = bookDetails.volumeInfo;
+
+    // Asegurar que siempre tenemos un objeto volumeInfo completo
+    return {
+      ...bookDetails,
+      volumeInfo: {
+        ...info,        title: info.title || 'Título no disponible',
+        authors: Array.isArray(info.authors) ? info.authors : [],
+        categories: Array.isArray(info.categories) ? info.categories : [],
+        description: info.description || '',
+        publishedDate: info.publishedDate || null,
+        pageCount: info.pageCount || 0,
+        language: info.language || '',
+        imageLinks: info.imageLinks || {},
+        industryIdentifiers: Array.isArray(info.industryIdentifiers) ? info.industryIdentifiers : []
+      }
+    };
+  };
+
+  // Normalizar datos del libro
+  const normalizedDetails = normalizeBookInfo(details);
+  const info = normalizedDetails.volumeInfo;
 
   //Preparar objeto de libro para guardar en listas
   const bookData = {
-    id: details.id,
+    id: normalizedDetails.id,
     title: info.title,
-    authors: info.authors || [],
+    authors: info.authors, // Ya normalizado como array
     thumbnail: info.imageLinks?.thumbnail,
     publishedDate: info.publishedDate
   };
-
   console.log("libro ID: " + bookData.id);
-
   // Manejar añadir libro a lista
   const handleAddBook = async (listName) => {
-    if (listName === "Read" && isInRead){
-      handleRemoveBook("Read");
-    } else if (listName === "Reading" && isInWishlist){
-      handleRemoveBook("Reading");
-    } 
-     else {
+    console.log(`handleAddBook llamado con lista: ${listName}`);
+    console.log(`Estado actual - isInRead: ${isInRead}, isInWishlist: ${isInWishlist}`);
+
     try {
-      await userBookService.addToLista(authData.user.id, listName, bookData.id, authData.token);
-      checkIfInRead();
-      checkIfInWishlist();
+      // Validar que tenemos los datos necesarios
+      if (!bookData || !bookData.id) {
+        console.error("Error: ID del libro no disponible");
+        return;
+      }      // Lógica para alternar el estado
+      if (listName === "Read" && isInRead) {
+        console.log("El libro ya está en Read, eliminándolo...");
+        await handleRemoveBook("Read");
+      }
+      else if (listName === "Reading" && isInWishlist) {
+        console.log("El libro ya está en Reading, eliminándolo...");
+        await handleRemoveBook("Reading");
+      }
+      else {
+        // Agregar a la lista - asegurar que usamos la lista correcta con mayúsculas/minúsculas
+        let listaCorrecta = listName;
+        if (listName.toLowerCase() === "read") listaCorrecta = "Read";
+        if (listName.toLowerCase() === "reading") listaCorrecta = "Reading";
+        if (listName.toLowerCase() === "favorites") listaCorrecta = "Favorites";
+
+        console.log(`Agregando libro ID=${bookData.id} a la lista ${listaCorrecta}`);
+        await userBookService.addToLista(
+          authData.user.id,
+          listaCorrecta,
+          bookData.id,
+          authData.token
+        );
+        console.log(`Libro agregado exitosamente a ${listName}`);
+      }
+
+      // Actualizar estados después de la operación
+      console.log("Actualizando estados...");
+      await checkIfInRead();
+      await checkIfInWishlist();
+      console.log(`Estados actualizados - isInRead: ${isInRead}, isInWishlist: ${isInWishlist}`);
+
     } catch (error) {
-      console.error("Error al agregar a lista:", error.message);
+      console.error(`Error en handleAddBook para ${listName}:`, error.message);
     }
-  }
   };
 
 // Manejar eliminar libro de lista
     const handleRemoveBook = async (list) => {
       try {
-        await userBookService.removeFromLista(authData.user.id, list, bookData.id, authData.token);
-        checkIfInRead();
-        checkIfInWishlist();
+        // Normalizar el nombre de la lista (asegurar mayúsculas/minúsculas correctas)
+        let listaCorrecta = list;
+        if (list.toLowerCase() === "read") listaCorrecta = "Read";
+        if (list.toLowerCase() === "reading") listaCorrecta = "Reading";
+        if (list.toLowerCase() === "favorites") listaCorrecta = "Favorites";
+
+        console.log(`Eliminando libro de la lista ${listaCorrecta}`);
+        await userBookService.removeFromLista(authData.user.id, listaCorrecta, bookData.id, authData.token);
+        await checkIfInRead();
+        await checkIfInWishlist();
       } catch (error) {
         console.error("Error al eliminar de lista: ", error.message);
       }
-    };
-
-  async function checkIfInRead() {
+    };  async function checkIfInRead() {
     try {
+      console.log("Verificando si el libro está en la lista Read...");
+      // Asegurarse de que haya un ID de libro disponible
+      if (!volumeId) {
+        console.warn("No hay ID de libro disponible para verificar Read");
+        return false;
+      }
       const inList = await userBookService.isInLista(authData.user.id, "Read", volumeId, authData.token);
+      console.log("Resultado: ", inList);
       setIsInRead(inList);
+      return inList;
     } catch (error) {
-      console.error("Error verificando si el libro está en la lista:", error.message);
+      console.error("Error verificando si el libro está en la lista Read:", error.message);
+      return false;
     }
   };
 
   async function checkIfInWishlist() {
     try {
+      console.log("Verificando si el libro está en la lista Reading...");
+      // Asegurarse de que haya un ID de libro disponible
+      if (!volumeId) {
+        console.warn("No hay ID de libro disponible para verificar Reading");
+        return false;
+      }
       const inList = await userBookService.isInLista(authData.user.id, "Reading", volumeId, authData.token);
+      console.log("Resultado: ", inList);
       setIsInWishlist(inList);
+      return inList;
     } catch (error) {
-      console.error("Error verificando si el libro está en la lista:", error.message);
+      console.error("Error verificando si el libro está en la lista Reading:", error.message);
+      return false;
     }
   };
 
@@ -200,18 +297,18 @@ const DetailBook = ({ route }) => {
             <View style={styles.headerRight}>
               <View style={styles.titleContainer}>
                 <Text style={styles.title}>{info.title}</Text>
-                {info.authors && <Text style={styles.authors}>{info.authors.join(", ")}</Text>}
+                {Array.isArray(info.authors) && info.authors.length > 0 && (
+                  <Text style={styles.authors}>{info.authors.join(", ")}</Text>
+                )}
               </View>
               {info.publishedDate && (
                 <Text style={styles.publishedDate}>{formatDate(info.publishedDate)}</Text>
               )}
-              {info.categories && (
+              {Array.isArray(info.categories) && info.categories.length > 0 && (
                 <View style={styles.categoriesContainer}>
-                  {info.categories.length > 0 && (
-                    <View style={styles.categoryBadge}>
-                      <Text style={styles.categoryText}>{info.categories[0]}</Text>
-                    </View>
-                  )}
+                  <View style={styles.categoryBadge}>
+                    <Text style={styles.categoryText}>{info.categories[0]}</Text>
+                  </View>
                 </View>
               )}
             </View>
@@ -251,8 +348,7 @@ const DetailBook = ({ route }) => {
               visible={visible}
               animationType="fade"
               onRequestClose={() => setVisible(false)}
-            >
-              <Pressable
+            >              <Pressable
                 style={[styles.overlay, { backgroundColor: "rgba(0, 0, 0, 0.5)" }]}
                 onPress={() => setVisible(false)}
               >
@@ -260,21 +356,27 @@ const DetailBook = ({ route }) => {
                   <Pressable onPress={() => setVisible(false)} style={styles.closeButton}>
                     <Text>×</Text>
                   </Pressable>
-                  {options.slice(2).map((opt, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        handleAddBook(opt);
-                        setVisible(false);
-                      }}
-                    >
-                      <Text style={styles.option}>{opt}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </Pressable>
+                  {Array.isArray(options) && options.length > 2 ?
+                    options.slice(2).map((opt, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          handleAddBook(opt);
+                          setVisible(false);
+                        }}
+                      >
+                        <Text style={styles.option}>{opt}</Text>
+                      </TouchableOpacity>
+                    ))
+                  : <Text style={styles.option}>No hay listas disponibles</Text>}
+                </View>              </Pressable>
             </Modal>
-            <Pressable onPress={() => handleAddBook("Reading")} style={styles.rowItemContainer}>
+            <Pressable
+              onPress={() => {
+                console.log('Botón Next presionado, agregando a lista "Reading"');
+                handleAddBook("Reading");
+              }}
+              style={styles.rowItemContainer}>
               <View style={styles.reviewstButtonContainer}>
                 {isInWishlist ? (
                   <Image
@@ -294,7 +396,7 @@ const DetailBook = ({ route }) => {
           <View style={{height: 1, width: "100%", backgroundColor: Colors.BORDER, marginBottom: 20}}></View>
           <View style={styles.reviewContainer}>
               <View style={styles.reviewButtonContainer}>
-                <TouchableOpacity 
+                <TouchableOpacity
                   onPress={() =>
                   userReview
                     ? navigation.navigate("EditReview", { volumeId, review: userReview })
@@ -309,13 +411,12 @@ const DetailBook = ({ route }) => {
                   onPress={() => navigation.navigate("Reviews", { volumeId: details.id })}
                   style={styles.reviewBtn}>
                     <Text style={styles.reviewBtnText}>Reviews</Text>
-                </TouchableOpacity>
-              </View>
+                </TouchableOpacity>              </View>
           </View>
 
           <View style={styles.textSection}>
             <Text style={styles.sectionTitle}>Description</Text>
-            {info.description ? (
+            {info.description && typeof info.description === 'string' ? (
               <RenderHtml
                 contentWidth={width - 40}
                 source={{ html: info.description }}
@@ -348,9 +449,11 @@ const DetailBook = ({ route }) => {
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>ISBN:</Text>
               <Text style={styles.detailValue}>
-                {info.industryIdentifiers?.find((id) => id.type === "ISBN_13")?.identifier ||
-                  info.industryIdentifiers?.find((id) => id.type === "ISBN_10")?.identifier ||
-                  "No disponible"}
+                {Array.isArray(info.industryIdentifiers)
+                  ? (info.industryIdentifiers.find((id) => id.type === "ISBN_13")?.identifier ||
+                     info.industryIdentifiers.find((id) => id.type === "ISBN_10")?.identifier ||
+                     "No disponible")
+                  : "No disponible"}
               </Text>
             </View>
           </View>

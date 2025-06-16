@@ -1,11 +1,8 @@
-import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import ListDetailScreen from '../../../../screens/profile/lists/ListDetailScreen';
-import EditListScreen from '../../../../screens/profile/lists/EditListScreen';
-import DetailBook from '../../../../screens/searchScreens/DetailBookScreen';
-import ListNavigation from '../list/ListsNavigator'
-import ListsBooksScreen from "../../../../screens/profile/lists/ListsBooksScreen";
 import { useRoute } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import EditListScreen from '../../../../screens/profile/lists/EditListScreen';
+import ListDetailScreen from '../../../../screens/profile/lists/ListDetailScreen';
+import DetailBook from '../../../../screens/searchScreens/DetailBookScreen';
 
 
 
@@ -33,10 +30,9 @@ export default function ListDetailNavigation() {
       <Stack.Screen
         name="BookView"
         component={DetailBook}
-      />
-      <Stack.Screen
-        name="ListNavigation"
-        component={ListNavigation}
+      />      <Stack.Screen
+        name="AllLists"
+        component={require('./NavigationHelpers').getListsNavigationComponent()}
       />
 
     </Stack.Navigator>
