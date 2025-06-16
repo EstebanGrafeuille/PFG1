@@ -15,7 +15,7 @@ import {
   Pressable,
   Modal,
   useWindowDimensions,
-  Alert
+  Platform
 } from "react-native";
 import RenderHtml from "react-native-render-html";
 import useBookDetails from "../../hooks/useBookDetails";
@@ -123,50 +123,59 @@ const DetailBook = ({ route }) => {
 
   // Manejar añadir libro a lista
   const handleAddBook = async (listName) => {
-    if (listName === "Read" && isInRead){
+    if (listName === "Read" && isInRead) {
       handleRemoveBook("Read");
-    } else if (listName === "Reading" && isInWishlist){
+    } else if (listName === "Reading" && isInWishlist) {
       handleRemoveBook("Reading");
-    } 
-     else {
-    try {
-      await userBookService.addToLista(authData.user.id, listName, bookData.id, authData.token);
-      checkIfInRead();
-      checkIfInWishlist();
-    } catch (error) {
-      console.error("Error al agregar a lista:", error.message);
-    }
-  }
-  };
-
-// Manejar eliminar libro de lista
-    const handleRemoveBook = async (list) => {
+    } else {
       try {
-        await userBookService.removeFromLista(authData.user.id, list, bookData.id, authData.token);
+        await userBookService.addToLista(authData.user.id, listName, bookData.id, authData.token);
         checkIfInRead();
         checkIfInWishlist();
       } catch (error) {
-        console.error("Error al eliminar de lista: ", error.message);
+        console.error("Error al agregar a lista:", error.message);
       }
-    };
+    }
+  };
+
+  // Manejar eliminar libro de lista
+  const handleRemoveBook = async (list) => {
+    try {
+      await userBookService.removeFromLista(authData.user.id, list, bookData.id, authData.token);
+      checkIfInRead();
+      checkIfInWishlist();
+    } catch (error) {
+      console.error("Error al eliminar de lista: ", error.message);
+    }
+  };
 
   async function checkIfInRead() {
     try {
-      const inList = await userBookService.isInLista(authData.user.id, "Read", volumeId, authData.token);
+      const inList = await userBookService.isInLista(
+        authData.user.id,
+        "Read",
+        volumeId,
+        authData.token
+      );
       setIsInRead(inList);
     } catch (error) {
       console.error("Error verificando si el libro está en la lista:", error.message);
     }
-  };
+  }
 
   async function checkIfInWishlist() {
     try {
-      const inList = await userBookService.isInLista(authData.user.id, "Reading", volumeId, authData.token);
+      const inList = await userBookService.isInLista(
+        authData.user.id,
+        "Reading",
+        volumeId,
+        authData.token
+      );
       setIsInWishlist(inList);
     } catch (error) {
       console.error("Error verificando si el libro está en la lista:", error.message);
     }
-  };
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -225,14 +234,14 @@ const DetailBook = ({ route }) => {
               <View style={styles.listButtonContainer}>
                 {isInRead ? (
                   <Image
-                  source={require("../../../assets/img/read-icon-active.png")}
-                  style={styles.listIcon}
-                />
+                    source={require("../../../assets/img/read-icon-active.png")}
+                    style={styles.listIcon}
+                  />
                 ) : (
                   <Image
-                  source={require("../../../assets/img/read-icon.png")}
-                  style={styles.listIcon}
-                />
+                    source={require("../../../assets/img/read-icon.png")}
+                    style={styles.listIcon}
+                  />
                 )}
               </View>
               <Text style={styles.iconText}>Read</Text>
@@ -278,39 +287,45 @@ const DetailBook = ({ route }) => {
               <View style={styles.reviewstButtonContainer}>
                 {isInWishlist ? (
                   <Image
-                  source={require("../../../assets/img/wishlist-icon-active.png")}
-                  style={styles.listIcon}
-                />
+                    source={require("../../../assets/img/wishlist-icon-active.png")}
+                    style={styles.listIcon}
+                  />
                 ) : (
                   <Image
-                  source={require("../../../assets/img/wishlist-icon.png")}
-                  style={styles.listIcon}
-                />
+                    source={require("../../../assets/img/wishlist-icon.png")}
+                    style={styles.listIcon}
+                  />
                 )}
               </View>
               <Text style={styles.iconText}>Next</Text>
             </Pressable>
           </View>
-          <View style={{height: 1, width: "100%", backgroundColor: Colors.BORDER, marginBottom: 20}}></View>
+          <View
+            style={{ height: 1, width: "100%", backgroundColor: Colors.BORDER, marginBottom: 20 }}
+          ></View>
           <View style={styles.reviewContainer}>
-              <View style={styles.reviewButtonContainer}>
-                <TouchableOpacity 
-                  onPress={() =>
+            <View style={styles.reviewButtonContainer}>
+              <TouchableOpacity
+                onPress={() =>
                   userReview
                     ? navigation.navigate("EditReview", { volumeId, review: userReview })
                     : navigation.navigate("AddReview", { volumeId: details.id })
-                  }
-                  style={styles.addReviewBtn}>
-                    <Text style={styles.addReviewBtnText}>{userReview ? "Edit review" : "Add review"}</Text>
-                  </TouchableOpacity>
-              </View>
-              <View style={styles.reviewButtonContainer}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Reviews", { volumeId: details.id })}
-                  style={styles.reviewBtn}>
-                    <Text style={styles.reviewBtnText}>Reviews</Text>
-                </TouchableOpacity>
-              </View>
+                }
+                style={styles.addReviewBtn}
+              >
+                <Text style={styles.addReviewBtnText}>
+                  {userReview ? "Edit review" : "Add review"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.reviewButtonContainer}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Reviews", { volumeId: details.id })}
+                style={styles.reviewBtn}
+              >
+                <Text style={styles.reviewBtnText}>Reviews</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.textSection}>

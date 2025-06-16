@@ -1,11 +1,12 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import Colors from "../constants/colors";
 import Layout from "../constants/layout";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.BACKGROUND
+    backgroundColor: Colors.BACKGROUND,
+    marginTop: Platform.OS === "android" ? 50 : 0
   },
   scrollView: {
     flex: 1
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
   infoSection: {
     backgroundColor: Colors.WHITE,
     borderTopLeftRadius: Layout.BORDER_RADIUS.L,
-    borderTopRightRadius: Layout.BORDER_RADIUS.L,
+    borderTopRightRadius: Layout.BORDER_RADIUS.L
   },
   buttonRow: {
     flexDirection: "row",
@@ -163,8 +164,7 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30
   },
-  reviewButtonContainer: {
-  },
+  reviewButtonContainer: {},
   addReviewBtn: {
     backgroundColor: Colors.PRIMARY,
     flexDirection: "column",
@@ -188,12 +188,12 @@ const styles = StyleSheet.create({
   addReviewBtnText: {
     fontSize: 15,
     fontWeight: Layout.FONT_WEIGHT.BOLD,
-    color: Colors.WHITE,
+    color: Colors.WHITE
   },
   reviewBtnText: {
     fontSize: 15,
     fontWeight: Layout.FONT_WEIGHT.BOLD,
-    color: Colors.PRIMARY,
+    color: Colors.PRIMARY
   },
   reviewIcon: {
     height: "100%",
