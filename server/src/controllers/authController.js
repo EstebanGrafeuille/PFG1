@@ -80,14 +80,18 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({
-        error: GENERIC_ERROR_MESSAGE
+        errors: {
+          general: GENERIC_ERROR_MESSAGE
+        }
       });
     }
 
     const isValidPassword = await user.comparePassword(password);
     if (!isValidPassword) {
       return res.status(401).json({
-        error: GENERIC_ERROR_MESSAGE
+        errors: {
+          general: GENERIC_ERROR_MESSAGE
+        }
       });
     }
 

@@ -134,6 +134,8 @@ export default function ForgotPassScreen() {
                   keyboardType="email-address"
                 />
                 {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+                {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+                {errors.general && <Text style={styles.errorText}>{errors.general}</Text>}
               </View>
             </>
           )}
