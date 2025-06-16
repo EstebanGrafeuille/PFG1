@@ -1,4 +1,4 @@
-import BASE_URL from '../services/connection.js';
+import BASE_URL from "../services/connection.js";
 
 const addLista = async (userId, lista, token) => {
   try {
@@ -45,7 +45,6 @@ const getListas = async (userId, token) => {
 };
 
 const addToLista = async (userId, lista, bookId, token) => {
-  console.log(userId, lista, bookId, token);
   try {
     const response = await fetch(`${BASE_URL}/books/addLibroToLista`, {
       method: "POST",
@@ -62,7 +61,6 @@ const addToLista = async (userId, lista, bookId, token) => {
     }
 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     throw error;
@@ -70,7 +68,6 @@ const addToLista = async (userId, lista, bookId, token) => {
 };
 
 const removeFromLista = async (userId, lista, bookId, token) => {
-  console.log(userId, lista, bookId, token);
   try {
     const response = await fetch(`${BASE_URL}/books/removeFromLista`, {
       method: "DELETE",
@@ -120,16 +117,13 @@ const removeList = async (userId, lista, token) => {
 
 const getLista = async (userId, lista, token) => {
   try {
-    const response = await fetch(
-      `${BASE_URL}/books/getLista?userId=${userId}&lista=${lista}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Cache-Control": "no-cache"
-        }
+    const response = await fetch(`${BASE_URL}/books/getLista?userId=${userId}&lista=${lista}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Cache-Control": "no-cache"
       }
-    );
+    });
 
     if (!response.ok) {
       throw new Error("No se pudo obtener la Lista");
@@ -144,16 +138,13 @@ const getLista = async (userId, lista, token) => {
 
 const isInLista = async (userId, lista, bookId, token) => {
   try {
-    const response = await fetch(
-      `${BASE_URL}/books/getLista?userId=${userId}&lista=${lista}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Cache-Control": "no-cache"
-        }
+    const response = await fetch(`${BASE_URL}/books/getLista?userId=${userId}&lista=${lista}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Cache-Control": "no-cache"
       }
-    );
+    });
 
     if (!response.ok) {
       throw new Error("No se pudo obtener la Lista");

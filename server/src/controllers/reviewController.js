@@ -44,7 +44,6 @@ class ReviewController {
   };
 
   getByUserAndBook = async (req, res) => {
-    console.log("ACa tamo")
     try {
       const { userId, googleId } = req.params;
       const rev = await reviewService.getByUserAndBook(userId, googleId);
@@ -53,7 +52,6 @@ class ReviewController {
       res.status(404).json({ success: false, message: e.message });
     }
   };
-
 }
 
 module.exports = new ReviewController();
