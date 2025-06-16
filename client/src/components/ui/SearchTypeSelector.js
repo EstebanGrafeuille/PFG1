@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     paddingVertical: Layout.SPACING.S,
     borderRadius: Layout.BORDER_RADIUS.S,
     height: 40,
-    minWidth: 80
+    minWidth: 100
   },
   selectorText: {
     color: Colors.TEXT_PRIMARY,
