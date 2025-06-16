@@ -27,8 +27,30 @@ npm run client
 
 # Iniciar solo backend
 npm run server
+```
 
+## Configuración de seguridad
 
+La aplicación implementa diversas medidas de seguridad:
+
+1. **Variables de entorno**: Crear archivo `.env` basado en `.env.template` con tus credenciales.
+2. **Autenticación**: Sistema JWT con middleware de autorización para rutas protegidas.
+3. **Protección contra ataques**: Implementación de rate limiting, cabeceras HTTP seguras y validaciones.
+4. **Almacenamiento seguro**: Contraseñas hasheadas con bcrypt, imágenes almacenadas en Cloudinary con validación.
+
+Para más detalles sobre la seguridad del sistema, consulta el documento [seguridad-integridad-sistemas.md](./seguridad-integridad-sistemas.md).
+
+### Buenas prácticas de seguridad
+
+- Mantener las dependencias actualizadas: `npm audit` y `npm update`
+- No exponer variables de entorno en el código fuente
+- Usar HTTPS en producción
+- Implementar políticas de contraseñas seguras
+- Validar todas las entradas de usuario
+
+## Notas para desarrollo
+
+```
 // "userId": "6834a749616656319f70feb4"
 
 // Codigo de libros para testear

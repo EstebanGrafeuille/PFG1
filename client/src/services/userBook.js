@@ -1,4 +1,4 @@
-import BASE_URL from '../services/connection.js'
+import BASE_URL from '../services/connection.js';
 
 const addLista = async (userId, lista, token) => {
   try {
@@ -24,6 +24,7 @@ const addLista = async (userId, lista, token) => {
 
 const getListas = async (userId, token) => {
   try {
+    // Usamos la función estándar fetch para mantener compatibilidad
     const response = await fetch(`${BASE_URL}/books/getListas?userId=${userId}`, {
       method: "GET",
       headers: {
