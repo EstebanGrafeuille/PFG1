@@ -4,6 +4,8 @@ const sendEmail = require("../utils/sendEmail");
 const bookService = require("../services/bookService");
 const { isValidEmail } = require("../utils/helpers");
 
+const GENERIC_ERROR_MESSAGE = "Invalid email or password";
+
 // Registrar un nuevo usuario
 exports.register = async (req, res) => {
   try {
@@ -17,10 +19,7 @@ exports.register = async (req, res) => {
 
     if (existingEmail || existingUsername) {
       return res.status(400).json({
-        errors: {
-          ...(existingEmail && { email: "This email is already in use" }),
-          ...(existingUsername && { username: "This username is already taken" })
-        }
+        error: "Unable to complete registration. Please check your data"
       });
     }
 
@@ -79,11 +78,16 @@ exports.login = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-    if (!user || !(await user.comparePassword(password))) {
+    if (!user) {
       return res.status(401).json({
-        errors: {
-          general: "Invalid email or password"
-        }
+        error: GENERIC_ERROR_MESSAGE
+      });
+    }
+
+    const isValidPassword = await user.comparePassword(password);
+    if (!isValidPassword) {
+      return res.status(401).json({
+        error: GENERIC_ERROR_MESSAGE
       });
     }
 
@@ -139,10 +143,8 @@ exports.forgotPassword = async (req, res) => {
 
     const user = await User.findOne({ email: email.trim() });
     if (!user) {
-      return res.status(404).json({
-        errors: {
-          email: "No account found with this email"
-        }
+      return res.status(200).json({
+        message: "If the email exists, you will receive a recovery link"
       });
     }
 
