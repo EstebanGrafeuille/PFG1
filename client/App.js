@@ -11,6 +11,16 @@ import {
 } from "@expo-google-fonts/roboto";
 import { BooksProvider } from "./src/context/BooksContext";
 import { AuthProvider } from "./src/context/AuthContext";
+import React from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StyleSheet, Platform } from "react-native";
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingBottom: Platform.OS === "android" ? 50 : 0
+  }
+});
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -22,13 +32,15 @@ export default function App() {
   });
 
   return (
-    <AuthProvider>
-      <BooksProvider>
-        <NavigationContainer>
-          <StackNavigation />
-          <StatusBar style="auto" />
-        </NavigationContainer>
-      </BooksProvider>
-    </AuthProvider>
+    <SafeAreaProvider style={styles.container}>
+      <AuthProvider>
+        <BooksProvider>
+          <NavigationContainer>
+            <StackNavigation />
+            <StatusBar style="auto" />
+          </NavigationContainer>
+        </BooksProvider>
+      </AuthProvider>
+    </SafeAreaProvider>
   );
 }
