@@ -86,7 +86,6 @@ export default function ProfileInfoEditable() {
 
       console.log("Usuario actualizado:", updatedUser);
 
-      // Actualizar el contexto de autenticación si es necesario
       if (updatedUser && authData) {
         const newAuthData = {
           ...authData,
@@ -95,8 +94,6 @@ export default function ProfileInfoEditable() {
             username: updatedUser.username
           }
         };
-        // Si tienes una función para actualizar el contexto de autenticación, úsala aquí
-        // Por ejemplo: updateAuthContext(newAuthData);
       }
 
       Alert.alert("Success", "Username updated successfully");
@@ -111,7 +108,6 @@ export default function ProfileInfoEditable() {
   };
 
   const handleUpdateDescription = async () => {
-    // Usar id en lugar de _id ya que el backend devuelve id
     const userId = authData?.user?.id || authData?.user?._id;
     if (!userId) {
       console.error("No se puede identificar al usuario:", authData);
@@ -124,7 +120,6 @@ export default function ProfileInfoEditable() {
       setError(null);
 
       console.log("Actualizando biografía para usuario ID:", userId);
-      // Enviamos solo el campo biography sin username ni email
       const updatedUser = await updateUserProfile(userId, {
         biography: description
       });
@@ -142,7 +137,6 @@ export default function ProfileInfoEditable() {
   };
 
   const pickImage = async () => {
-    // Usar id en lugar de _id ya que el backend devuelve id
     const userId = authData?.user?.id || authData?.user?._id;
     if (!userId) {
       console.error("No se puede identificar al usuario para actualizar imagen:", authData);
@@ -283,7 +277,7 @@ export default function ProfileInfoEditable() {
         )}
       </TouchableOpacity>
 
-      <View style={[profileStyles.usernameRow, { marginTop: 20 }]}>
+      <View style={[profileStyles.descriptionContainer, { marginTop: 20 }]}>
         {isEditingUser ? (
           <View style={styles.editContainer}>
             <TextInput
