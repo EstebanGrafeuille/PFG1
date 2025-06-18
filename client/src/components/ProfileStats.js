@@ -30,10 +30,14 @@ const fetchListas = async () => {
   }
 };
 
-useEffect(() => {
-  fetchListas();
-  fetchLibros();
-}, []);
+
+useFocusEffect(
+  useCallback(() => {
+    fetchListas();
+    fetchLibros();
+  }, [])
+);
+
 
   return (
     <View style={styles.profileStatsContainer}>

@@ -4,7 +4,7 @@ import BASE_URL from "../services/connection.js";
 const login = (email, password) => {
   return new Promise((resolve, reject) => {
     console.log("En login");
-    console.log(email, password);
+    console.log(email);
 
     fetch(`${BASE_URL}/auth/login/`, {
       method: "POST",

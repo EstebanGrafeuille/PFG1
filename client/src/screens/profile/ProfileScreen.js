@@ -110,6 +110,16 @@ export default function ProfileScreen() {
     }
   }, [fetchUserProfile]);
 
+  useEffect(() => {
+  const unsubscribe = navigation.addListener("focus", () => {
+  
+    fetchUserProfile();
+  });
+
+  return unsubscribe;
+}, [navigation, fetchUserProfile]);
+
+
   return (
     <SafeAreaView style={profileStyles.safeArea}>
       <ScrollView
