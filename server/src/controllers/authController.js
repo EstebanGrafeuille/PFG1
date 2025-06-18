@@ -202,7 +202,7 @@ exports.resetPassword = async (req, res) => {
 
     await user.save();
 
-    res.json({ message: "Contraseña actualizada correctamente" });
+    res.json({ message: "Password updated successfully" });
   } catch (error) {
     if (error.name === "ValidationError") {
       const fieldErrors = {};
